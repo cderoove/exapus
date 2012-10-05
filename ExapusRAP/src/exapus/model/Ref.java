@@ -1,0 +1,127 @@
+package exapus.model;
+
+import java.util.UUID;
+
+import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.IMember;
+import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.core.SourceRange;
+import org.eclipse.jdt.core.dom.ASTNode;
+import org.eclipse.jdt.core.dom.CompilationUnit;
+
+public abstract class Ref extends ForestElement {
+
+	private Ref dual;
+	
+	protected Direction direction;
+
+	protected Pattern pattern;
+
+	protected Element element;
+
+	protected QName rname; // list of uqnames to be taken through tree
+
+	protected SourceRange range;
+
+	private int lineNumber;
+
+	public Ref(Direction d, Pattern p, Element e, QName n, SourceRange r, int l) {
+		// super(new UqName(UUID.randomUUID().toString())); //probably too slow
+		super(UqName.EMPTY);
+		direction = d;
+		pattern = p;
+		element = e;
+		rname = n;
+		range = r;
+		lineNumber = l;
+	}
+
+	@Override
+	public ICompilationUnit getCorrespondingICompilationUnit() {
+		return getParentMember().getCorrespondingICompilationUnit();
+	}
+
+	public String getSourceString() {
+		Member parent = getParentMember();
+		if(parent == null)
+			return null;
+		return parent.getSourceString();
+	}
+
+	public int getSourceCharacterIndexOffset() {
+		Member parent = getParentMember();
+		if(parent == null)
+			return 0;
+		return parent.getSourceCharacterIndexOffset();
+	}
+
+	public int getSourceLineNumberOffset() {
+		Member parent = getParentMember();
+		if(parent == null)
+			return 0;
+		return parent.getSourceLineNumberOffset();
+	}
+
+	protected static int getLineNumber(ASTNode n) {
+		int startPosition = n.getStartPosition();
+		CompilationUnit cu = (CompilationUnit) n.getRoot();
+		return cu.getLineNumber(startPosition);
+	}
+
+	protected static SourceRange getSourceRange(ASTNode n) {
+		return new SourceRange(n.getStartPosition(), n.getLength());
+	}
+
+
+	public SourceRange getSourceRange() {
+		return range;
+	}
+
+	public int getLineNumber() {
+		return lineNumber;
+	}
+
+	public void setLineNumber(int lineNumber) {
+		this.lineNumber = lineNumber;
+	}
+
+	public Pattern getReferencingPattern() {
+		return pattern;
+	}
+
+
+	protected Element getElementOfParentMember() {
+		Member parentMember = getParentMember();
+		if(parentMember == null)
+			return null;
+		return parentMember.getElement();
+	}
+
+
+
+	public abstract QName getReferencingName();
+
+	public abstract QName getReferencedName();
+
+	public abstract Element getReferencingElement();
+
+	public abstract Element getReferencedElement();
+
+
+	public QName getQName() {
+		Member parentMember = getParentMember();
+		if(parentMember == null)
+			return null;
+		return parentMember.getQName();
+	}
+
+	public Ref getDual() {
+		return dual;
+	}
+
+	public void setDual(Ref dual) {
+		this.dual = dual;
+	}
+
+}
+

@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="exapus.gui.ExplorationPerspective"
+            id="exapus.gui.perspective.exploration"
+            name="Exploration">
+      </perspective>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            class="org.eclipse.ui.ExtensionFactory:progressView"
+            icon="icons/pview.gif"
+            id="org.eclipse.ui.views.ProgressView"
+            name="Progress">
+      </view>
+      <view
+            category="one"
+            class="org.eclipse.rap.demo.DemoTreeViewPart"
+            icon="icons/contact.gif"
+            id="org.eclipse.rap.demo.DemoTreeViewPartI"
+            name="View I">
+      </view>
+      <view
+            category="one"
+            class="org.eclipse.rap.demo.DemoTreeViewPart"
+            icon="icons/info.gif"
+            id="org.eclipse.rap.demo.DemoTreeViewPartII"
+            name="View II">
+      </view>
+      
+      
+      
+      <view
+            category="one"
+            class="org.eclipse.rap.demo.DemoTreeViewPart"
+            icon="icons/login.gif"
+            id="org.eclipse.rap.demo.DemoTreeViewPartIII"
+            name="View III">
+      </view>
+      <view
+            category="two"
+            class="org.eclipse.rap.demo.DemoTreeViewPart"
+            icon="icons/register.gif"
+            id="org.eclipse.rap.demo.DemoTreeViewPartIV"
+            name="View V">
+      </view>
+      <view
+            category="two"
+            class="org.eclipse.rap.demo.DemoTableViewPart"
+            icon="icons/search.gif"
+            id="org.eclipse.rap.demo.DemoTableViewPart"
+            name="View IV">
+      </view>
+      <view
+            category="two"
+            class="org.eclipse.rap.demo.DemoSelectionViewPart"
+            icon="icons/status.gif"
+            id="org.eclipse.rap.demo.DemoSelectionViewPart"
+            name="Selection View">
+      </view>
+      <view
+            allowMultiple="true"
+            category="two"
+            class="org.eclipse.rap.demo.DemoBrowserViewPart"
+            icon="icons/internal_browser.gif"
+            id="org.eclipse.rap.demo.DemoBrowserViewPart"
+            name="Browser">
+      </view>
+      <category
+            id="one"
+            name="Category 1">
+      </category>
+      <category
+            id="two"
+            name="Category 2">
+      </category>
+      <view
+            class="exapus.gui.views.forest.FactForestTreeViewPart"
+            id="exapus.gui.views.FactForestTreeView"
+            name="Forest">
+      </view>
+      <view
+            class="exapus.gui.views.reference.ReferenceViewPart"
+            id="exapus.gui.views.ReferenceView"
+            name="Reference">
+      </view>
+      <view
+            class="exapus.gui.views.forest.FactForestTreeViewPart"
+            id="exapus.gui.views.DualFactForestTreeView"
+            name="Dual Forest">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.rap.ui.branding">
+      <branding
+            defaultEntrypointId="exapus.gui.entrypoint.workbench"
+            id="exapus.branding"
+            servletName="exapus"
+            themeId="org.eclipse.rap.design.example.fancy.theme"
+            title="Exapus Workbench">
+      </branding>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="org.eclipse.rap.demo.editor.FooEditor"
+            contributorClass="org.eclipse.rap.demo.editor.FooEditorContributor"
+            extensions="*"
+            icon="icons/status.gif"
+            id="org.eclipse.rap.demo.editor"
+            name="Foo Editor">
+      </editor>
+   </extension>
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            id="org.eclipse.rap.demo.actionSet"
+            label="Sample Action Set"
+            visible="false">
+         <menu
+               id="sampleMenu"
+               label="Sample &amp;Menu">
+            <separator
+                  name="sampleGroup">
+            </separator>
+         </menu>
+         <action
+               class="org.eclipse.rap.demo.actions.SampleAction"
+               icon="icons/sample.gif"
+               id="org.eclipse.rap.demo.actions.SampleAction"
+               label="&amp;Sample Action"
+               menubarPath="sampleMenu/sampleGroup"
+               toolbarPath="sampleGroup"
+               tooltip="Hello, Eclipse world">
+         </action>
+         <action
+               class="org.eclipse.rap.demo.actions.JobAction"
+               icon="icons/pview.gif"
+               id="org.eclipse.rap.demo.actions.JobAction"
+               label="&amp;Start Job"
+               menubarPath="sampleMenu/sampleGroup"
+               toolbarPath="sampleGroup"
+               tooltip="Start Job">
+         </action>
+         <action
+               class="org.eclipse.rap.demo.actions.JobActionWithDialog"
+               icon="icons/progress_ok.gif"
+               id="org.eclipse.rap.demo.actions.JobActionWithDialog"
+               label="&amp;Start Job with Dialog"
+               menubarPath="sampleMenu/sampleGroup"
+               toolbarPath="sampleGroup"
+               tooltip="Start Job with Dialog">
+         </action>
+      </actionSet>
+   </extension>
+   <extension
+         point="org.eclipse.rap.ui.entrypoint">
+      <entrypoint
+            class="exapus.gui.ExapusWorkbench"
+            id="exapus.gui.entrypoint.workbench"
+            parameter="default"
+            path="/workbench">
+      </entrypoint>
+   </extension>
+
+</plugin>
