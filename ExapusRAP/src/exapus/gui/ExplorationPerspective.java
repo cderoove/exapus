@@ -38,6 +38,9 @@ public class ExplorationPerspective implements IPerspectiveFactory {
 		layout.addStandaloneView(FactForestTreeViewPart.ID_DUAL, true, IPageLayout.RIGHT, 0.80f, "results");
 		
 		layout.addStandaloneView(ReferenceViewPart.ID, true, IPageLayout.BOTTOM, 0.60f, "results");
+		
+		//layout.addStandaloneView("org.eclipse.ui.views.properties.PropertySheet", true, IPageLayout.BOTTOM, 0.60f, "results");
+		
 
 		// IFolderLayout topRight = layout.createFolder("topRight",
 		// IPageLayout.RIGHT, 0.70f, editorArea);

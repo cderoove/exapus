@@ -14,14 +14,14 @@ import exapus.model.Ref;
 
 public class FactForestTreeLabelProviders {
 
-	private static final Image PKTREE_IMG = AbstractUIPlugin.imageDescriptorFromPlugin("ExapusRAP", "/icons/packagefolder_obj.gif").createImage();
-	private static final Image PKLAYER_IMG = AbstractUIPlugin.imageDescriptorFromPlugin("ExapusRAP", "/icons/package_obj.gif").createImage();
-	private static final Image CLASS_IMG = AbstractUIPlugin.imageDescriptorFromPlugin("ExapusRAP", "/icons/class_obj.gif").createImage();
-	private static final Image ENUM_IMG = AbstractUIPlugin.imageDescriptorFromPlugin("ExapusRAP", "/icons/enum_obj.gif").createImage();
-	private static final Image INTERFACE_IMG = AbstractUIPlugin.imageDescriptorFromPlugin("ExapusRAP", "/icons/int_obj.gif").createImage();
-	private static final Image METHOD_IMG = AbstractUIPlugin.imageDescriptorFromPlugin("ExapusRAP", "/icons/methpub_obj.gif").createImage();
-	private static final Image FIELD_IMG = AbstractUIPlugin.imageDescriptorFromPlugin("ExapusRAP", "/icons/field_public_obj.gif").createImage();
-	private static final Image ANNOTATION_IMG = AbstractUIPlugin.imageDescriptorFromPlugin("ExapusRAP", "/icons/annotation_obj.gif").createImage();
+	private static final Image PKTREE_IMG = AbstractUIPlugin.imageDescriptorFromPlugin("Exapus", "icons/packagefolder_obj.gif").createImage();
+	private static final Image PKLAYER_IMG = AbstractUIPlugin.imageDescriptorFromPlugin("Exapus", "icons/package_obj.gif").createImage();
+	private static final Image CLASS_IMG = AbstractUIPlugin.imageDescriptorFromPlugin("Exapus", "icons/class_obj.gif").createImage();
+	private static final Image ENUM_IMG = AbstractUIPlugin.imageDescriptorFromPlugin("Exapus", "icons/enum_obj.gif").createImage();
+	private static final Image INTERFACE_IMG = AbstractUIPlugin.imageDescriptorFromPlugin("Exapus", "icons/int_obj.gif").createImage();
+	private static final Image METHOD_IMG = AbstractUIPlugin.imageDescriptorFromPlugin("Exapus", "icons/methpub_obj.gif").createImage();
+	private static final Image FIELD_IMG = AbstractUIPlugin.imageDescriptorFromPlugin("Exapus", "icons/field_public_obj.gif").createImage();
+	private static final Image ANNOTATION_IMG = AbstractUIPlugin.imageDescriptorFromPlugin("Exapus", "icons/annotation_obj.gif").createImage();
 
 	public static class PatternColumnLabelProvider extends ColumnLabelProvider {
 
