@@ -31,6 +31,7 @@ public class UqName {
 
 	public static UqName EMPTY = new UqName("");
 
+	/*
 	public static UqName forMethod(IMethod m) {
 		StringBuilder name = new StringBuilder();
 		name.append(m.getElementName());
@@ -50,10 +51,27 @@ public class UqName {
 		name.append(")");
 		return new UqName(name.toString());
 	}
+	*/
 
 	public static UqName forBinding(IMethodBinding mb) {
-		IJavaElement e = mb.getJavaElement();
-		return forMethod((IMethod) e);
+		StringBuilder name = new StringBuilder();
+		name.append(mb.getName());
+		name.append("(");		
+		
+		ITypeBinding[] parameterTypes = mb.getParameterTypes();
+		String[] parameterTypeNames = new String[parameterTypes.length];
+		for (int i=0; i<parameterTypes.length; ++i) 	
+			parameterTypeNames[i] = parameterTypes[i].getName();
+		
+		Joiner joiner = Joiner.on(", ");
+		String parameters = joiner.join(parameterTypeNames);
+
+		assert(parameters.indexOf('.') < 0); //otherwise, QName cannot use . to separate component names!!
+
+		
+		name.append(parameters);
+		name.append(")");
+		return new UqName(name.toString());
 	}
 
 	public static UqName forBinding(IVariableBinding variableBinding) {
