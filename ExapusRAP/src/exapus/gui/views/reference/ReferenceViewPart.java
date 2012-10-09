@@ -28,11 +28,12 @@ import de.java2html.javasource.JavaSource;
 import de.java2html.javasource.JavaSourceParser;
 import de.java2html.options.JavaSourceConversionOptions;
 import de.java2html.util.RGB;
-import exapus.model.ForestElement;
-import exapus.model.Member;
-import exapus.model.MemberContainer;
-import exapus.model.OutboundRef;
-import exapus.model.Ref;
+import exapus.model.forest.Direction;
+import exapus.model.forest.ForestElement;
+import exapus.model.forest.Member;
+import exapus.model.forest.MemberContainer;
+import exapus.model.forest.OutboundRef;
+import exapus.model.forest.Ref;
 
 //TODO: could try being nothing of clicks through BrowserFunction, or clientSide script (incubator components)
 
@@ -143,6 +144,8 @@ public class ReferenceViewPart extends ViewPart {
 	*/
 	
 	private void updateBrowser(ForestElement fe) {
+		if(fe.getParentFactForest().getDirection().equals(Direction.INBOUND))
+				return;
 		String source = fe.getSourceString();
 		if(null != source)  {
 			JavaSourceLineHighlights highlights = new JavaSourceLineHighlights();
