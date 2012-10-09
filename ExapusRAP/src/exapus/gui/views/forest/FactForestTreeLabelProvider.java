@@ -11,11 +11,11 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
-import exapus.model.Element;
-import exapus.model.Member;
-import exapus.model.OutboundRef;
-import exapus.model.PackageLayer;
-import exapus.model.PackageTree;
+import exapus.model.forest.Element;
+import exapus.model.forest.Member;
+import exapus.model.forest.OutboundRef;
+import exapus.model.forest.PackageLayer;
+import exapus.model.forest.PackageTree;
 
 public class FactForestTreeLabelProvider implements ITableLabelProvider {
 

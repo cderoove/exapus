@@ -1,4 +1,4 @@
-package exapus.model;
+package exapus.model.forest;
 
 import java.util.ArrayList;
 import java.util.HashMap;

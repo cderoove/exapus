@@ -1,4 +1,4 @@
-package exapus.model;
+package exapus.model.forest;
 
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;

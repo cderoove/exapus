@@ -11,7 +11,7 @@ import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 
 import exapus.gui.actions.PopulateExapusModelAction;
-import exapus.model.ExapusModel;
+import exapus.model.forest.ExapusModel;
 
 public class ExapusWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 

@@ -1,4 +1,4 @@
-package exapus.model;
+package exapus.model.forest;
 
 public interface IDeltaListener {
 	public void add(DeltaEvent event);

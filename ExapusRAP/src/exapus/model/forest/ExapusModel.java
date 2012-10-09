@@ -1,4 +1,4 @@
-package exapus.model;
+package exapus.model.forest;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;

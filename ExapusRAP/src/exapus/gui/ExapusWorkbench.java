@@ -9,7 +9,7 @@ import org.eclipse.ui.internal.util.PrefUtil;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
 
 import exapus.gui.actions.PopulateExapusModelAction;
-import exapus.model.ExapusModel;
+import exapus.model.forest.ExapusModel;
 
 public class ExapusWorkbench implements IEntryPoint {
 

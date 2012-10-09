@@ -1,4 +1,4 @@
-package exapus.model;
+package exapus.model.forest;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.IJavaProject;

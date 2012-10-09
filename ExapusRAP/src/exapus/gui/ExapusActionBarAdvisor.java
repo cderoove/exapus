@@ -28,7 +28,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.*;
 
 import exapus.gui.actions.PopulateExapusModelAction;
-import exapus.model.ExapusModel;
+import exapus.model.forest.ExapusModel;
 
 public class ExapusActionBarAdvisor extends ActionBarAdvisor {
 

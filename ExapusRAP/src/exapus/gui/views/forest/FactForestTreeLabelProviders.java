@@ -4,13 +4,13 @@ import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
-import exapus.model.Element;
-import exapus.model.InboundRef;
-import exapus.model.Member;
-import exapus.model.OutboundRef;
-import exapus.model.PackageLayer;
-import exapus.model.PackageTree;
-import exapus.model.Ref;
+import exapus.model.forest.Element;
+import exapus.model.forest.InboundRef;
+import exapus.model.forest.Member;
+import exapus.model.forest.OutboundRef;
+import exapus.model.forest.PackageLayer;
+import exapus.model.forest.PackageTree;
+import exapus.model.forest.Ref;
 
 public class FactForestTreeLabelProviders {
 

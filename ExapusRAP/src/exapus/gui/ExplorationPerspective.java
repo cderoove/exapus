@@ -20,7 +20,7 @@ public class ExplorationPerspective implements IPerspectiveFactory {
 		// "view_id" ID in this placeholder.
 
 		String editorArea = layout.getEditorArea();
-		layout.setEditorAreaVisible(false);
+		layout.setEditorAreaVisible(true);
 
 		// TODO: list available view specifications
 		IFolderLayout specificationsFolder = layout.createFolder("specifications", IPageLayout.TOP, 075f, editorArea);

@@ -23,9 +23,9 @@ import org.eclipse.ui.part.ViewPart;
 
 import exapus.gui.ExapusWorkbench;
 import exapus.gui.views.reference.ReferenceViewPart;
-import exapus.model.ForestElement;
-import exapus.model.Member;
-import exapus.model.Ref;
+import exapus.model.forest.ForestElement;
+import exapus.model.forest.Member;
+import exapus.model.forest.Ref;
 
 public class FactForestTreeViewPart extends ViewPart implements IDoubleClickListener {
 

@@ -8,15 +8,15 @@ import org.eclipse.swt.widgets.Tree;
 
 import com.google.common.collect.Iterables;
 
-import exapus.model.DeltaEvent;
-import exapus.model.FactForest;
-import exapus.model.ForestElement;
-import exapus.model.IDeltaListener;
-import exapus.model.Member;
-import exapus.model.MemberContainer;
-import exapus.model.PackageLayer;
-import exapus.model.PackageTree;
-import exapus.model.Ref;
+import exapus.model.forest.DeltaEvent;
+import exapus.model.forest.FactForest;
+import exapus.model.forest.ForestElement;
+import exapus.model.forest.IDeltaListener;
+import exapus.model.forest.Member;
+import exapus.model.forest.MemberContainer;
+import exapus.model.forest.PackageLayer;
+import exapus.model.forest.PackageTree;
+import exapus.model.forest.Ref;
 
 public class FactForestTreeContentProvider implements ITreeContentProvider, IDeltaListener {
 
