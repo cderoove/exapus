@@ -106,11 +106,14 @@ public class GraphViz {
 	}
 	
 	public BufferedImage toImage(IGraphFormatter gf, INodeFormatter nf, IEdgeFormatter ef) throws IOException {
-		File dotfile = new File("/Users/cderoove/Desktop/lookatme.dot");
+		File dotfile = File.createTempFile("generateddot", "dot");
 		toDotFile(dotfile,gf,nf,ef);
-		File imgfile = new File("/Users/cderoove/Desktop/lookatme.png");
+		File imgfile = File.createTempFile("converteddot", IMG_EXT);
 		dotToImage(dotfile,imgfile);
-		return ImageIO.read(imgfile);
+		BufferedImage img = ImageIO.read(imgfile);
+		dotfile.delete();
+		imgfile.delete();
+		return img;
 	}
 
 
