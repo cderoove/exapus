@@ -8,6 +8,7 @@ public class NamedSelection {
 	
 	public class ScopedName {
 		public Scope scope;
+		
 		public UqName name;
 	}
 

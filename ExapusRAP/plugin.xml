@@ -64,22 +64,6 @@
             name="Selection View">
       </view>
       <view
-            allowMultiple="true"
-            category="two"
-            class="org.eclipse.rap.demo.DemoBrowserViewPart"
-            icon="icons/internal_browser.gif"
-            id="org.eclipse.rap.demo.DemoBrowserViewPart"
-            name="Browser">
-      </view>
-      <category
-            id="one"
-            name="Category 1">
-      </category>
-      <category
-            id="two"
-            name="Category 2">
-      </category>
-      <view
             class="exapus.gui.views.forest.FactForestTreeViewPart"
             id="exapus.gui.views.FactForestTreeView"
             name="Forest">
@@ -97,7 +81,7 @@
       <view
             class="exapus.gui.views.graph.GraphViewPart"
             id="exapus.gui.views.GraphView"
-            name="Graph View">
+            name="Graph">
       </view>
    </extension>
    <extension

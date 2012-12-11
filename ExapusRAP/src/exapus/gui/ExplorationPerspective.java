@@ -3,6 +3,7 @@ package exapus.gui;
 import org.eclipse.ui.*;
 
 import exapus.gui.views.forest.FactForestTreeViewPart;
+import exapus.gui.views.graph.GraphViewPart;
 import exapus.gui.views.reference.ReferenceViewPart;
 
 public class ExplorationPerspective implements IPerspectiveFactory {
@@ -20,7 +21,7 @@ public class ExplorationPerspective implements IPerspectiveFactory {
 		// "view_id" ID in this placeholder.
 
 		String editorArea = layout.getEditorArea();
-		layout.setEditorAreaVisible(true);
+		layout.setEditorAreaVisible(false); //curently located at the very bottom, spanning all other columns
 
 		// TODO: list available view specifications
 		IFolderLayout specificationsFolder = layout.createFolder("specifications", IPageLayout.TOP, 075f, editorArea);
@@ -34,8 +35,11 @@ public class ExplorationPerspective implements IPerspectiveFactory {
 		IFolderLayout resultsFolder = layout.createFolder("results", IPageLayout.RIGHT, 0.20f, "specifications");
 		resultsFolder.addView(FactForestTreeViewPart.ID); // TODO: meerdere
 															// laten openen
-
+		
+		resultsFolder.addView(GraphViewPart.ID);
+		
 		layout.addStandaloneView(FactForestTreeViewPart.ID_DUAL, true, IPageLayout.RIGHT, 0.80f, "results");
+		
 		
 		layout.addStandaloneView(ReferenceViewPart.ID, true, IPageLayout.BOTTOM, 0.60f, "results");
 		
