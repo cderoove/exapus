@@ -94,6 +94,11 @@
             id="exapus.gui.views.DualFactForestTreeView"
             name="Dual Forest">
       </view>
+      <view
+            class="exapus.gui.views.graph.GraphViewPart"
+            id="exapus.gui.views.GraphView"
+            name="Graph View">
+      </view>
    </extension>
    <extension
          point="org.eclipse.rap.ui.branding">
