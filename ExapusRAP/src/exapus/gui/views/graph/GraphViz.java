@@ -1,17 +1,19 @@
 package exapus.gui.views.graph;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+import javax.imageio.ImageIO;
 
 import com.google.common.base.Joiner;
 
 public class GraphViz {
 
 	public static String DOT_EXC = "/usr/local/Cellar/graphviz/2.28.0/bin/dot";
-	public static String IMG_EXT = "svg";
+	public static String IMG_EXT = "png";
 
 	
 	private Graph graph;
@@ -89,9 +91,9 @@ public class GraphViz {
 	}
 	
 	//TODO: file.createTemp file 
-	private void dotToSVG(File dotfile, File svgfile) throws IOException {
+	private void dotToImage(File dotfile, File imgfile) throws IOException {
 		Runtime rt = Runtime.getRuntime();
-		String[] cmdargs = {DOT_EXC, "-T"+IMG_EXT, dotfile.getAbsolutePath(), "-o", svgfile.getAbsolutePath()};
+		String[] cmdargs = {DOT_EXC, "-T"+IMG_EXT, dotfile.getAbsolutePath(), "-o", imgfile.getAbsolutePath()};
 		Process p;
 		try {
 			p = rt.exec(cmdargs);
@@ -103,11 +105,12 @@ public class GraphViz {
 				
 	}
 	
-	public void toSVGFile(IGraphFormatter gf, INodeFormatter nf, IEdgeFormatter ef) throws IOException {
+	public BufferedImage toImage(IGraphFormatter gf, INodeFormatter nf, IEdgeFormatter ef) throws IOException {
 		File dotfile = new File("/Users/cderoove/Desktop/lookatme.dot");
 		toDotFile(dotfile,gf,nf,ef);
-		File svgfile = new File("/Users/cderoove/Desktop/lookatme.svg");
-		dotToSVG(dotfile, svgfile);
+		File imgfile = new File("/Users/cderoove/Desktop/lookatme.png");
+		dotToImage(dotfile,imgfile);
+		return ImageIO.read(imgfile);
 	}
 
 
