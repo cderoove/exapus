@@ -8,6 +8,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.JavaCore;
 
+import exapus.model.visitors.IForestVisitor;
+
 public class ExapusModel {
 
 	private InboundFactForest apis;
@@ -45,13 +47,10 @@ public class ExapusModel {
 				resetForests();
 				return Status.CANCEL_STATUS;
 			}
-			
 			processProject(p, null); // new SubProgressMonitor(m, 1));
-			
 			m.worked(1);
 		}
 		m.done();
-		
 		return Status.OK_STATUS;
 	}
 	
@@ -60,5 +59,15 @@ public class ExapusModel {
 		if (p.isOpen() && p.isNatureEnabled(JavaCore.NATURE_ID))
 			projects.addProject(JavaCore.create(p), m);
 	}
+	
+	/*
+	public void acceptVisitor(IForestVisitor v) {
+		if(v.visitModel(this)) {
+			getProjectCentricForest().acceptVisitor(v);
+			getAPICentricForest().acceptVisitor(v);
+		}
+		
+	}
+	*/
 
 }

@@ -30,7 +30,9 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import com.google.common.collect.Iterables;
 
-public class PackageLayer extends MemberContainer {
+import exapus.model.visitors.IForestVisitor;
+
+public class PackageLayer extends MemberContainer implements ILayerContainer {
 
 	public PackageLayer(UqName n) {
 		super(n);
@@ -160,6 +162,20 @@ public class PackageLayer extends MemberContainer {
 		Member enclosingMember = getOrAddMember(variableBinding);
 		InboundRef inbound = outbound.toInboundRef();
 		enclosingMember.addAPIReference(inbound);
+	}
+
+	public void acceptVisitor(IForestVisitor v) {
+		if(v.visitPackageLayer(this)) {
+			for(PackageLayer l : getLayers())
+				l.acceptVisitor(v);
+			for(Member m : getMembers())
+				m.acceptVisitor(v);
+		}
+	}
+
+	public void addLayer(PackageLayer l) {
+		layers.add(l);
+		l.setParent(this);
 	}
 
 

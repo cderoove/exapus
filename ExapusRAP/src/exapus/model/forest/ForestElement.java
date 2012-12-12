@@ -20,6 +20,10 @@ public abstract class ForestElement {
 	public ForestElement(UqName id) {
 		this.id = id;
 	}
+	
+	public void setName(UqName id) {
+		this.id = id;
+	}
 
 	public UqName getName() {
 		return id;

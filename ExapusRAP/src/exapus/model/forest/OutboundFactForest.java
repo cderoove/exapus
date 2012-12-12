@@ -5,6 +5,8 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.JavaModelException;
 
+import exapus.model.visitors.IForestVisitor;
+
 public class OutboundFactForest extends FactForest {
 
 	public OutboundFactForest(ExapusModel m) {
@@ -32,4 +34,12 @@ public class OutboundFactForest extends FactForest {
 	public FactForest getDualFactForest() {
 		return getModel().getAPICentricForest();
 	}
+	
+	public void acceptVisitor(IForestVisitor v) {
+		if(v.visitOutboundFactForest(this)) 
+			for(PackageTree t : getPackageTrees()) 
+				t.acceptVisitor(v);
+	}
+
+	
 }

@@ -8,16 +8,18 @@ import java.util.Set;
 
 import com.google.common.collect.Iterables;
 
+import exapus.model.visitors.IForestVisitor;
+
 public abstract class FactForest {
 
 	protected Map<UqName, PackageTree> trees;
-	
+
 	private Set<IDeltaListener> listeners;
 
 	private ExapusModel model;
 
 	private Direction direction;
-	
+
 	public FactForest(ExapusModel m, Direction d) {
 		model = m;
 		trees = new HashMap<UqName, PackageTree>();
@@ -53,7 +55,7 @@ public abstract class FactForest {
 			l.remove(event);
 	}
 
-	
+
 	public Iterable<Member> getAllMembers() {
 		Iterable<Member> members = new ArrayList<Member>();
 		for(PackageTree t : getPackageTrees()) {
@@ -61,7 +63,7 @@ public abstract class FactForest {
 		}
 		return members;
 	}
-	
+
 	public Iterable<Ref> getAllReferences() {
 		Iterable<Ref> references = new ArrayList<Ref>();
 		for(Member m : getAllMembers()) {
@@ -69,12 +71,12 @@ public abstract class FactForest {
 		}
 		return references;
 	}
-				
+
 
 	public Direction getDirection() {
 		return direction;
 	}
-	
+
 	public void addPackageTree(PackageTree tree) {
 		tree.setFactForest(this);
 		trees.put(tree.getName(), tree);
@@ -82,5 +84,8 @@ public abstract class FactForest {
 	}
 
 	public abstract FactForest getDualFactForest();
-	
+
+	public abstract void acceptVisitor(IForestVisitor v);
+
+
 }

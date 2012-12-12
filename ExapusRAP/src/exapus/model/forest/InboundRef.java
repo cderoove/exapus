@@ -2,6 +2,8 @@ package exapus.model.forest;
 
 import org.eclipse.jdt.core.SourceRange;
 
+import exapus.model.visitors.IForestVisitor;
+
 public class InboundRef extends Ref {
 
 	public InboundRef(Pattern p, Element e, QName n, SourceRange r, int l) {
@@ -34,6 +36,13 @@ public class InboundRef extends Ref {
 	public String toString() {
 		return "IR[" +  "<-" + getReferencingElement().toString()  + ":" + getReferencingPattern().toString() +  getReferencingName().toString() + "]";
 	}
+
+	@Override
+	public void acceptVisitor(IForestVisitor v) {
+			v.visitInboundReference(this);
+	}
+	
+	
 	
 
 	

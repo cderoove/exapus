@@ -19,7 +19,9 @@ import org.eclipse.jdt.core.dom.IVariableBinding;
 
 import com.google.common.collect.Iterables;
 
-public class PackageTree extends ForestElement {
+import exapus.model.visitors.IForestVisitor;
+
+public class PackageTree extends ForestElement  implements ILayerContainer  {
 
 	private FactForest forest;
 
@@ -29,13 +31,13 @@ public class PackageTree extends ForestElement {
 		super(name);
 		root = new PackageLayer(new UqName("<rootLayer>"));
 		root.setParent(this); // TODO: this might cause the root layer to show
-								// up in views
+		// up in views
 	}
 
 	public PackageLayer getHiddenRootLayer() {
 		return root;
 	}
-	
+
 	public Iterable<PackageLayer> getLayers() {
 		return root.getLayers();
 	}
@@ -75,44 +77,55 @@ public class PackageTree extends ForestElement {
 	public ICompilationUnit getCorrespondingICompilationUnit() {
 		return null;
 	}
-	
-	
+
+
 	public Iterable<Member> getAllMembers() {
 		return root.getAllMembers();
 	}
-	
+
 	public Iterable<Ref> getAllReferences() {
 		return root.getAllReferences();
 	}
 
+	public void addLayer(PackageLayer l) {
+		root.addLayer(l);
+		l.setParent(this);
+	}
+	
 	public PackageLayer getOrAddLayerForPackageFragment(IPackageFragment packageFragment) {
 		QName qname = new QName(packageFragment);
 		PackageLayer layer = root.getOrAddLayer(qname, this);
 		getParentFactForest().fireUpdate(layer);
 		return layer;
 	}
-	
-	
+
+
 	private PackageLayer getOrAddLayerCorrespondingToTypeBinding(ITypeBinding t) {
 		IType type = (IType) t.getJavaElement();
 		IPackageFragment packageFragment = type.getPackageFragment();
 		PackageLayer layer = getOrAddLayerForPackageFragment(packageFragment);
 		return layer;
 	}
-	
+
 	public void addInboundReference(ITypeBinding b, OutboundRef outbound) {
 		PackageLayer layer = getOrAddLayerCorrespondingToTypeBinding(b);
 		layer.addInboundReference(b, outbound);
 	}
-	
+
 	public void addInboundReference(ITypeBinding t, IMethodBinding b, OutboundRef outbound) {
 		PackageLayer layer = getOrAddLayerCorrespondingToTypeBinding(t);
 		layer.addInboundReference(b, outbound);
 	}
-	
+
 	public void addInboundReference(ITypeBinding t, IVariableBinding b, OutboundRef outbound) {
 		PackageLayer layer = getOrAddLayerCorrespondingToTypeBinding(t);
 		layer.addInboundReference(b, outbound);
+	}
+
+	public void acceptVisitor(IForestVisitor v) {
+		if(v.visitPackageTree(this))
+			for(PackageLayer l : getLayers())
+				l.acceptVisitor(v);
 	}
 
 

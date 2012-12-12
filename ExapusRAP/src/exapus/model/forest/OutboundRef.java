@@ -8,6 +8,8 @@ import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jdt.core.dom.IVariableBinding;
 import org.eclipse.jdt.core.dom.Type;
 
+import exapus.model.visitors.IForestVisitor;
+
 public class OutboundRef extends Ref {
 
 	public static OutboundRef fromNodeToBinding(ASTNode n, ITypeBinding apiType) {
@@ -31,7 +33,7 @@ public class OutboundRef extends Ref {
 		return new OutboundRef(referencingPattern, referencedElement, referencedName, getSourceRange(n), getLineNumber(n));
 	}
 
-	OutboundRef(Pattern referencingPattern, Element referencedElement, QName referencedName, SourceRange r, int l) {
+	public OutboundRef(Pattern referencingPattern, Element referencedElement, QName referencedName, SourceRange r, int l) {
 		super(Direction.OUTBOUND, referencingPattern, referencedElement, referencedName, r, l);
 	}
 	
@@ -59,5 +61,11 @@ public class OutboundRef extends Ref {
 		return "OR[" + getReferencingPattern().toString() + "->" + getReferencedElement().toString() + ":" + getReferencedName().toString() + "]";
 	}
 
+	@Override
+	public void acceptVisitor(IForestVisitor v) {
+			v.visitOutboundReference(this);
+	}
 
+	
+	
 }

@@ -6,6 +6,8 @@ import org.eclipse.jdt.core.dom.IMethodBinding;
 import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jdt.core.dom.IVariableBinding;
 
+import exapus.model.visitors.IForestVisitor;
+
 public class InboundFactForest extends FactForest {
 
 	private PackageTree root;
@@ -32,5 +34,13 @@ public class InboundFactForest extends FactForest {
 	public FactForest getDualFactForest() {
 		return getModel().getProjectCentricForest();
 	}
+	
+	public void acceptVisitor(IForestVisitor v) {
+		if(v.visitInboundFactForest(this)) 
+			for(PackageTree t : getPackageTrees()) 
+				t.acceptVisitor(v);
+	}
+
+	
 
 }

@@ -9,6 +9,8 @@ import org.eclipse.jdt.core.SourceRange;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 
+import exapus.model.visitors.IForestVisitor;
+
 public abstract class Ref extends ForestElement {
 
 	private Ref dual;
@@ -122,6 +124,8 @@ public abstract class Ref extends ForestElement {
 	public void setDual(Ref dual) {
 		this.dual = dual;
 	}
+
+	abstract public void acceptVisitor(IForestVisitor v);
 
 }
 

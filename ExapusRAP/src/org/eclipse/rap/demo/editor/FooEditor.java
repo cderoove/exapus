@@ -14,6 +14,8 @@ package org.eclipse.rap.demo.editor;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.rap.demo.editor.BarEditor;
+import org.eclipse.rap.demo.editor.BazEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.*;

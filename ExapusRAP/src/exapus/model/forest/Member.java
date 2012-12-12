@@ -18,6 +18,8 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 
 import com.google.common.collect.Iterables;
 
+import exapus.model.visitors.IForestVisitor;
+
 public class Member extends MemberContainer {
 
 	public Member(UqName id, Element e) {
@@ -146,6 +148,15 @@ public class Member extends MemberContainer {
 		} catch (JavaModelException e) {
 			e.printStackTrace();
 			return 0;
+		}
+	}
+
+	public void acceptVisitor(IForestVisitor v) {
+		if(v.visitMember(this)) {
+			for(Ref r : getReferences())
+				r.acceptVisitor(v);
+			for(Member m : getMembers())
+				m.acceptVisitor(v);
 		}
 	}
 
