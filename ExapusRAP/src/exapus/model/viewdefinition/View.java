@@ -1,4 +1,4 @@
-package exapus.model.view;
+package exapus.model.viewdefinition;
 
 public class View {
 

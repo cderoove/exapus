@@ -1,4 +1,4 @@
-package exapus.model.view;
+package exapus.model.viewdefinition;
 
 import exapus.model.forest.QName;
 
