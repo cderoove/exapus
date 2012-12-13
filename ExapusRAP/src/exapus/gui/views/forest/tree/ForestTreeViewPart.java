@@ -19,7 +19,7 @@ import org.eclipse.ui.PlatformUI;
 
 import exapus.gui.views.forest.reference.ForestReferenceViewPart;
 import exapus.model.forest.FactForest;
-import exapus.model.world.World;
+import exapus.model.world.Store;
 
 public class ForestTreeViewPart implements IEditorPart, IDoubleClickListener {
 
@@ -111,7 +111,7 @@ public class ForestTreeViewPart implements IEditorPart, IDoubleClickListener {
 		
 		
 		String registeredName = editorInput.getName();
-		FactForest forest = World.getCurrent().getForest(registeredName);
+		FactForest forest = Store.getCurrent().getForest(registeredName);
 		viewer.setInput(forest);
 		
 		

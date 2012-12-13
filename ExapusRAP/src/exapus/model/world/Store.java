@@ -12,19 +12,19 @@ import org.eclipse.core.runtime.jobs.Job;
 import exapus.model.forest.ExapusModel;
 import exapus.model.forest.FactForest;
 
-public class World {
+public class Store {
 
-	private static World current;
+	private static Store current;
 
 	static {
-		current = new World();
+		current = new Store();
 	}
 	
-	public static World getCurrent() {
+	public static Store getCurrent() {
 		return current;
 	}
 	
-	private World() {
+	private Store() {
 		registry = new HashMap<String, FactForest>();
 		workspaceModel = new ExapusModel();
 		registerForest("apis", workspaceModel.getAPICentricForest());

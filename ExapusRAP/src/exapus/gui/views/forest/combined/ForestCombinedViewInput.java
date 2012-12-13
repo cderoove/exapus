@@ -4,7 +4,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 
-import exapus.model.world.World;
+import exapus.model.world.Store;
 
 public class ForestCombinedViewInput implements IEditorInput {
 	
@@ -15,7 +15,7 @@ public class ForestCombinedViewInput implements IEditorInput {
 	private String registeredForestName;
 	
 	public boolean exists() {
-		return World.getCurrent().hasRegisteredForest(registeredForestName);
+		return Store.getCurrent().hasRegisteredForest(registeredForestName);
 	}
 
 	public ImageDescriptor getImageDescriptor() {

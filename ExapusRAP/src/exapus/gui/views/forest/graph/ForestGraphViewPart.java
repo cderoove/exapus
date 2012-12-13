@@ -17,7 +17,7 @@ import org.eclipse.ui.PartInitException;
 import exapus.gui.views.SelectedForestElementImageBrowserViewPart;
 import exapus.model.forest.FactForest;
 import exapus.model.forest.ForestElement;
-import exapus.model.world.World;
+import exapus.model.world.Store;
 
 public class ForestGraphViewPart extends SelectedForestElementImageBrowserViewPart implements IEditorPart {
 	
@@ -91,7 +91,7 @@ public class ForestGraphViewPart extends SelectedForestElementImageBrowserViewPa
     protected void setInput(IEditorInput input) {
     	editorInput = input;
 		String registeredName = input.getName();
-		FactForest forest = World.getCurrent().getForest(registeredName);
+		FactForest forest = Store.getCurrent().getForest(registeredName);
 		//should set forest here
 	}
 
