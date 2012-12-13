@@ -1,5 +1,5 @@
 package exapus.model.viewdefinition;
 
 public enum Perspective {
-	ApiCentric, ProjectCentric
+	API_CENTRIC, PROJECT_CENTRIC
 }
