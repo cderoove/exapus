@@ -1,5 +1,6 @@
 package exapus.model.visitors;
 
+import exapus.model.forest.FactForest;
 import exapus.model.forest.InboundFactForest;
 import exapus.model.forest.InboundRef;
 import exapus.model.forest.Member;
@@ -10,22 +11,20 @@ import exapus.model.forest.PackageTree;
 
 public interface IForestVisitor {
 	
-	//boolean visitModel(ExapusModel m);
-
-	boolean visitInboundFactForest(InboundFactForest forest);
+	public boolean visitInboundFactForest(InboundFactForest forest);
 	
-	boolean visitOutboundFactForest(OutboundFactForest forest);
+	public boolean visitOutboundFactForest(OutboundFactForest forest);
 
-	boolean visitPackageTree(PackageTree packageTree);
+	public boolean visitPackageTree(PackageTree packageTree);
 
-	boolean visitPackageLayer(PackageLayer packageLayer);
+	public boolean visitPackageLayer(PackageLayer packageLayer);
 
-	boolean visitMember(Member member);
+	public boolean visitMember(Member member);
 
-	boolean visitInboundReference(InboundRef inboundRef);
+	public boolean visitInboundReference(InboundRef inboundRef);
 
-	boolean visitOutboundReference(OutboundRef outboundRef);
-	
+	public boolean visitOutboundReference(OutboundRef outboundRef);
 
+	public FactForest copy(FactForest f);
 
 }

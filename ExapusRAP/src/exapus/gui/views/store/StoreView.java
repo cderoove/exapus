@@ -20,7 +20,7 @@ import org.eclipse.ui.part.ViewPart;
 import exapus.gui.editors.view.ViewEditor;
 import exapus.gui.editors.view.ViewEditorInput;
 import exapus.gui.views.forest.reference.ForestReferenceViewPart;
-import exapus.model.view.Store;
+import exapus.model.store.Store;
 import exapus.model.view.View;
 
 public class StoreView extends ViewPart implements IDoubleClickListener {

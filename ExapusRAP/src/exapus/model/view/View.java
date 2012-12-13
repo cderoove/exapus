@@ -1,6 +1,6 @@
 package exapus.model.view;
 
-public class View {
+public abstract class View {
 
 	public View(String n, Perspective p, Selection apis, Selection projects) {
 		name = n;
@@ -49,6 +49,9 @@ public class View {
 		return name;
 	}
 	
+	public abstract boolean isAPICentric();
+	
+	public abstract boolean isProjectCentric();
 	
 	
 }

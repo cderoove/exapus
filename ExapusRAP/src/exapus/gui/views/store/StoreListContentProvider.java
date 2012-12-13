@@ -12,7 +12,7 @@ import exapus.model.IDeltaListener;
 import exapus.model.Observable;
 import exapus.model.forest.FactForest;
 import exapus.model.forest.PackageTree;
-import exapus.model.view.Store;
+import exapus.model.store.Store;
 import exapus.model.view.View;
 
 public class StoreListContentProvider implements IStructuredContentProvider, IDeltaListener {

@@ -1,4 +1,4 @@
-package exapus.model.view;
+package exapus.model.store;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,6 +12,8 @@ import org.eclipse.core.runtime.jobs.Job;
 import exapus.model.Observable;
 import exapus.model.forest.ExapusModel;
 import exapus.model.forest.FactForest;
+import exapus.model.view.View;
+import exapus.model.view.ViewFactory;
 
 public class Store extends Observable {
 

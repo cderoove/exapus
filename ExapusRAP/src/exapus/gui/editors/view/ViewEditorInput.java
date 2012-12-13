@@ -4,7 +4,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 
-import exapus.model.view.Store;
+import exapus.model.store.Store;
 
 public class ViewEditorInput implements IEditorInput {
 
