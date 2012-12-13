@@ -25,10 +25,8 @@ public class Store {
 	}
 	
 	private Store() {
-		registry = new HashMap<String, FactForest>();
+		registry = new HashMap<String, View>();
 		workspaceModel = new ExapusModel();
-		registerForest("apis", workspaceModel.getAPICentricForest());
-		registerForest("projects", workspaceModel.getProjectCentricForest());
 	}
 	
 	public void populateWorkspaceModel() {
@@ -48,26 +46,26 @@ public class Store {
 	
 	private ExapusModel workspaceModel;
 
-	private Map<String, FactForest> registry;
+	private Map<String, View> registry;
 	
 	public ExapusModel getWorkspaceModel() {
 		return workspaceModel;
 	}
 	
-	public void registerForest(String name, FactForest model) {
-		registry.put(name, model);
+	public void registerView(String name, View view) {
+		registry.put(name, view);
 	}
 	
-	public void unregisterForest(String name) {
+	public void unregisterView(String name) {
 		registry.remove(name);
 	}
 	
-	public FactForest getForest(String name) {
+	public View getView(String name) {
 		return registry.get(name);
 	}
 
-	public boolean hasRegisteredForest(String registeredForest) {
-		return registry.containsKey(registeredForest);
+	public boolean hasRegisteredView(String name) {
+		return registry.containsKey(name);
 	}
 	
 	
