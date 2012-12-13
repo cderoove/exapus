@@ -54,6 +54,10 @@ public class Store extends Observable {
 		return workspaceModel;
 	}
 	
+	public Iterable<View> getRegisteredViews() {
+		return registry.values();
+	}
+	
 	public void registerView(View view) {
 		registry.put(view.getName(), view);
 	}

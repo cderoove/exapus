@@ -5,6 +5,7 @@ import org.eclipse.ui.*;
 import exapus.gui.editors.forest.graph.ForestGraphEditor;
 import exapus.gui.editors.forest.tree.ForestTreeEditor;
 import exapus.gui.views.forest.reference.ForestReferenceViewPart;
+import exapus.gui.views.store.StoreView;
 
 public class ExplorationPerspective implements IPerspectiveFactory {
 
@@ -15,12 +16,7 @@ public class ExplorationPerspective implements IPerspectiveFactory {
 		String editorArea = layout.getEditorArea();
 		layout.setEditorAreaVisible(true); 
 
-		IFolderLayout specificationsFolder = layout.createFolder("specifications", IPageLayout.LEFT, 0.25f, editorArea);
-		specificationsFolder.addView("org.eclipse.rap.demo.DemoTreeViewPartI"); // project-centric
-																				// or
-																				// api-centric
-
-		
+		layout.addStandaloneView(StoreView.ID, true, IPageLayout.LEFT, 0.25f, editorArea);
 		layout.addStandaloneView(ForestReferenceViewPart.ID, true, IPageLayout.BOTTOM, 0.60f, editorArea);
 		
 		

@@ -14,59 +14,22 @@
          point="org.eclipse.ui.views">
       <view
             class="org.eclipse.ui.ExtensionFactory:progressView"
-            icon="icons/pview.gif"
             id="org.eclipse.ui.views.ProgressView"
             name="Progress">
       </view>
-      <view
-            category="one"
-            class="org.eclipse.rap.demo.DemoTreeViewPart"
-            icon="icons/contact.gif"
-            id="org.eclipse.rap.demo.DemoTreeViewPartI"
-            name="View I">
-      </view>
-      <view
-            category="one"
-            class="org.eclipse.rap.demo.DemoTreeViewPart"
-            icon="icons/info.gif"
-            id="org.eclipse.rap.demo.DemoTreeViewPartII"
-            name="View II">
-      </view>
       
       
       
       <view
-            category="one"
-            class="org.eclipse.rap.demo.DemoTreeViewPart"
-            icon="icons/login.gif"
-            id="org.eclipse.rap.demo.DemoTreeViewPartIII"
-            name="View III">
-      </view>
-      <view
-            category="two"
-            class="org.eclipse.rap.demo.DemoTreeViewPart"
-            icon="icons/register.gif"
-            id="org.eclipse.rap.demo.DemoTreeViewPartIV"
-            name="View V">
-      </view>
-      <view
-            category="two"
-            class="org.eclipse.rap.demo.DemoTableViewPart"
-            icon="icons/search.gif"
-            id="org.eclipse.rap.demo.DemoTableViewPart"
-            name="View IV">
-      </view>
-      <view
-            category="two"
-            class="org.eclipse.rap.demo.DemoSelectionViewPart"
-            icon="icons/status.gif"
-            id="org.eclipse.rap.demo.DemoSelectionViewPart"
-            name="Selection View">
+            allowMultiple="false"
+            class="exapus.gui.views.store.StoreView"
+            id="exapus.gui.views.store.StoreView"
+            name="Views">
       </view>
       <view
             class="exapus.gui.views.forest.reference.ForestReferenceViewPart"
             id="exapus.gui.views.forest.ForestReferenceView"
-            name="Reference View">
+            name="Source">
       </view>
    </extension>
    <extension
@@ -84,7 +47,7 @@
       <editor
             class="exapus.gui.editors.view.ViewEditor"
             id="exapus.gui.views.forest.ForestCombinedView"
-            name="Combined Forest View">
+            name="View">
       </editor>
    </extension>
    <extension
