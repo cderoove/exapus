@@ -1,5 +1,6 @@
 package exapus.model;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class Observable {
@@ -7,7 +8,7 @@ public class Observable {
 	protected Set<IDeltaListener> listeners;
 
 	public Observable() {
-		super();
+		listeners = new HashSet<IDeltaListener>();
 	}
 
 	public void addListener(IDeltaListener l) {

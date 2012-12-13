@@ -22,7 +22,6 @@ public abstract class FactForest extends Observable {
 	public FactForest(ExapusModel m, Direction d) {
 		model = m;
 		trees = new HashMap<UqName, PackageTree>();
-		listeners = new HashSet<IDeltaListener>();
 		direction = d;
 	}
 
