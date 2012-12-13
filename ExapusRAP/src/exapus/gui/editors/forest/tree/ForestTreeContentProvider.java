@@ -8,13 +8,14 @@ import org.eclipse.swt.widgets.Tree;
 
 import com.google.common.collect.Iterables;
 
+import exapus.gui.util.Util;
 import exapus.model.DeltaEvent;
 import exapus.model.IDeltaListener;
 import exapus.model.forest.FactForest;
 import exapus.model.forest.ForestElement;
 import exapus.model.forest.Member;
 import exapus.model.forest.MemberContainer;
-import exapus.model.forest.Observable;
+import exapus.model.Observable;
 import exapus.model.forest.PackageLayer;
 import exapus.model.forest.PackageTree;
 import exapus.model.forest.Ref;
@@ -72,7 +73,7 @@ public class ForestTreeContentProvider implements ITreeContentProvider, IDeltaLi
 			Iterable<Ref> references = member.getReferences();
 			return Iterables.toArray(Iterables.concat(members, references), Object.class);
 		}
-		
+
 		return null;
 	}
 
@@ -83,7 +84,7 @@ public class ForestTreeContentProvider implements ITreeContentProvider, IDeltaLi
 			return fe.getParent();
 		}
 		return null;
-		
+
 	}
 
 	@Override
@@ -93,18 +94,11 @@ public class ForestTreeContentProvider implements ITreeContentProvider, IDeltaLi
 		return getChildren(element).length > 0;
 	}
 
-	public void asyncExecIfNotDisposed(Runnable r) {
-		Tree tree = viewer.getTree();
-		if (!tree.isDisposed()) {
-			Display display = tree.getDisplay();
-			display.asyncExec(r);
-		}
-	}
 
 	@Override
 	public void add(DeltaEvent event) {
 		final ForestElement element = (ForestElement) event.receiver();
-		asyncExecIfNotDisposed(new Runnable() {
+		Util.asyncUIThreadIfWidgetNotDisposed(viewer.getControl(), new Runnable() {
 			public void run() {
 				if (element instanceof Ref)
 					viewer.refresh(element.getParentMember(), true);
@@ -119,7 +113,7 @@ public class ForestTreeContentProvider implements ITreeContentProvider, IDeltaLi
 	@Override
 	public void remove(final DeltaEvent event) {
 		final ForestElement element = (ForestElement) event.receiver();
-		asyncExecIfNotDisposed(new Runnable() {
+		Util.asyncUIThreadIfWidgetNotDisposed(viewer.getControl(), new Runnable() {
 			public void run() {
 				if (element instanceof PackageTree)
 					viewer.refresh();
