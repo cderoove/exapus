@@ -11,12 +11,14 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
 import exapus.gui.editors.forest.graph.ForestGraphEditor;
 import exapus.gui.editors.forest.tree.ForestTreeEditor;
+import exapus.gui.editors.view.definition.ViewDefinitionEditor;
 
 public class ViewEditor extends MultiPageEditorPart {
 
 	private ForestTreeEditor forestTree;
 	private ForestGraphEditor forestGraph;
-
+	private ViewDefinitionEditor viewDefinition;
+	
 	public static final String ID = "exapus.gui.views.forest.ForestCombinedView";
 
 	public ViewEditor() {
@@ -42,8 +44,11 @@ public class ViewEditor extends MultiPageEditorPart {
 	protected void createPages() {
 		forestTree = new ForestTreeEditor();
 		forestGraph = new ForestGraphEditor();
+		viewDefinition = new ViewDefinitionEditor();
 		int index;
 		try {
+			index = addPage(viewDefinition, getEditorInput());
+			setPageText(index, "View");
 			index = addPage(forestTree, getEditorInput());
 			setPageText(index, "Table");
 			index = addPage(forestGraph, getEditorInput());
