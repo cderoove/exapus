@@ -1,4 +1,4 @@
-package exapus.gui.views.forest.graph;
+package exapus.gui.editors.forest.graph;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -14,12 +14,12 @@ import org.eclipse.ui.IPropertyListener;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.PartInitException;
 
-import exapus.gui.views.SelectedForestElementImageBrowserViewPart;
+import exapus.gui.editors.SelectedForestElementImageBrowserViewPart;
 import exapus.model.forest.FactForest;
 import exapus.model.forest.ForestElement;
 import exapus.model.view.Store;
 
-public class ForestGraphViewPart extends SelectedForestElementImageBrowserViewPart implements IEditorPart {
+public class ForestGraphEditor extends SelectedForestElementImageBrowserViewPart implements IEditorPart {
 	
 	private IEditorSite editorSite;
 	private IEditorInput editorInput;
@@ -91,8 +91,8 @@ public class ForestGraphViewPart extends SelectedForestElementImageBrowserViewPa
     protected void setInput(IEditorInput input) {
     	editorInput = input;
 		String registeredName = input.getName();
-		FactForest forest = Store.getCurrent().getForest(registeredName);
-		//should set forest here
+		//TODO: compute forest
+		//FactForest forest = Store.getCurrent().getForest(registeredName);
 	}
 
 

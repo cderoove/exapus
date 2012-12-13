@@ -28,7 +28,7 @@ import de.java2html.javasource.JavaSource;
 import de.java2html.javasource.JavaSourceParser;
 import de.java2html.options.JavaSourceConversionOptions;
 import de.java2html.util.RGB;
-import exapus.gui.views.SelectedForestElementBrowserViewPart;
+import exapus.gui.editors.SelectedForestElementBrowserViewPart;
 import exapus.model.forest.Direction;
 import exapus.model.forest.ForestElement;
 import exapus.model.forest.Member;

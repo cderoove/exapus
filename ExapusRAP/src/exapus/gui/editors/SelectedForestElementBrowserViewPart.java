@@ -1,4 +1,4 @@
-package exapus.gui.views;
+package exapus.gui.editors;
 
 
 import org.eclipse.jface.viewers.ISelection;

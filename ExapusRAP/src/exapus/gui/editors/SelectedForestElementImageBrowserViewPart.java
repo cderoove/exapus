@@ -1,4 +1,4 @@
-package exapus.gui.views;
+package exapus.gui.editors;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;

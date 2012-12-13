@@ -1,4 +1,4 @@
-package exapus.gui.views.forest.tree;
+package exapus.gui.editors.forest.tree;
 
 import org.eclipse.jface.viewers.CellLabelProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;

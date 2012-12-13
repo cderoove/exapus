@@ -1,4 +1,4 @@
-package exapus.gui.views.forest.combined;
+package exapus.gui.editors.view;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
@@ -6,16 +6,16 @@ import org.eclipse.ui.IPersistableElement;
 
 import exapus.model.view.Store;
 
-public class ForestCombinedViewInput implements IEditorInput {
+public class ViewEditorInput implements IEditorInput {
 	
-	public ForestCombinedViewInput(String forestName) {
-		registeredForestName = forestName;
+	public ViewEditorInput(String name) {
+		registeredViewName = name;
 	}
 
-	private String registeredForestName;
+	private String registeredViewName;
 	
 	public boolean exists() {
-		return Store.getCurrent().hasRegisteredForest(registeredForestName);
+		return Store.getCurrent().hasRegisteredView(registeredViewName);
 	}
 
 	public ImageDescriptor getImageDescriptor() {
@@ -23,7 +23,7 @@ public class ForestCombinedViewInput implements IEditorInput {
 	}
 
 	public String getName() {
-		return registeredForestName;
+		return registeredViewName;
 	}
 
 	public IPersistableElement getPersistable() {

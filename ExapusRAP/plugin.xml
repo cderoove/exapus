@@ -82,7 +82,7 @@
    <extension
          point="org.eclipse.ui.editors">
       <editor
-            class="exapus.gui.views.forest.combined.ForestCombinedViewPart"
+            class="exapus.gui.editors.view.ViewEditor"
             id="exapus.gui.views.forest.ForestCombinedView"
             name="Combined Forest View">
       </editor>

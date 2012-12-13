@@ -1,4 +1,4 @@
-package exapus.gui.views.forest.graph;
+package exapus.gui.editors.forest.graph;
 
 import java.awt.image.BufferedImage;
 import java.io.File;

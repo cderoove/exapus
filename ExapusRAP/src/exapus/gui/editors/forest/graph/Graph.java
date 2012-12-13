@@ -1,4 +1,4 @@
-package exapus.gui.views.forest.graph;
+package exapus.gui.editors.forest.graph;
 
 import java.util.ArrayList;
 import java.util.HashMap;

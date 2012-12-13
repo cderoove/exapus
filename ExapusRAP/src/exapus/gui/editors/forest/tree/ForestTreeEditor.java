@@ -1,4 +1,4 @@
-package exapus.gui.views.forest.tree;
+package exapus.gui.editors.forest.tree;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -21,7 +21,7 @@ import exapus.gui.views.forest.reference.ForestReferenceViewPart;
 import exapus.model.forest.FactForest;
 import exapus.model.view.Store;
 
-public class ForestTreeViewPart implements IEditorPart, IDoubleClickListener {
+public class ForestTreeEditor implements IEditorPart, IDoubleClickListener {
 
 	private IEditorSite editorSite; 
 	private IEditorInput editorInput;
@@ -110,10 +110,12 @@ public class ForestTreeViewPart implements IEditorPart, IDoubleClickListener {
 		 */
 		
 		
+		/*
+		 * TODO: compute view
 		String registeredName = editorInput.getName();
 		FactForest forest = Store.getCurrent().getForest(registeredName);
 		viewer.setInput(forest);
-		
+		*/
 		
 		viewer.addDoubleClickListener(this);
 

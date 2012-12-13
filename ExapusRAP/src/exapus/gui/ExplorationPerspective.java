@@ -2,9 +2,9 @@ package exapus.gui;
 
 import org.eclipse.ui.*;
 
-import exapus.gui.views.forest.graph.ForestGraphViewPart;
+import exapus.gui.editors.forest.graph.ForestGraphEditor;
+import exapus.gui.editors.forest.tree.ForestTreeEditor;
 import exapus.gui.views.forest.reference.ForestReferenceViewPart;
-import exapus.gui.views.forest.tree.ForestTreeViewPart;
 
 public class ExplorationPerspective implements IPerspectiveFactory {
 

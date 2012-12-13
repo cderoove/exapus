@@ -12,8 +12,8 @@ import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 
-import exapus.gui.views.forest.combined.ForestCombinedViewInput;
-import exapus.gui.views.forest.combined.ForestCombinedViewPart;
+import exapus.gui.editors.view.ViewEditorInput;
+import exapus.gui.editors.view.ViewEditor;
 import exapus.gui.views.forest.reference.ForestReferenceViewPart;
 import exapus.model.view.Store;
 
@@ -49,9 +49,9 @@ public class ExapusWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 
 		//TODO
 		IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		ForestCombinedViewInput input = new ForestCombinedViewInput("apis");
+		ViewEditorInput input = new ViewEditorInput("apis");
 		try {
-			activePage.openEditor(input, ForestCombinedViewPart.ID, true);
+			activePage.openEditor(input, ViewEditor.ID, true);
 		} catch (PartInitException e) {
 			e.printStackTrace();
 		}

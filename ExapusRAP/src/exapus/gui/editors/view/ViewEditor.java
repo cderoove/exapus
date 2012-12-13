@@ -1,4 +1,4 @@
-package exapus.gui.views.forest.combined;
+package exapus.gui.editors.view;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.ISelection;
@@ -9,17 +9,17 @@ import org.eclipse.ui.*;
 import org.eclipse.ui.part.MultiPageEditorPart;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
-import exapus.gui.views.forest.graph.ForestGraphViewPart;
-import exapus.gui.views.forest.tree.ForestTreeViewPart;
+import exapus.gui.editors.forest.graph.ForestGraphEditor;
+import exapus.gui.editors.forest.tree.ForestTreeEditor;
 
-public class ForestCombinedViewPart extends MultiPageEditorPart {
+public class ViewEditor extends MultiPageEditorPart {
 
-	private ForestTreeViewPart forestTree;
-	private ForestGraphViewPart forestGraph;
+	private ForestTreeEditor forestTree;
+	private ForestGraphEditor forestGraph;
 
 	public static final String ID = "exapus.gui.views.forest.ForestCombinedView";
 
-	public ForestCombinedViewPart() {
+	public ViewEditor() {
 		super();
 	}
 
@@ -40,8 +40,8 @@ public class ForestCombinedViewPart extends MultiPageEditorPart {
 
 	@Override
 	protected void createPages() {
-		forestTree = new ForestTreeViewPart();
-		forestGraph = new ForestGraphViewPart();
+		forestTree = new ForestTreeEditor();
+		forestGraph = new ForestGraphEditor();
 		int index;
 		try {
 			index = addPage(forestTree, getEditorInput());
