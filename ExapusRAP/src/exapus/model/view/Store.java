@@ -1,4 +1,4 @@
-package exapus.model.world;
+package exapus.model.view;
 
 import java.util.HashMap;
 import java.util.Map;

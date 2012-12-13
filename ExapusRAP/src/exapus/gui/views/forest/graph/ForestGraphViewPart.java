@@ -17,7 +17,7 @@ import org.eclipse.ui.PartInitException;
 import exapus.gui.views.SelectedForestElementImageBrowserViewPart;
 import exapus.model.forest.FactForest;
 import exapus.model.forest.ForestElement;
-import exapus.model.world.Store;
+import exapus.model.view.Store;
 
 public class ForestGraphViewPart extends SelectedForestElementImageBrowserViewPart implements IEditorPart {
 	

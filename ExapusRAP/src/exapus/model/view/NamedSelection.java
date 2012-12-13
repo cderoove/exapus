@@ -1,4 +1,4 @@
-package exapus.model.viewdefinition;
+package exapus.model.view;
 
 import java.util.List;
 

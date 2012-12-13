@@ -19,7 +19,7 @@ import org.eclipse.ui.PlatformUI;
 
 import exapus.gui.views.forest.reference.ForestReferenceViewPart;
 import exapus.model.forest.FactForest;
-import exapus.model.world.Store;
+import exapus.model.view.Store;
 
 public class ForestTreeViewPart implements IEditorPart, IDoubleClickListener {
 
