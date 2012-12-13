@@ -1,4 +1,4 @@
-package exapus.gui.views.reference;
+package exapus.gui.views.forest.reference;
 
 import java.util.HashMap;
 import java.util.Map;

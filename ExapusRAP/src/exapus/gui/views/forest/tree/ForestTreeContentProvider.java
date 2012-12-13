@@ -1,4 +1,4 @@
-package exapus.gui.views.forest;
+package exapus.gui.views.forest.tree;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -18,7 +18,7 @@ import exapus.model.forest.PackageLayer;
 import exapus.model.forest.PackageTree;
 import exapus.model.forest.Ref;
 
-public class FactForestTreeContentProvider implements ITreeContentProvider, IDeltaListener {
+public class ForestTreeContentProvider implements ITreeContentProvider, IDeltaListener {
 
 	protected TreeViewer viewer;
 
@@ -55,7 +55,8 @@ public class FactForestTreeContentProvider implements ITreeContentProvider, IDel
 	}
 
 	@Override
-	public Object[] getChildren(Object parentElement) {
+	//TODO: getChildren() should be implemented on ForestElement, preferably in a thread-safe manner
+	public  Object[] getChildren(Object parentElement) {
 		if (parentElement instanceof PackageTree)
 			return Iterables.toArray(((PackageTree) parentElement).getLayers(), PackageLayer.class);
 		if (parentElement instanceof PackageLayer) {
@@ -70,6 +71,7 @@ public class FactForestTreeContentProvider implements ITreeContentProvider, IDel
 			Iterable<Ref> references = member.getReferences();
 			return Iterables.toArray(Iterables.concat(members, references), Object.class);
 		}
+		
 		return null;
 	}
 

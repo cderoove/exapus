@@ -2,9 +2,9 @@ package exapus.gui;
 
 import org.eclipse.ui.*;
 
-import exapus.gui.views.forest.FactForestTreeViewPart;
-import exapus.gui.views.graph.GraphViewPart;
-import exapus.gui.views.reference.ReferenceViewPart;
+import exapus.gui.views.forest.graph.ForestGraphViewPart;
+import exapus.gui.views.forest.reference.ForestReferenceViewPart;
+import exapus.gui.views.forest.tree.ForestTreeViewPart;
 
 public class ExplorationPerspective implements IPerspectiveFactory {
 
@@ -12,36 +12,18 @@ public class ExplorationPerspective implements IPerspectiveFactory {
 
 	@Override
 	public void createInitialLayout(final IPageLayout layout) {
-		// TODO: You can also add placeholders for views via the
-		// layout.addPlaceholder() method call. This methods accepts wildcards
-		// and a View with a matching ID would open in this area. For example if
-		// you want to open all views in a specific place you could use the
-		// layout.addPlaceholder("*",...) method call, or
-		// layout.addPlaceholder("view_id",....) to open a View with the
-		// "view_id" ID in this placeholder.
-
 		String editorArea = layout.getEditorArea();
-		layout.setEditorAreaVisible(false); //curently located at the very bottom, spanning all other columns
+		layout.setEditorAreaVisible(true); 
 
-		// TODO: list available view specifications
-		IFolderLayout specificationsFolder = layout.createFolder("specifications", IPageLayout.TOP, 075f, editorArea);
+		IFolderLayout specificationsFolder = layout.createFolder("specifications", IPageLayout.LEFT, 0.25f, editorArea);
 		specificationsFolder.addView("org.eclipse.rap.demo.DemoTreeViewPartI"); // project-centric
 																				// or
 																				// api-centric
 
-		// layout.addStandaloneView("org.eclipse.rap.demo.DemoTreeViewPartI",
-		// false, IPageLayout.TOP, 075f, editorArea);
-
-		IFolderLayout resultsFolder = layout.createFolder("results", IPageLayout.RIGHT, 0.20f, "specifications");
-		resultsFolder.addView(FactForestTreeViewPart.ID); // TODO: meerdere
-															// laten openen
 		
-		resultsFolder.addView(GraphViewPart.ID);
-		
-		layout.addStandaloneView(FactForestTreeViewPart.ID_DUAL, true, IPageLayout.RIGHT, 0.80f, "results");
+		layout.addStandaloneView(ForestReferenceViewPart.ID, true, IPageLayout.BOTTOM, 0.60f, editorArea);
 		
 		
-		layout.addStandaloneView(ReferenceViewPart.ID, true, IPageLayout.BOTTOM, 0.60f, "results");
 		
 		//layout.addStandaloneView("org.eclipse.ui.views.properties.PropertySheet", true, IPageLayout.BOTTOM, 0.60f, "results");
 		

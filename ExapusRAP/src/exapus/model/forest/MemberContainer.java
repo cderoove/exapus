@@ -10,6 +10,8 @@ import org.eclipse.jdt.core.dom.IMethodBinding;
 import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jdt.core.dom.IVariableBinding;
 
+import com.google.common.collect.ImmutableList;
+
 public abstract class MemberContainer extends ForestElement {
 
 	protected List<Member> members;
@@ -22,7 +24,7 @@ public abstract class MemberContainer extends ForestElement {
 	public Iterable<Member> getMembers() {
 		return members;
 	}
-	
+		
 	public void addMember(Member m) {
 		members.add(m);
 		m.setParent(this);

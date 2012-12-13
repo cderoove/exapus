@@ -25,6 +25,7 @@ public interface IForestVisitor {
 	boolean visitInboundReference(InboundRef inboundRef);
 
 	boolean visitOutboundReference(OutboundRef outboundRef);
+	
 
 
 }

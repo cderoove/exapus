@@ -1,4 +1,4 @@
-package exapus.gui.views.forest;
+package exapus.gui.views.forest.tree;
 
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.swt.graphics.Image;
@@ -12,7 +12,7 @@ import exapus.model.forest.PackageLayer;
 import exapus.model.forest.PackageTree;
 import exapus.model.forest.Ref;
 
-public class FactForestTreeLabelProviders {
+public class ForestTreeLabelProviders {
 
 	private static final Image PKTREE_IMG = AbstractUIPlugin.imageDescriptorFromPlugin("Exapus", "icons/packagefolder_obj.gif").createImage();
 	private static final Image PKLAYER_IMG = AbstractUIPlugin.imageDescriptorFromPlugin("Exapus", "icons/package_obj.gif").createImage();

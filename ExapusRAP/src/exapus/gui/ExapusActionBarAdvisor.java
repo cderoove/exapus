@@ -1,40 +1,24 @@
 package exapus.gui;
 
-import java.net.URL;
-import java.util.Dictionary;
-
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.jface.action.*;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.wizard.WizardDialog;
-
-import org.eclipse.rap.demo.editor.FooEditorInput;
-/*
- import org.eclipse.rap.demo.wizard.SurveyWizard;
- */
-
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.ICoolBarManager;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.IStatusLineManager;
+import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.action.ToolBarContributionItem;
+import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.*;
-import org.eclipse.ui.actions.ActionFactory;
-import org.eclipse.ui.actions.ContributionItemFactory;
-import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
-import org.eclipse.ui.browser.IWebBrowser;
-import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.osgi.framework.*;
 
-import exapus.gui.actions.PopulateExapusModelAction;
-import exapus.model.forest.ExapusModel;
 
 public class ExapusActionBarAdvisor extends ActionBarAdvisor {
 
 	private Action aboutAction;
 	private Action newEditorAction;
-	private Action populateModelAction;
+	//private Action populateModelAction;
 
 	public ExapusActionBarAdvisor(final IActionBarConfigurer configurer) {
 		super(configurer);
@@ -62,17 +46,20 @@ public class ExapusActionBarAdvisor extends ActionBarAdvisor {
 		 * register( preferencesAction );
 		 */
 
+		/*
 		populateModelAction = new PopulateExapusModelAction();
 		register(populateModelAction);
-
+		 */
 		newEditorAction = new Action() {
 
 			public void run() {
+				/*
 				try {
-					window.getActivePage().openEditor(new FooEditorInput(ExapusActionBarAdvisor.this), "org.eclipse.rap.demo.editor", true);
+					//window.getActivePage().openEditor(new FooEditorInput(ExapusActionBarAdvisor.this), "org.eclipse.rap.demo.editor", true);
 				} catch (PartInitException e) {
 					e.printStackTrace();
 				}
+				*/
 			}
 		};
 		newEditorAction.setText("Open new editor");
@@ -160,7 +147,7 @@ public class ExapusActionBarAdvisor extends ActionBarAdvisor {
 	private void createWorkbenchToolBar(final ICoolBarManager coolBar) {
 		IToolBarManager toolbar = new ToolBarManager(SWT.FLAT | SWT.RIGHT);
 		coolBar.add(new ToolBarContributionItem(toolbar, "workbench"));
-		toolbar.add(populateModelAction);
+		//toolbar.add(populateModelAction);
 	}
 
 	private void createEditorToolBar(final ICoolBarManager coolBar) {

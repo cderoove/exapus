@@ -1,4 +1,4 @@
-package exapus.gui.views.reference;
+package exapus.gui.views.forest.reference;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,9 +38,9 @@ import exapus.model.forest.Ref;
 
 //TODO: could try being nothing of clicks through BrowserFunction, or clientSide script (incubator components)
 
-public class ReferenceViewPart extends SelectedForestElementBrowserViewPart {
+public class ForestReferenceViewPart extends SelectedForestElementBrowserViewPart {
 
-	public static final String ID = "exapus.gui.views.ReferenceView";
+	public static final String ID = "exapus.gui.views.forest.ForestReferenceView";
 
 	private JavaSource2HTMLLineHighlightingConverter converter;
 

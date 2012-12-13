@@ -1,6 +1,7 @@
 package exapus.model.forest;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -16,6 +17,7 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 
 import exapus.model.visitors.IForestVisitor;
@@ -25,7 +27,7 @@ public class Member extends MemberContainer {
 	public Member(UqName id, Element e) {
 		super(id);
 		element = e;
-		references = new ArrayList<Ref>();
+		references =  Collections.synchronizedList(new ArrayList<Ref>());
 	}
 
 
@@ -40,7 +42,7 @@ public class Member extends MemberContainer {
 	public Iterable<Ref> getReferences() {
 		return references;
 	}
-
+	
 	public Iterable<Ref> getAllReferences() {
 		Iterable<Ref> references = getReferences();
 		for(Member m : getMembers()) {

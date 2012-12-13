@@ -8,17 +8,12 @@ import org.eclipse.ui.application.WorkbenchAdvisor;
 import org.eclipse.ui.internal.util.PrefUtil;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
 
-import exapus.gui.actions.PopulateExapusModelAction;
-import exapus.model.forest.ExapusModel;
-
 public class ExapusWorkbench implements IEntryPoint {
 
 	/*
 	 * private static final String DEMO_PRESENTATION =
 	 * "org.eclipse.rap.demo.presentation";
 	 */
-
-	public static ExapusModel exapusModel;
 
 	public int createUI() {
 

@@ -1,4 +1,4 @@
-package exapus.gui.views.graph;
+package exapus.gui.views.forest.graph;
 
 public class Edge {
 	
