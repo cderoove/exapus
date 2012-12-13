@@ -18,8 +18,8 @@ public class ViewFactory {
 	
 	
 	private ViewFactory() {
-		completeAPIView = new APICentricView(UniversalSelection.getCurrent(),UniversalSelection.getCurrent());
-		completeProjectView = new ProjectCentricView(UniversalSelection.getCurrent(),UniversalSelection.getCurrent());
+		completeAPIView = new APICentricView("All APIs", UniversalSelection.getCurrent(),UniversalSelection.getCurrent());
+		completeProjectView = new ProjectCentricView("All Projects", UniversalSelection.getCurrent(),UniversalSelection.getCurrent());
 	}
 	
 	public View completeAPIView() {

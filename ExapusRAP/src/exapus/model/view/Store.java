@@ -9,10 +9,11 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 
+import exapus.model.Observable;
 import exapus.model.forest.ExapusModel;
 import exapus.model.forest.FactForest;
 
-public class Store {
+public class Store extends Observable {
 
 	private static Store current;
 
@@ -27,6 +28,7 @@ public class Store {
 	private Store() {
 		registry = new HashMap<String, View>();
 		workspaceModel = new ExapusModel();
+		registerDefaultViews();
 	}
 	
 	public void populateWorkspaceModel() {
@@ -52,8 +54,8 @@ public class Store {
 		return workspaceModel;
 	}
 	
-	public void registerView(String name, View view) {
-		registry.put(name, view);
+	public void registerView(View view) {
+		registry.put(view.getName(), view);
 	}
 	
 	public void unregisterView(String name) {
@@ -67,7 +69,11 @@ public class Store {
 	public boolean hasRegisteredView(String name) {
 		return registry.containsKey(name);
 	}
-	
+		
+	protected void registerDefaultViews() {
+		registerView(ViewFactory.getCurrent().completeAPIView());
+		registerView(ViewFactory.getCurrent().completeProjectView());
+	}
 	
 	
 }

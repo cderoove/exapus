@@ -2,8 +2,8 @@ package exapus.model.view;
 
 public class APICentricView extends View {
 
-	public APICentricView(Selection apis, Selection projects) {
-		super(Perspective.API_CENTRIC, apis, projects);
+	public APICentricView(String name, Selection apis, Selection projects) {
+		super(name, Perspective.API_CENTRIC, apis, projects);
 	}
 	
 

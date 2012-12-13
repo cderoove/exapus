@@ -2,7 +2,8 @@ package exapus.model.view;
 
 public class View {
 
-	public View(Perspective p, Selection apis, Selection projects) {
+	public View(String n, Perspective p, Selection apis, Selection projects) {
+		name = n;
 		perspective = p;
 		apiselection = apis;
 		projectselection = projects;
@@ -13,6 +14,8 @@ public class View {
 	private Selection apiselection;
 	
 	private Selection projectselection;
+	
+	private String name;
 
 	public Perspective getPerspective() {
 		return perspective;
@@ -36,6 +39,10 @@ public class View {
 
 	public void setProjectSelection(Selection selection) {
 		this.projectselection = selection;
+	}
+
+	public String getName() {
+		return name;
 	}
 	
 	
