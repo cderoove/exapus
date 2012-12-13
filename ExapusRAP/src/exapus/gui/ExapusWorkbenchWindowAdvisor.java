@@ -15,7 +15,7 @@ import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import exapus.gui.editors.view.ViewEditorInput;
 import exapus.gui.editors.view.ViewEditor;
 import exapus.gui.views.forest.reference.ForestReferenceViewPart;
-import exapus.model.view.Store;
+import exapus.model.store.Store;
 
 public class ExapusWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 
