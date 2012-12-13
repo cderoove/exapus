@@ -8,12 +8,13 @@ import org.eclipse.swt.widgets.Tree;
 
 import com.google.common.collect.Iterables;
 
-import exapus.model.forest.DeltaEvent;
+import exapus.model.DeltaEvent;
+import exapus.model.IDeltaListener;
 import exapus.model.forest.FactForest;
 import exapus.model.forest.ForestElement;
-import exapus.model.forest.IDeltaListener;
 import exapus.model.forest.Member;
 import exapus.model.forest.MemberContainer;
+import exapus.model.forest.Observable;
 import exapus.model.forest.PackageLayer;
 import exapus.model.forest.PackageTree;
 import exapus.model.forest.Ref;
@@ -30,18 +31,18 @@ public class ForestTreeContentProvider implements ITreeContentProvider, IDeltaLi
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		this.viewer = (TreeViewer) viewer;
 		if (oldInput != null) {
-			removeListenerFrom((FactForest) oldInput);
+			removeListenerFrom((Observable) oldInput);
 		}
 		if (newInput != null) {
-			addListenerTo((FactForest) newInput);
+			addListenerTo((Observable) newInput);
 		}
 	}
 
-	private void removeListenerFrom(FactForest oldInput) {
+	private void removeListenerFrom(Observable oldInput) {
 		oldInput.removeListener(this);
 	}
 
-	private void addListenerTo(FactForest newInput) {
+	private void addListenerTo(Observable newInput) {
 		newInput.addListener(this);
 	}
 

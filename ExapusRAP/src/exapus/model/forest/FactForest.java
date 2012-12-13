@@ -4,17 +4,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import com.google.common.collect.Iterables;
 
+import exapus.model.IDeltaListener;
+import exapus.model.Observable;
 import exapus.model.visitors.IForestVisitor;
 
-public abstract class FactForest {
+public abstract class FactForest extends Observable {
 
 	protected Map<UqName, PackageTree> trees;
-
-	private Set<IDeltaListener> listeners;
 
 	private ExapusModel model;
 
@@ -34,27 +33,6 @@ public abstract class FactForest {
 	public Iterable<PackageTree> getPackageTrees() {
 		return trees.values();
 	}
-
-	public void addListener(IDeltaListener l) {
-		listeners.add(l);
-	}
-
-	public boolean removeListener(IDeltaListener l) {
-		return listeners.remove(l);
-	}
-
-	protected void fireUpdate(Object added) {
-		DeltaEvent event = new DeltaEvent(added);
-		for (IDeltaListener l : listeners)
-			l.add(event);
-	}
-
-	protected void fireRemove(Object removed) {
-		DeltaEvent event = new DeltaEvent(removed);
-		for (IDeltaListener l : listeners)
-			l.remove(event);
-	}
-
 
 	public Iterable<Member> getAllMembers() {
 		Iterable<Member> members = new ArrayList<Member>();

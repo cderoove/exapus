@@ -1,4 +1,4 @@
-package exapus.model.forest;
+package exapus.model;
 
 public class DeltaEvent {
 	protected Object actedUpon;

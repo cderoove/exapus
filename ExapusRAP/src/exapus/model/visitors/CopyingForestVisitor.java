@@ -11,6 +11,7 @@ import exapus.model.forest.InboundFactForest;
 import exapus.model.forest.InboundRef;
 import exapus.model.forest.Member;
 import exapus.model.forest.MemberContainer;
+import exapus.model.forest.Observable;
 import exapus.model.forest.OutboundFactForest;
 import exapus.model.forest.OutboundRef;
 import exapus.model.forest.PackageLayer;
@@ -24,7 +25,7 @@ public class CopyingForestVisitor implements IForestVisitor {
 		copies = new HashMap<ForestElement, ForestElement>();
 	}
 	
-	public static FactForest copy(FactForest f) {
+	public static Observable copy(FactForest f) {
 		CopyingForestVisitor v = new CopyingForestVisitor();
 		f.acceptVisitor(v);
 		return v.forestCopy;
