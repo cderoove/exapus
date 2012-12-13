@@ -45,6 +45,10 @@ public class View {
 		return name;
 	}
 	
+	public String toString() {
+		return name;
+	}
+	
 	
 	
 }

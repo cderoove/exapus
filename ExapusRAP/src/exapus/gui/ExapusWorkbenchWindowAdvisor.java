@@ -46,17 +46,7 @@ public class ExapusWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 		IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
 		Shell shell = window.getShell();
 		shell.setMaximized(true);
-
-		//TODO
-		IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		ViewEditorInput input = new ViewEditorInput("apis");
-		try {
-			activePage.openEditor(input, ViewEditor.ID, true);
-		} catch (PartInitException e) {
-			e.printStackTrace();
-		}
 		
 		Store.getCurrent().populateWorkspaceModel();
-		
 	}
 }

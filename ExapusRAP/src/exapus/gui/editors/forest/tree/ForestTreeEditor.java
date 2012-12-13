@@ -236,11 +236,9 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener {
 		return editorInput.getName();
 	}
 
-
 	@Override
 	public void removePropertyListener(IPropertyListener listener) {
 	}
-
 
 	@Override
 	public Object getAdapter(Class adapter) {
