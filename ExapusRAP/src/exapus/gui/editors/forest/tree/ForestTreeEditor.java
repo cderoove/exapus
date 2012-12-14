@@ -26,7 +26,6 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener {
 	private IEditorSite editorSite; 
 	private IEditorInput editorInput;
 	
-
 	public static final String ID = "exapus.gui.views.forest.ForestTreeView";
 
 	/*
@@ -90,6 +89,8 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener {
 		lineCol.getColumn().setText("Line");
 		lineCol.getColumn().setWidth(50);
 		lineCol.setLabelProvider(new ForestTreeLabelProviders.LineColumnLabelProvider());
+		
+		getSite().setSelectionProvider(viewer);
 
 
 		/*
@@ -149,10 +150,19 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener {
 	}
 
 	 */
-
-
+	
+	
+	private void update() {
+		String viewName = getEditorInput().getName();
+		//TODO: only has to be recomputed if view has changed
+		FactForest forest = Store.getCurrent().forestForRegisteredView(viewName,true);
+		viewer.setInput(forest);
+	}
+	
+	
 	public void setFocus() {
 		viewer.getControl().setFocus();
+		update();
 	}
 
 	@Override
