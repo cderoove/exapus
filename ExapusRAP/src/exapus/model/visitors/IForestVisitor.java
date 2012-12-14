@@ -25,6 +25,4 @@ public interface IForestVisitor {
 
 	public boolean visitOutboundReference(OutboundRef outboundRef);
 
-	public FactForest copy(FactForest f);
-
 }

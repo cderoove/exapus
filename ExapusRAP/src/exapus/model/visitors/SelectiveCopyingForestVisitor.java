@@ -89,11 +89,11 @@ public abstract class SelectiveCopyingForestVisitor implements IForestVisitor {
 		return false;	
 	}
 
-	protected boolean selectChildren(PackageLayer packageTree) {
+	protected boolean selectChildren(PackageLayer packageLayer) {
 		return true;
 	}
 
-	abstract protected boolean select(PackageLayer packageTree);
+	abstract protected boolean select(PackageLayer packageLayer);
 
 
 	@Override

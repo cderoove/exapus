@@ -8,25 +8,28 @@ import exapus.model.forest.OutboundFactForest;
 import exapus.model.forest.OutboundRef;
 import exapus.model.forest.PackageLayer;
 import exapus.model.forest.PackageTree;
+import exapus.model.store.Store;
 import exapus.model.view.Selection;
 import exapus.model.view.View;
 import exapus.model.visitors.IForestVisitor;
 import exapus.model.visitors.SelectiveCopyingForestVisitor;
 
 public class APICentricEvaluator extends Evaluator {
-
+	
 	protected APICentricEvaluator(View v) {
 		super(v);
 	}
 
 	@Override
 	public FactForest getResult() {
-		return getModelResult().getAPICentricForest();
+		return modelResult.getAPICentricForest();
 	}
 
 
 	protected SelectiveCopyingForestVisitor newVisitor() {
 		SelectiveCopyingForestVisitor visitor = new SelectiveCopyingForestVisitor() {
+			
+			Selection APISelection = getView().getAPISelection();
 
 			@Override
 			protected boolean select(InboundFactForest forest) {
@@ -40,20 +43,17 @@ public class APICentricEvaluator extends Evaluator {
 
 			@Override
 			protected boolean select(PackageTree packageTree) {
-				Selection selection = getView().getAPISelection();
-				return selection.matchAPIPackageTree(packageTree);
+				return APISelection.matchAPIPackageTree(packageTree);
 			}
 
 			@Override
-			protected boolean select(PackageLayer packageTree) {
-				// TODO Auto-generated method stub
-				return false;
+			protected boolean select(PackageLayer packageLayer) {
+				return APISelection.matchAPIPackageLayer(packageLayer);
 			}
 
 			@Override
 			protected boolean select(Member member) {
-				// TODO Auto-generated method stub
-				return false;
+				return APISelection.matchAPIMember(member);
 			}
 
 			@Override
@@ -74,10 +74,10 @@ public class APICentricEvaluator extends Evaluator {
 
 	@Override
 	public void evaluate() {
-
-
-		// TODO Auto-generated method stub
-
+		SelectiveCopyingForestVisitor v = newVisitor();
+		InboundFactForest workspaceForest = Store.getCurrent().getWorkspaceModel().getAPICentricForest();
+		FactForest forest = v.copy(workspaceForest);
+		modelResult.setAPICentricForest((InboundFactForest) forest);
 	}
 
 }

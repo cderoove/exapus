@@ -25,6 +25,14 @@ public class ExapusModel {
 		resetForests();
 	}
 
+	public void setAPICentricForest(InboundFactForest forest) {
+		apis = forest;
+	}
+	
+	public void setProjectCentricForest(OutboundFactForest forest) {
+		projects = forest;
+	}
+	
 	public InboundFactForest getAPICentricForest() {
 		return apis;
 	}

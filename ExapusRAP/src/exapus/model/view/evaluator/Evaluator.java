@@ -10,25 +10,30 @@ import exapus.model.view.View;
 public abstract class Evaluator {
 
 	private View view;
-	private ExapusModel modelResult;
+	protected ExapusModel modelResult;
 
 	protected ExapusModel getModelResult() {
 		return modelResult;
 	}
-	
+		
 	public static Evaluator forView(View v) {
 		if(v.isAPICentric())
-			new APICentricEvaluator(v);
+			return new APICentricEvaluator(v);
 		if(v.isProjectCentric())
-			new ProjectCentricEvaluator(v);
+			return new ProjectCentricEvaluator(v);
 		return null;
+	}
+	
+	public static FactForest evaluate(View v) {
+		Evaluator e = forView(v);
+		e.evaluate();
+		return e.getResult();
 	}
 	
 	protected Evaluator(View v) {
 		view = v;
 		modelResult = new ExapusModel();
 	}
-
 
 	public View getView() {
 		return view;
