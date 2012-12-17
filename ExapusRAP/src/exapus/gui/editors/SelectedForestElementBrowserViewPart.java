@@ -54,7 +54,11 @@ public class SelectedForestElementBrowserViewPart extends ViewPart {
 				return;
 			}
 		}
-		browser.setText("");
+		updateBrowser();
+	}
+
+	protected void updateBrowser() {
+		browser.setText(textToRender());
 	}
 
 	
@@ -63,12 +67,18 @@ public class SelectedForestElementBrowserViewPart extends ViewPart {
 	}
 	
 	protected String textToRender(ForestElement fe) {
+		return textToRender();
+	}
+	
+	protected String textToRender() {
 		return "";
 	}
+
 	
 	
 	@Override
 	public void setFocus() {
+		updateBrowser();
 		browser.setFocus();
 	}
 

@@ -1,19 +1,22 @@
 package exapus.gui.editors.forest.graph;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.StringWriter;
 import java.io.Writer;
-import javax.imageio.ImageIO;
 
 import com.google.common.base.Joiner;
 
 public class GraphViz {
 
 	public static String DOT_EXC = "/usr/local/Cellar/graphviz/2.28.0/bin/dot";
+	
+	//TODO: SVG for clickable URLs in a graph, however: Chrome does not seem to render this well
+	//public static String IMG_EXT = "svg";
+	//public static String IMG_MIME = "image/svg+xml";
+
 	public static String IMG_EXT = "png";
+	public static String IMG_MIME = "image/png";
 
 	
 	private Graph graph;
@@ -90,7 +93,6 @@ public class GraphViz {
 		}
 	}
 	
-	//TODO: file.createTemp file 
 	private void dotToImage(File dotfile, File imgfile) throws IOException {
 		Runtime rt = Runtime.getRuntime();
 		String[] cmdargs = {DOT_EXC, "-T"+IMG_EXT, dotfile.getAbsolutePath(), "-o", imgfile.getAbsolutePath()};
@@ -105,15 +107,16 @@ public class GraphViz {
 				
 	}
 	
-	public BufferedImage toImage(IGraphFormatter gf, INodeFormatter nf, IEdgeFormatter ef) throws IOException {
-		File dotfile = File.createTempFile("generateddot", "dot");
+	public File toImage(IGraphFormatter gf, INodeFormatter nf, IEdgeFormatter ef) throws IOException {
+		File dotfile = File.createTempFile("generateddot", ".dot");
 		toDotFile(dotfile,gf,nf,ef);
-		File imgfile = File.createTempFile("converteddot", IMG_EXT);
+		File imgfile = File.createTempFile("converteddot", "." + IMG_EXT);
 		dotToImage(dotfile,imgfile);
-		BufferedImage img = ImageIO.read(imgfile);
+		//BufferedImage img = ImageIO.read(imgfile);
 		dotfile.delete();
-		imgfile.delete();
-		return img;
+		//imgfile.delete();
+		return imgfile;
+		//return img;
 	}
 
 

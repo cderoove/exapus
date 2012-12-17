@@ -8,6 +8,8 @@ import org.eclipse.ui.application.WorkbenchAdvisor;
 import org.eclipse.ui.internal.util.PrefUtil;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
 
+import exapus.model.store.Store;
+
 public class ExapusWorkbench implements IEntryPoint {
 
 	/*

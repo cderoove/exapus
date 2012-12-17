@@ -154,9 +154,9 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener {
 	
 	private void update() {
 		String viewName = getEditorInput().getName();
-		//TODO: only has to be recomputed if view has changed
-		FactForest forest = Store.getCurrent().forestForRegisteredView(viewName,true);
+		FactForest forest = Store.getCurrent().forestForRegisteredView(viewName,false);
 		viewer.setInput(forest);
+		viewer.expandAll();
 	}
 	
 	

@@ -1,6 +1,7 @@
 package exapus.model.store;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -38,10 +39,11 @@ public class Store extends Observable {
 	private Store() {
 		registry = new HashMap<String, View>();
 		viewForests = new HashMap<String, FactForest>();
-		viewGraphs = new HashMap<String, BufferedImage>();
+		viewGraphs = new HashMap<String, File>();
 		workspaceModel = null;
 		registerDefaultViews();
 	}
+	
 	
 	private void initializeModelFromWorkspace(IProgressMonitor m) throws CoreException {
 		workspaceModel = new ExapusModel();
@@ -71,7 +73,7 @@ public class Store extends Observable {
 	
 	//caches 
 	private Map<String,FactForest> viewForests;
-	private Map<String,BufferedImage> viewGraphs;
+	private Map<String,File> viewGraphs;
 
 	
 	public ExapusModel getWorkspaceModel() {
@@ -118,17 +120,17 @@ public class Store extends Observable {
 		return Evaluator.evaluate(getView(name));
 	}
 	
-	private BufferedImage drawView(String name) {
+	private File drawView(String name) {
 		View view = getView(name);
 		FactForest forest = forestForRegisteredView(name);
 		ForestGraph graph = GraphBuilder.forView(view).build(forest);
-		BufferedImage image = null;
+		File imageFile = null;
 		try {
-			image = GraphDrawer.forView(view).draw(graph);
+			imageFile = GraphDrawer.forView(view).draw(graph);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return image;
+		return imageFile;
 	}
 	
 	public FactForest forestForRegisteredView(String name, boolean forceEval) {
@@ -146,14 +148,14 @@ public class Store extends Observable {
 		return forest;
 	}
 	
-	public BufferedImage graphForRegisteredView(String name, boolean forceEval) {
-		if(forceEval)
+	public File graphForRegisteredView(String name, boolean forceEval) {
+		if(forceEval) 
 			viewGraphs.put(name, drawView(name));
 		return graphForRegisteredView(name);	
 	}
 
-	public BufferedImage graphForRegisteredView(String name) {
-		BufferedImage graph = viewGraphs.get(name);
+	public File graphForRegisteredView(String name) {
+		File graph = viewGraphs.get(name);
 		if(graph == null) {
 			graph = drawView(name);
 			viewGraphs.put(name, graph);

@@ -1,6 +1,6 @@
 package exapus.gui.editors;
 
-import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -11,6 +11,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.eclipse.rwt.RWT;
 import org.eclipse.rwt.service.IServiceHandler;
 
+import com.google.common.io.Files;
+
+import exapus.gui.editors.forest.graph.GraphViz;
+
 
 public class SelectedForestElementImageBrowserViewPart extends SelectedForestElementBrowserViewPart {
 
@@ -18,9 +22,9 @@ public class SelectedForestElementImageBrowserViewPart extends SelectedForestEle
 		super();
 		registerImageServiceHandler();
 	}
-	
+
 	private final static String SERVICE_HANDLER = "imageServiceHandler";
-	
+
 	protected Object createImageUrl(String imageKey) {
 		StringBuffer url = new StringBuffer();
 		url.append(RWT.getRequest().getContextPath());
@@ -36,19 +40,24 @@ public class SelectedForestElementImageBrowserViewPart extends SelectedForestEle
 		String encodedURL = RWT.getResponse().encodeURL(url.toString());
 		return encodedURL;
 	}
+
 	
-	protected void registerImage(String id, BufferedImage img) {
+	protected void registerImage(String id, File img) {
 		RWT.getSessionStore().setAttribute(id, img);
 	}
+
 
 	private class GraphServiceHandler implements IServiceHandler {
 		public void service() throws IOException, ServletException {
 			String id = RWT.getRequest().getParameter("imageId");
-			BufferedImage image = (BufferedImage)RWT.getSessionStore().getAttribute(id);
-			HttpServletResponse response = RWT.getResponse();
-			response.setContentType("image/png");
-			ServletOutputStream out = response.getOutputStream();
-			ImageIO.write(image, "png", out );
+			File image = (File)RWT.getSessionStore().getAttribute(id);
+			if(image != null) {
+				HttpServletResponse response = RWT.getResponse();
+				response.setContentType(GraphViz.IMG_MIME);
+				ServletOutputStream out = response.getOutputStream();
+				Files.copy(image, out);
+				out.close();
+			}
 		}
 	}
 

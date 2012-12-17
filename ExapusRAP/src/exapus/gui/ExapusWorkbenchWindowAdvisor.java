@@ -46,7 +46,5 @@ public class ExapusWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 		IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
 		Shell shell = window.getShell();
 		shell.setMaximized(true);
-		
-		Store.getCurrent().populateWorkspaceModel();
 	}
 }

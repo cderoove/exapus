@@ -1,6 +1,7 @@
 package exapus.gui.editors.forest.graph;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 
@@ -27,23 +28,30 @@ public class ForestGraphEditor extends SelectedForestElementImageBrowserViewPart
 	public static final String ID = "exapus.gui.views.forest.ForestGraphView";
 	private final static String GRAPH_KEY = "graphviz";
 
-	protected BufferedImage getGraphImage() {
-		return null;
-	}
-
 	@Override
 	protected String textToRender(ForestElement fe) {
-		StringBuffer html = new StringBuffer();
-		html.append("<img src=\"");
-		html.append(createImageUrl(GRAPH_KEY));
-		html.append("\"/>");
-		return html.toString();
+		return textToRender();
+	}
+	
+	@Override
+	protected String textToRender() {
+		File imageFile = Store.getCurrent().graphForRegisteredView(editorInput.getName(),false);
+		if(imageFile != null) {
+			registerImage(GRAPH_KEY, imageFile);
+			StringBuffer html = new StringBuffer();
+			html.append("<html><body><p>");
+			html.append("<img src=\"");
+			html.append(createImageUrl(GRAPH_KEY));
+			html.append("\"/>");
+			html.append("</p></body></html>");
+
+			return html.toString();
+		}
+		return "";
 	}
 
     protected void setInput(IEditorInput input) {
     	editorInput = input;
-    	String viewName = input.getName();
-		registerImage(GRAPH_KEY, Store.getCurrent().graphForRegisteredView(viewName,true));
 	}
 
 	@Override

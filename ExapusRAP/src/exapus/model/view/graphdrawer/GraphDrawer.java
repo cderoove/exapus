@@ -1,6 +1,6 @@
 package exapus.model.view.graphdrawer;
 
-import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 
 import exapus.gui.editors.forest.graph.GraphViz;
@@ -17,7 +17,7 @@ public abstract class GraphDrawer {
 		return new ContainmentGraphDrawer(v);
 	}
 	
-	public BufferedImage draw(ForestGraph g) throws IOException {
+	public File draw(ForestGraph g) throws IOException {
 		 GraphViz gv = new GraphViz(g);
 		 return gv.toImage(getGraphFormatter(), getNodeFormatter(), getEdgeFormatter());
 	}
