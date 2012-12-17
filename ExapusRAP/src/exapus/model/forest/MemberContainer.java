@@ -24,7 +24,12 @@ public abstract class MemberContainer extends ForestElement {
 	public Iterable<Member> getMembers() {
 		return members;
 	}
-		
+	
+	
+	public boolean hasMembers() {
+		return members.isEmpty();
+	}
+	
 	public void addMember(Member m) {
 		members.add(m);
 		m.setParent(this);
