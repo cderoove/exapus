@@ -39,7 +39,7 @@ public class ContainmentGraphBuilder extends GraphBuilder {
 			@Override
 			public boolean visitPackageLayer(PackageLayer packageLayer) {
 				graph.add(packageLayer);
-				graph.add(new Edge(packageLayer, packageLayer.getParent()));
+				graph.add(new Edge(packageLayer.getParent(),packageLayer));
 				return true;
 			}
 
@@ -47,7 +47,7 @@ public class ContainmentGraphBuilder extends GraphBuilder {
 			public boolean visitMember(Member member) {
 				if(member.isTopLevel()) {
 					graph.add(member);
-					graph.add(new Edge(member, member.getParent()));
+					graph.add(new Edge(member.getParent(),member));
 				}
 				return false;
 			}
