@@ -11,5 +11,11 @@ public abstract class Selection {
 	public abstract boolean matchAPIPackageLayer(PackageLayer packageLayer);
 
 	public abstract boolean matchAPIMember(Member member);
+
+	public abstract boolean matchProjectPackageTree(PackageTree packageTree);
+
+	public abstract boolean matchProjectPackageLayer(PackageLayer packageLayer);
+
+	public abstract boolean matchProjectMember(Member member);
 	
 }

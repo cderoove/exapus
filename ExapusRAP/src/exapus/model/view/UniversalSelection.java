@@ -30,4 +30,19 @@ public class UniversalSelection extends Selection {
 		return true;
 	}
 
+	@Override
+	public boolean matchProjectPackageTree(PackageTree packageTree) {
+		return true;
+	}
+
+	@Override
+	public boolean matchProjectPackageLayer(PackageLayer packageLayer) {
+		return true;
+	}
+
+	@Override
+	public boolean matchProjectMember(Member member) {
+		return true;
+	}
+
 }
