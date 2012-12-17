@@ -25,62 +25,14 @@ public class ForestGraphEditor extends SelectedForestElementImageBrowserViewPart
 	private IEditorInput editorInput;
 	
 	public static final String ID = "exapus.gui.views.forest.ForestGraphView";
-
 	private final static String GRAPH_KEY = "graphviz";
 
-	private Graph graph;
-
-	public void setGraph(Graph g ) {
-		graph = g;
-	}
-
-	public static Graph dummyGraph() {
-		Graph g = new Graph();
-		Node n1 = new Node();
-		Node n2 = new Node();
-		Edge e = new Edge(n1,n2);
-		g.add(e);
-		return g;
-	}
-
-
 	protected BufferedImage getGraphImage() {
-		GraphViz dot = new GraphViz(dummyGraph());
-		BufferedImage image = null;
-		try {
-			image = dot.toImage(new IGraphFormatter() {
-				@Override
-				public Iterable<String> decorations(Graph g) {
-					return Collections.emptyList();
-				}
-			},
-			new INodeFormatter() {
-				@Override
-				public String label(Node n) {
-					return n.getIdentifier();
-				}
-
-				@Override
-				public Iterable<String> decorations(Node n) {
-					return Collections.emptyList();
-				}
-			},
-			new IEdgeFormatter() {
-				@Override
-				public Iterable<String> decorations(Edge e) {
-					return Collections.emptyList();
-				}
-			});
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return image;
+		return null;
 	}
 
 	@Override
 	protected String textToRender(ForestElement fe) {
-		registerImage(GRAPH_KEY, getGraphImage());
 		StringBuffer html = new StringBuffer();
 		html.append("<img src=\"");
 		html.append(createImageUrl(GRAPH_KEY));
@@ -90,11 +42,9 @@ public class ForestGraphEditor extends SelectedForestElementImageBrowserViewPart
 
     protected void setInput(IEditorInput input) {
     	editorInput = input;
-		String registeredName = input.getName();
-		//TODO: compute forest
-		//FactForest forest = Store.getCurrent().getForest(registeredName);
+    	String viewName = input.getName();
+		registerImage(GRAPH_KEY, Store.getCurrent().graphForRegisteredView(viewName,true));
 	}
-
 
 	@Override
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {

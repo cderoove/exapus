@@ -6,6 +6,8 @@ public interface INodeFormatter {
 	
 	abstract public Iterable<String> decorations(INode n);
 
+	abstract public String getIdentifier(INode n);
+
 }
 
 	

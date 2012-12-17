@@ -70,6 +70,11 @@ public class Member extends MemberContainer {
 		}
 		return oldParent;
 	}
+	
+	public boolean isTopLevel() {
+		ForestElement parent = getParent();
+		return !(parent instanceof Member);
+	}
 
 	public ICompilationUnit getCorrespondingICompilationUnit() {
 		IMember member = getCorrespondingIMember();

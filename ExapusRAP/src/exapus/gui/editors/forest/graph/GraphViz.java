@@ -23,9 +23,9 @@ public class GraphViz {
 	}
 
 	public void writeNodes(Writer w, INodeFormatter f) throws IOException {
-		for(Node n : graph.getNodes()) {
+		for(INode n : graph.getNodes()) {
 			w.write("\"");
-			w.write(n.getIdentifier());
+			w.write(f.getIdentifier(n));
 			w.write("\"");
 			w.write("[");
 			String label = f.label(n);
@@ -42,14 +42,14 @@ public class GraphViz {
 		}
 	}
 
-	public void writeEdges(Writer w, IEdgeFormatter f) throws IOException {
+	public void writeEdges(Writer w, INodeFormatter nf, IEdgeFormatter f) throws IOException {
 		for(Edge e : graph.getEdges()) {
 			w.write("\"");
-			w.write(e.getFrom().getIdentifier());
+			w.write(nf.getIdentifier(e.getFrom()));
 			w.write("\"");
 			w.write(" -> ");
 			w.write("\"");
-			w.write(e.getTo().getIdentifier());
+			w.write(nf.getIdentifier(e.getTo()));
 			w.write("\"");			
 			w.write("[");
 			Iterable<String> decorations = f.decorations(e);
@@ -77,7 +77,7 @@ public class GraphViz {
 	public void write(Writer w, IGraphFormatter gf, INodeFormatter nf, IEdgeFormatter ef) throws IOException {
 		writePrologue(w, gf);
 		writeNodes(w,nf);
-		writeEdges(w,ef);
+		writeEdges(w,nf,ef);
 		writeEpilogue(w);
 	}
 

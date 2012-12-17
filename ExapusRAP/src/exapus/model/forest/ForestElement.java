@@ -11,12 +11,15 @@ import org.eclipse.jdt.core.JavaModelException;
 
 import com.google.common.collect.Iterables;
 
-public abstract class ForestElement {
+import exapus.gui.editors.forest.graph.INode;
+
+public abstract class ForestElement implements INode {
 
 	private ForestElement parent;
 
 	private UqName id;
 
+		
 	public ForestElement(UqName id) {
 		this.id = id;
 	}

@@ -2,20 +2,20 @@ package exapus.gui.editors.forest.graph;
 
 public class Edge {
 	
-	Edge(Node f, Node t) {
+	public Edge(INode f, INode t) {
 		from = f;
 		to = t;
 	}
 	
-	public Node getFrom() {
+	public INode getFrom() {
 		return from;
 	}
 
-	public void setFrom(Node from) {
+	public void setFrom(INode from) {
 		this.from = from;
 	}
 
-	public Node getTo() {
+	public INode getTo() {
 		return to;
 	}
 
@@ -23,8 +23,8 @@ public class Edge {
 		this.to = to;
 	}
 
-	private Node from;
+	private INode from;
 	
-	private Node to;
+	private INode to;
 
 }
