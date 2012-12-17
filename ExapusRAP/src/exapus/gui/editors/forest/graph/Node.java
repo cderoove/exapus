@@ -1,6 +1,6 @@
 package exapus.gui.editors.forest.graph;
 
-public class Node {
+public class Node implements INode {
 
 	public Node() {}
 		
