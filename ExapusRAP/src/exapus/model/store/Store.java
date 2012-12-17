@@ -39,15 +39,21 @@ public class Store extends Observable {
 		registry = new HashMap<String, View>();
 		viewForests = new HashMap<String, FactForest>();
 		viewGraphs = new HashMap<String, BufferedImage>();
-		workspaceModel = new ExapusModel();
+		workspaceModel = null;
 		registerDefaultViews();
+	}
+	
+	private void initializeModelFromWorkspace(IProgressMonitor m) throws CoreException {
+		workspaceModel = new ExapusModel();
+		workspaceModel.processWorkspace(m);
 	}
 	
 	public void populateWorkspaceModel() {
 		Job job = new Job("Populating fact forests.") {
 			protected IStatus run(final IProgressMonitor m) {
 				try {
-					workspaceModel.processWorkspace(m);
+					if(workspaceModel == null)
+						initializeModelFromWorkspace(m);
 				} catch (CoreException e) {
 					e.printStackTrace();
 				}
