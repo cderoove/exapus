@@ -18,7 +18,7 @@ import exapus.model.view.View;
 public class StoreListContentProvider implements IStructuredContentProvider, IDeltaListener {
 
 	protected ListViewer viewer;
-	
+
 	@Override
 	public void dispose() {
 	}
@@ -49,23 +49,16 @@ public class StoreListContentProvider implements IStructuredContentProvider, IDe
 		else
 			return null;
 	}
-	
-	@Override
-	public void add(DeltaEvent event) {
-		Util.asyncUIThreadIfWidgetNotDisposed(viewer.getControl(), new Runnable() {
-			public void run() {
-				viewer.refresh();
-			}
-		});
-	}
+
 
 	@Override
-	public void remove(final DeltaEvent event) {
+	public void delta(DeltaEvent event) {
 		Util.asyncUIThreadIfWidgetNotDisposed(viewer.getControl(), new Runnable() {
 			public void run() {
 				viewer.refresh();
 			}
 		});
+
 	}
 
 }

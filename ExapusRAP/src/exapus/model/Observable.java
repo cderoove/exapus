@@ -19,16 +19,17 @@ public class Observable {
 		return listeners.remove(l);
 	}
 
-	public void fireUpdate(Object added) {
-		DeltaEvent event = new DeltaEvent(added);
+	public void fire(DeltaEvent event) {
 		for (IDeltaListener l : listeners)
-			l.add(event);
+			l.delta(event);
+	}
+
+	public void fireUpdate(Object added) {
+		fire(new AddDeltaEvent(added));
 	}
 
 	public void fireRemove(Object removed) {
-		DeltaEvent event = new DeltaEvent(removed);
-		for (IDeltaListener l : listeners)
-			l.remove(event);
+		fire(new RemoveDeltaEvent(removed));
 	}
 
 }

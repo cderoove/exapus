@@ -9,8 +9,10 @@ import org.eclipse.swt.widgets.Tree;
 import com.google.common.collect.Iterables;
 
 import exapus.gui.util.Util;
+import exapus.model.AddDeltaEvent;
 import exapus.model.DeltaEvent;
 import exapus.model.IDeltaListener;
+import exapus.model.RemoveDeltaEvent;
 import exapus.model.forest.FactForest;
 import exapus.model.forest.ForestElement;
 import exapus.model.forest.Member;
@@ -95,31 +97,33 @@ public class ForestTreeContentProvider implements ITreeContentProvider, IDeltaLi
 	}
 
 
-	@Override
-	public void add(DeltaEvent event) {
-		final ForestElement element = (ForestElement) event.receiver();
-		Util.asyncUIThreadIfWidgetNotDisposed(viewer.getControl(), new Runnable() {
-			public void run() {
-				if (element instanceof Ref)
-					viewer.refresh(element.getParentMember(), true);
-				else if (element instanceof PackageTree)
-					viewer.refresh(element, true);
-				else
-					viewer.refresh(element.getParentPackageLayer(), true);
-			}
-		});
-	}
 
 	@Override
-	public void remove(final DeltaEvent event) {
+	public void delta(DeltaEvent event) {
 		final ForestElement element = (ForestElement) event.receiver();
-		Util.asyncUIThreadIfWidgetNotDisposed(viewer.getControl(), new Runnable() {
-			public void run() {
-				if (element instanceof PackageTree)
-					viewer.refresh();
-				else
-					add(event);
-			}
-		});
+		if(event instanceof AddDeltaEvent) {
+			Util.asyncUIThreadIfWidgetNotDisposed(viewer.getControl(), new Runnable() {
+				public void run() {
+					if (element instanceof Ref)
+						viewer.refresh(element.getParentMember(), true);
+					else if (element instanceof PackageTree)
+						viewer.refresh(element, true);
+					else
+						viewer.refresh(element.getParentPackageLayer(), true);
+				}
+			});
+		}
+		if(event instanceof RemoveDeltaEvent) {
+			Util.asyncUIThreadIfWidgetNotDisposed(viewer.getControl(), new Runnable() {
+				public void run() {
+					if (element instanceof PackageTree)
+						viewer.refresh();
+					else
+						delta(new AddDeltaEvent(element));
+				}
+			});
+		}
+
 	}
+
 }
