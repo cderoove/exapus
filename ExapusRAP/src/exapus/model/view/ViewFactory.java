@@ -22,9 +22,13 @@ public class ViewFactory {
 		completeAPIView = new APICentricView("All APIs");
 		completeAPIView.addAPISelection(universal);
 		completeAPIView.addProjectSelection(universal);
+		completeAPIView.setRenderable(false);
+		
 		completeProjectView = new ProjectCentricView("All Projects");
 		completeProjectView.addAPISelection(universal);
 		completeProjectView.addProjectSelection(universal);
+		completeProjectView.setRenderable(false);
+
 	}
 	
 	public View completeAPIView() {

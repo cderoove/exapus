@@ -3,6 +3,7 @@ package exapus.gui.editors.view.definition;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -12,8 +13,12 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.ISelectionListener;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.SWT;
@@ -33,6 +38,7 @@ import exapus.model.view.View;
 public class ViewDefinitionEditor extends EditorPart {
 
 	private ComboViewer comboVWPerspective;
+	private Button checkRenderable;
 
 	public ViewDefinitionEditor() {
 	}
@@ -62,6 +68,7 @@ public class ViewDefinitionEditor extends EditorPart {
 		return false;
 	}
 
+	@SuppressWarnings("serial")
 	@Override
 	public void createPartControl(Composite parent) {
 		parent.setLayout(new GridLayout(3, false));
@@ -89,7 +96,28 @@ public class ViewDefinitionEditor extends EditorPart {
 				}
 			}
 		});
+		
+		
+		//Renderable
+		Label lblRenderable = new Label(parent, SWT.NONE);
+		GridData gd_lblRenderable = new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1);
+		lblRenderable.setLayoutData(gd_lblRenderable);
+		
+		checkRenderable = new Button(parent, SWT.CHECK);
+		GridData gd_checkRenderable = new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1);
+		checkRenderable.setLayoutData(gd_checkRenderable);
+		checkRenderable.setText("Render as graph.");
 
+		checkRenderable.addSelectionListener(new SelectionListener() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				getView().setRenderable(checkRenderable.getSelection());
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
 
 		//APIs	
 		Label lblAPILabel = new Label(parent, SWT.NONE);
@@ -142,6 +170,8 @@ public class ViewDefinitionEditor extends EditorPart {
 	private void updateControls() {
 		View view = getView();
 		comboVWPerspective.setSelection(new StructuredSelection(view.getPerspective()));
+		checkRenderable.setSelection(getView().getRenderable());
+
 	}
 
 }

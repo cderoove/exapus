@@ -7,6 +7,16 @@ import exapus.model.visitors.IForestVisitor;
 
 public abstract class GraphBuilder {
 	
+	private View view;
+	
+	protected View getView() {
+		return view;
+	}
+	
+	public GraphBuilder(View view) {
+		this.view = view;
+	}
+	
 	public static GraphBuilder forView(View v) {
 		return new ContainmentGraphBuilder(v);
 	}
@@ -16,7 +26,8 @@ public abstract class GraphBuilder {
 	public ForestGraph build(FactForest f) {
 		graph = new ForestGraph(f);
 		IForestVisitor v = newVisitor();
-		f.acceptVisitor(v);
+		if(view.getRenderable())
+			f.acceptVisitor(v);	
 		return graph;
 	}
 	

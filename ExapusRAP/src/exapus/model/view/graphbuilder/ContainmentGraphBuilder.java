@@ -15,7 +15,7 @@ import exapus.model.visitors.IForestVisitor;
 public class ContainmentGraphBuilder extends GraphBuilder {
 	
 	ContainmentGraphBuilder(View v) {
-		super();
+		super(v);
 	}
 	
 	protected IForestVisitor newVisitor() {

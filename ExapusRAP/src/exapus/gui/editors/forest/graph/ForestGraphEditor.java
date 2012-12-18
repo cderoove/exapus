@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.Collections;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.rwt.RWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorInput;
@@ -33,19 +34,53 @@ public class ForestGraphEditor extends SelectedForestElementImageBrowserViewPart
 		return textToRender();
 	}
 	
+	//Larger seems to crash most recent Safari
+	private static long FILE_SIZE_THRESHOLD = 3 * 1024 * 1024;
+	private static boolean fileHasSafeSize(File f) {
+		return f.length() <= FILE_SIZE_THRESHOLD;
+	}
+	
+	
+	/*
+	private boolean askRenderConfirmation() {
+		    String title = "Confirm graph rendering.";
+		    String msg = "Graph might be too large to render. Continue rendering anyway?";
+		    return MessageDialog.openConfirm(getSite().getShell(), title, msg);
+	}
+	*/
+
+	private String textForGraph() {
+		StringBuffer html = new StringBuffer();
+		html.append("<html><body><p>");
+		html.append("<img src=\"");
+		html.append(createImageUrl(GRAPH_KEY));
+		html.append("\"/>");
+		html.append("</p></body></html>");
+		return html.toString();
+	}
+
+	private String textForConfirm() {
+		StringBuffer html = new StringBuffer();
+		html.append("<html><body><p>Graph might be too large to render. ");
+		html.append("Render large <a href=\"");
+		html.append(createImageUrl(GRAPH_KEY));
+		html.append("\"/>");
+		html.append("graph");
+		html.append("</a> anyway.");
+		html.append("</p></body></html>");
+		return html.toString();
+	}
+
+	
 	@Override
 	protected String textToRender() {
 		File imageFile = Store.getCurrent().graphForRegisteredView(editorInput.getName(),false);
 		if(imageFile != null) {
 			registerImage(GRAPH_KEY, imageFile);
-			StringBuffer html = new StringBuffer();
-			html.append("<html><body><p>");
-			html.append("<img src=\"");
-			html.append(createImageUrl(GRAPH_KEY));
-			html.append("\"/>");
-			html.append("</p></body></html>");
-
-			return html.toString();
+			if(fileHasSafeSize(imageFile)) 
+				return textForGraph();
+			else
+				return textForConfirm();
 		}
 		return "";
 	}

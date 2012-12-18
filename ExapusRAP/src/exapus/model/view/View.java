@@ -10,6 +10,7 @@ public abstract class View {
 		perspective = p;
 		apiselection = new ArrayList<Selection>();
 		projectselection = new ArrayList<Selection>();
+		renderable = true;
 	}
 	
 	private static 	Perspective[] supportedPerspectives = {Perspective.API_CENTRIC, Perspective.PROJECT_CENTRIC};
@@ -18,6 +19,8 @@ public abstract class View {
 		return supportedPerspectives;
 	}
 
+	private boolean renderable;
+	
 	private Perspective perspective;
 	
 	private List<Selection> apiselection;
@@ -30,6 +33,14 @@ public abstract class View {
 		return perspective;
 	}
 
+	public boolean getRenderable() {
+		return renderable;
+	}
+	
+	public void setRenderable(boolean renderable) {
+		this.renderable = renderable;
+	}
+	
 	public void setPerspective(Perspective perspective) {
 		this.perspective = perspective;
 	}
