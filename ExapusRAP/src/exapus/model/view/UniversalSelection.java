@@ -16,9 +16,14 @@ public class UniversalSelection extends Selection {
 	}
 	
 	@Override
-	public String toString() {
+	public String getNameString() {
 		return "*";
 	}	
+	
+	@Override
+	public String getScopeString() {
+		return "";
+	}
 
 	@Override
 	public boolean matchAPIPackageTree(PackageTree packageTree) {

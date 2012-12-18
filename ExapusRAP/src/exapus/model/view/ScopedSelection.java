@@ -19,6 +19,7 @@ public class ScopedSelection extends Selection {
 		this(name,RootScope.getCurrent());
 	}
 	
+
 	private Scope scope;
 		
 	private UqName name;
@@ -75,5 +76,17 @@ public class ScopedSelection extends Selection {
 	private void setName(UqName name) {
 		this.name = name;
 	}
+
+	@Override
+	public String getNameString() {
+		return getName().toString();
+	}
+
+	@Override
+	public String getScopeString() {
+		return getScope().toString();
+	}
+	
+	
 	
 }

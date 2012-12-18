@@ -18,4 +18,8 @@ public abstract class Selection {
 
 	public abstract boolean matchProjectMember(Member member);
 	
+	public abstract String getNameString();
+	
+	public abstract String getScopeString();
+	
 }

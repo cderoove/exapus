@@ -1,7 +1,16 @@
 package exapus.gui.editors.view.definition;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.IMenuCreator;
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.CellLabelProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -10,6 +19,9 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.viewers.TreeViewerColumn;
+import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
@@ -17,21 +29,30 @@ import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
+import org.eclipse.swt.events.HelpListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
 
+import com.google.common.collect.Iterables;
+
+import exapus.gui.editors.forest.tree.ForestTreeLabelProviders;
 import exapus.model.store.Store;
 import exapus.model.view.Perspective;
+import exapus.model.view.Selection;
 import exapus.model.view.View;
 
 //todo: implement view change listener, also in other editor parts
@@ -39,6 +60,9 @@ public class ViewDefinitionEditor extends EditorPart {
 
 	private ComboViewer comboVWPerspective;
 	private Button checkRenderable;
+	private TableViewer tableVWAPI;
+	private TableViewer tableVWProjects;
+
 
 	public ViewDefinitionEditor() {
 	}
@@ -124,35 +148,73 @@ public class ViewDefinitionEditor extends EditorPart {
 		lblAPILabel.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP, false, false, 1, 1));
 		lblAPILabel.setText("APIs:");
 
-		TableViewer tableVWAPI = new TableViewer(parent, SWT.BORDER | SWT.V_SCROLL);
-		GridData gd_tableAPI = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
-		tableVWAPI.getControl().setLayoutData(gd_tableAPI);
-
-		Button btnAPIAdd = new Button(parent, SWT.NONE);
-		btnAPIAdd.setText("Add...");
-		GridData gd_btnAPIAdd = new GridData(SWT.RIGHT, SWT.TOP, false, false, 1, 1);
-		btnAPIAdd.setLayoutData(gd_btnAPIAdd);
-
-
-
+		tableVWAPI = new TableViewer(parent, SWT.BORDER | SWT.V_SCROLL);
+		ToolBar toolbarAPI = new ToolBar(parent, SWT.VERTICAL);
+		configureSelectionTableAndToolBar(tableVWAPI, toolbarAPI);
+		
 		//Projects
 		Label lblProjectsLabel = new Label(parent, SWT.NONE);
 		lblProjectsLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP, false, false, 1, 1));
 		lblProjectsLabel.setText("Projects:");
+		
+		tableVWProjects = new TableViewer(parent, SWT.BORDER | SWT.V_SCROLL);
+		ToolBar toolbarProjects = new ToolBar(parent, SWT.VERTICAL);
+		configureSelectionTableAndToolBar(tableVWProjects, toolbarProjects);
 
-		TableViewer tableVWProjects = new TableViewer(parent, SWT.BORDER | SWT.V_SCROLL);
-		GridData gd_tableProjects = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
-		tableVWProjects.getTable().setLayoutData(gd_tableProjects);
-
-
-		Button btnProjectsAdd = new Button(parent, SWT.NONE);
-		btnProjectsAdd.setText("Add...");
-		GridData gd_btnProjectsAdd = new GridData(SWT.RIGHT, SWT.TOP, false, false, 1, 1);
-		btnProjectsAdd.setLayoutData(gd_btnProjectsAdd);
 
 
 	}
 
+	private void configureSelectionTableAndToolBar(TableViewer tableVW, ToolBar toolbar) {
+		Table tableAPI = tableVW.getTable();
+		GridData gd_tableAPI = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
+		gd_tableAPI.heightHint = tableAPI.getItemHeight() * 4;
+		tableAPI.setLayoutData(gd_tableAPI);
+		//tableAPI.setHeaderVisible(true);
+		tableVW.setContentProvider(ArrayContentProvider.getInstance());
+
+		TableViewerColumn APISelCol = new TableViewerColumn(tableVW, SWT.NONE);
+		APISelCol.getColumn().setText("Name");
+		APISelCol.getColumn().setWidth(150);
+
+		APISelCol.setLabelProvider(new CellLabelProvider() {
+			@Override
+			public void update(ViewerCell cell) {
+				Selection sel = (Selection) cell.getElement();
+				cell.setText(sel.getNameString());
+			}
+		});
+		TableViewerColumn APIScopeCol = new TableViewerColumn(tableVW, SWT.NONE);
+		APIScopeCol.getColumn().setText("Scope");
+		APIScopeCol.getColumn() .setWidth(150);
+		APIScopeCol.setLabelProvider(new CellLabelProvider() {
+			@Override
+			public void update(ViewerCell cell) {
+				Selection sel = (Selection) cell.getElement();
+				cell.setText(sel.getScopeString());
+			}
+		});
+		
+		
+	    ToolItem toolItemAddAPI = new ToolItem(toolbar, SWT.PUSH);
+	    toolItemAddAPI.setText("New");
+	    final ToolItem toolItemEditAPI = new ToolItem(toolbar, SWT.PUSH);
+	    toolItemEditAPI.setEnabled(false);
+	    toolItemEditAPI.setText("Edit");
+	    final ToolItem toolItemDeleteAPI = new ToolItem(toolbar, SWT.PUSH);
+	    toolItemDeleteAPI.setEnabled(false);
+	    toolItemDeleteAPI.setText("Delete");
+
+	    tableVW.addSelectionChangedListener(new ISelectionChangedListener() {
+			@Override
+			public void selectionChanged(SelectionChangedEvent event) {
+				boolean enabled = !event.getSelection().isEmpty();
+				toolItemEditAPI.setEnabled(enabled);
+				toolItemDeleteAPI.setEnabled(enabled);
+			}
+		});
+	}
+	
 	private View getView() {
 		return Store.getCurrent().getView(getEditorInput().getName());
 
@@ -170,7 +232,10 @@ public class ViewDefinitionEditor extends EditorPart {
 	private void updateControls() {
 		View view = getView();
 		comboVWPerspective.setSelection(new StructuredSelection(view.getPerspective()));
-		checkRenderable.setSelection(getView().getRenderable());
+		checkRenderable.setSelection(view.getRenderable());
+		tableVWAPI.setInput(Iterables.toArray(view.getAPISelections(),Object.class));
+		tableVWProjects.setInput(Iterables.toArray(view.getProjectSelections(),Object.class));
+
 
 	}
 
