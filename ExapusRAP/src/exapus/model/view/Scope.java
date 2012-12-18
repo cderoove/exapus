@@ -1,5 +1,5 @@
 package exapus.model.view;
 
-public class Scope {
+public abstract class Scope {
 
 }

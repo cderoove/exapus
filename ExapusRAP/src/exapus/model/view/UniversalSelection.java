@@ -14,6 +14,11 @@ public class UniversalSelection extends Selection {
 	
 	private UniversalSelection() {
 	}
+	
+	@Override
+	public String toString() {
+		return "*";
+	}	
 
 	@Override
 	public boolean matchAPIPackageTree(PackageTree packageTree) {
