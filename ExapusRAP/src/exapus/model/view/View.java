@@ -1,19 +1,28 @@
 package exapus.model.view;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class View {
 
-	public View(String n, Perspective p, Selection apis, Selection projects) {
+	public View(String n, Perspective p) {
 		name = n;
 		perspective = p;
-		apiselection = apis;
-		projectselection = projects;
+		apiselection = new ArrayList<Selection>();
+		projectselection = new ArrayList<Selection>();
 	}
 	
+	private static 	Perspective[] supportedPerspectives = {Perspective.API_CENTRIC, Perspective.PROJECT_CENTRIC};
+
+	public static Perspective[] supportedPerspectives() {
+		return supportedPerspectives;
+	}
+
 	private Perspective perspective;
 	
-	private Selection apiselection;
+	private List<Selection> apiselection;
 	
-	private Selection projectselection;
+	private List<Selection> projectselection;
 	
 	private String name;
 
@@ -25,20 +34,28 @@ public abstract class View {
 		this.perspective = perspective;
 	}
 
-	public Selection getAPISelection() {
+	public Iterable<Selection> getAPISelections() {
 		return apiselection;
 	}
 
-	public void setAPISelection(Selection selection) {
-		this.apiselection = selection;
+	public void addAPISelection(Selection selection) {
+		apiselection.add(selection);
+	}
+	
+	public boolean removeAPISelection(Selection selection) {
+		return apiselection.remove(selection);
 	}
 
-	public Selection getProjectSelection() {
+	public Iterable<Selection> getProjectSelections() {
 		return projectselection;
 	}
 
-	public void setProjectSelection(Selection selection) {
-		this.projectselection = selection;
+	public void addProjectSelection(Selection selection) {
+		projectselection.add(selection) ;
+	}
+	
+	public boolean removeProjectSelection(Selection selection) {
+		return projectselection.remove(selection);
 	}
 
 	public String getName() {

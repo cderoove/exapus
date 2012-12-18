@@ -1,5 +1,8 @@
 package exapus.model.view.evaluator;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
+
 import exapus.model.forest.FactForest;
 import exapus.model.forest.InboundFactForest;
 import exapus.model.forest.InboundRef;
@@ -27,7 +30,7 @@ public class ProjectCentricEvaluator extends Evaluator {
 	protected SelectiveCopyingForestVisitor newVisitor() {
 		SelectiveCopyingForestVisitor visitor = new SelectiveCopyingForestVisitor() {
 			
-			Selection ProjectSelection = getView().getProjectSelection();
+			Iterable<Selection> selections = getView().getProjectSelections();
 
 			@Override
 			protected boolean select(InboundFactForest forest) {
@@ -40,29 +43,44 @@ public class ProjectCentricEvaluator extends Evaluator {
 			}
 
 			@Override
-			protected boolean select(PackageTree packageTree) {
-				return ProjectSelection.matchProjectPackageTree(packageTree);
+			protected boolean select(final PackageTree packageTree) {
+				return Iterables.any(selections, new Predicate<Selection>() {
+					@Override
+					public boolean apply(Selection selection) {
+						return selection.matchProjectPackageTree(packageTree);
+					}
+				});
 			}
 
 			@Override
-			protected boolean select(PackageLayer packageLayer) {
-				return ProjectSelection.matchProjectPackageLayer(packageLayer);
+			protected boolean select(final PackageLayer packageLayer) {
+				return Iterables.any(selections, new Predicate<Selection>() {
+					@Override
+					public boolean apply(Selection selection) {
+						return selection.matchProjectPackageLayer(packageLayer);
+
+					}
+				});
 			}
 
 			@Override
-			protected boolean select(Member member) {
-				return ProjectSelection.matchProjectMember(member);
+			protected boolean select(final Member member) {
+				return Iterables.any(selections, new Predicate<Selection>() {
+					@Override
+					public boolean apply(Selection selection) {
+						return selection.matchAPIMember(member);
+
+					}
+				});
 			}
 
 			@Override
 			protected boolean select(InboundRef inboundRef) {
-				// TODO Auto-generated method stub
 				return false;
 			}
 
 			@Override
 			protected boolean select(OutboundRef outboundRef) {
-				// TODO Auto-generated method stub
 				return false;
 			}
 			

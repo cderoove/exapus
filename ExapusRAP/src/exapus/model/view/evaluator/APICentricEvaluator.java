@@ -1,5 +1,8 @@
 package exapus.model.view.evaluator;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
+
 import exapus.model.forest.FactForest;
 import exapus.model.forest.InboundFactForest;
 import exapus.model.forest.InboundRef;
@@ -15,7 +18,7 @@ import exapus.model.visitors.IForestVisitor;
 import exapus.model.visitors.SelectiveCopyingForestVisitor;
 
 public class APICentricEvaluator extends Evaluator {
-	
+
 	protected APICentricEvaluator(View v) {
 		super(v);
 	}
@@ -28,8 +31,8 @@ public class APICentricEvaluator extends Evaluator {
 
 	protected SelectiveCopyingForestVisitor newVisitor() {
 		SelectiveCopyingForestVisitor visitor = new SelectiveCopyingForestVisitor() {
-			
-			Selection APISelection = getView().getAPISelection();
+
+			Iterable<Selection> selections = getView().getAPISelections();
 
 			@Override
 			protected boolean select(InboundFactForest forest) {
@@ -42,18 +45,36 @@ public class APICentricEvaluator extends Evaluator {
 			}
 
 			@Override
-			protected boolean select(PackageTree packageTree) {
-				return APISelection.matchAPIPackageTree(packageTree);
+			protected boolean select(final PackageTree packageTree) {
+				return Iterables.any(selections, new Predicate<Selection>() {
+					@Override
+					public boolean apply(Selection selection) {
+						return selection.matchAPIPackageTree(packageTree);
+
+					}
+				});
 			}
 
 			@Override
-			protected boolean select(PackageLayer packageLayer) {
-				return APISelection.matchAPIPackageLayer(packageLayer);
+			protected boolean select(final PackageLayer packageLayer) {
+				return Iterables.any(selections, new Predicate<Selection>() {
+					@Override
+					public boolean apply(Selection selection) {
+						return selection.matchAPIPackageLayer(packageLayer);
+
+					}
+				});
 			}
 
 			@Override
-			protected boolean select(Member member) {
-				return APISelection.matchAPIMember(member);
+			protected boolean select(final Member member) {
+				return Iterables.any(selections, new Predicate<Selection>() {
+					@Override
+					public boolean apply(Selection selection) {
+						return selection.matchAPIMember(member);
+
+					}
+				});
 			}
 
 			@Override
@@ -67,7 +88,7 @@ public class APICentricEvaluator extends Evaluator {
 				// TODO Auto-generated method stub
 				return false;
 			}
-			
+
 		};
 		return visitor;
 	}
