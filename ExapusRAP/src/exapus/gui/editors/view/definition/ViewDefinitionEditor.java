@@ -162,10 +162,9 @@ public class ViewDefinitionEditor extends EditorPart {
 		configureSelectionTableAndToolBar(tableVWProjects, toolbarProjects);
 
 
-
 	}
 
-	private void configureSelectionTableAndToolBar(TableViewer tableVW, ToolBar toolbar) {
+	private void configureSelectionTableAndToolBar(final TableViewer tableVW, ToolBar toolbar) {
 		Table tableAPI = tableVW.getTable();
 		GridData gd_tableAPI = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
 		gd_tableAPI.heightHint = tableAPI.getItemHeight() * 4;
@@ -226,6 +225,8 @@ public class ViewDefinitionEditor extends EditorPart {
 	}
 
 	private void hasUpdatedView() {
+		
+		
 		
 	}
 
