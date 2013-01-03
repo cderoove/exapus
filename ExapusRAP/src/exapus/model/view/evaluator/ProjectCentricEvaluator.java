@@ -81,7 +81,7 @@ public class ProjectCentricEvaluator extends Evaluator {
 
 			@Override
 			protected boolean select(OutboundRef outboundRef) {
-				return false;
+				return true;
 			}
 			
 		};

@@ -79,13 +79,11 @@ public class APICentricEvaluator extends Evaluator {
 
 			@Override
 			protected boolean select(InboundRef inboundRef) {
-				// TODO Auto-generated method stub
-				return false;
+				return true;
 			}
 
 			@Override
 			protected boolean select(OutboundRef outboundRef) {
-				// TODO Auto-generated method stub
 				return false;
 			}
 
