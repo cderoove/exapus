@@ -6,11 +6,10 @@ import java.io.IOException;
 import java.io.Writer;
 
 import com.google.common.base.Joiner;
+import exapus.model.store.Store;
 
 public class GraphViz {
 
-	public static String DOT_EXC = "/usr/local/Cellar/graphviz/2.28.0/bin/dot";
-	
 	//TODO: SVG for clickable URLs in a graph, however: Chrome does not seem to render this well
 	//public static String IMG_EXT = "svg";
 	//public static String IMG_MIME = "image/svg+xml";
@@ -18,7 +17,6 @@ public class GraphViz {
 	public static String IMG_EXT = "png";
 	public static String IMG_MIME = "image/png";
 
-	
 	private Graph graph;
 
 	public GraphViz(Graph g) {
@@ -36,7 +34,7 @@ public class GraphViz {
 			if(label != null) {
 				w.write("label=");
 				w.write(label);
-				if(decorations.iterator().hasNext()) 
+				if(decorations.iterator().hasNext())
 					w.write(",");
 			}
 			w.write(Joiner.on(",").join(decorations));
@@ -53,7 +51,7 @@ public class GraphViz {
 			w.write(" -> ");
 			w.write("\"");
 			w.write(nf.getIdentifier(e.getTo()));
-			w.write("\"");			
+			w.write("\"");
 			w.write("[");
 			Iterable<String> decorations = f.decorations(e);
 			if(decorations.iterator().hasNext())
@@ -92,10 +90,10 @@ public class GraphViz {
 			w.close();
 		}
 	}
-	
+
 	private void dotToImage(File dotfile, File imgfile) throws IOException {
 		Runtime rt = Runtime.getRuntime();
-		String[] cmdargs = {DOT_EXC, "-T"+IMG_EXT, dotfile.getAbsolutePath(), "-o", imgfile.getAbsolutePath()};
+		String[] cmdargs = {Store.Settings.DOT_EXC.getValue(), "-T" + IMG_EXT, dotfile.getAbsolutePath(), "-o", imgfile.getAbsolutePath()};
 		Process p;
 		try {
 			p = rt.exec(cmdargs);
@@ -104,9 +102,9 @@ public class GraphViz {
 		catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-				
+
 	}
-	
+
 	public File toImage(IGraphFormatter gf, INodeFormatter nf, IEdgeFormatter ef) throws IOException {
 		File dotfile = File.createTempFile("generateddot", ".dot");
 		toDotFile(dotfile,gf,nf,ef);

@@ -1,8 +1,11 @@
 package exapus.model.store;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -21,6 +24,7 @@ public class Store extends Observable {
 	private static Store current;
 
 	static {
+        readSettings();
 		current = new Store();
 	}
 	
@@ -97,5 +101,40 @@ public class Store extends Observable {
 	
 	public File graphForRegisteredView(String name) {
 		return getView(name).draw();
-	} 
+	}
+
+	// This file should be located in the same dir as eclipse.ini
+	// I.e., for Mac OS: PATH_TO_THE_ECLPSE_DIR/Eclipse.app/Contents/MacOS/
+	private static final String CONFIG_FILENAME = "config.properties";
+	
+    private static void readSettings() {
+        Properties prop = new Properties();
+        try {
+            prop.load(new FileInputStream(CONFIG_FILENAME));
+            Settings.DOT_EXC.setValue(prop.getProperty(Settings.DOT_EXC.key));
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public static enum Settings {
+        DOT_EXC("dot.path", "/usr/local/bin/dot");
+
+        private Settings(String key, String defaultValue) {
+            this.key = key;
+            this.value = defaultValue;
+        }
+
+        private void setValue(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        private String key;
+        private String value;
+    }
+
 }
