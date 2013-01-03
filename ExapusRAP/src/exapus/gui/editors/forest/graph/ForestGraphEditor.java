@@ -17,15 +17,18 @@ import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.PartInitException;
 
 import exapus.gui.editors.SelectedForestElementImageBrowserViewPart;
+import exapus.gui.editors.view.IViewEditorPage;
+import exapus.gui.editors.view.ViewEditor;
 import exapus.model.forest.FactForest;
 import exapus.model.forest.ForestElement;
 import exapus.model.store.Store;
 
-public class ForestGraphEditor extends SelectedForestElementImageBrowserViewPart implements IEditorPart {
+public class ForestGraphEditor extends SelectedForestElementImageBrowserViewPart implements IEditorPart, IViewEditorPage {
 	
 	private IEditorSite editorSite;
 	private IEditorInput editorInput;
-	
+	private ViewEditor viewEditor;
+		
 	public static final String ID = "exapus.gui.views.forest.ForestGraphView";
 	private final static String GRAPH_KEY = "graphviz";
 
@@ -74,7 +77,7 @@ public class ForestGraphEditor extends SelectedForestElementImageBrowserViewPart
 	
 	@Override
 	protected String textToRender() {
-		File imageFile = Store.getCurrent().graphForRegisteredView(editorInput.getName(),false);
+		File imageFile = Store.getCurrent().graphForRegisteredView(editorInput.getName());
 		if(imageFile != null) {
 			registerImage(GRAPH_KEY, imageFile);
 			if(fileHasSafeSize(imageFile)) 
@@ -85,7 +88,8 @@ public class ForestGraphEditor extends SelectedForestElementImageBrowserViewPart
 		return "";
 	}
 
-    protected void setInput(IEditorInput input) {
+
+	protected void setInput(IEditorInput input) {
     	editorInput = input;
 	}
 
@@ -182,6 +186,11 @@ public class ForestGraphEditor extends SelectedForestElementImageBrowserViewPart
 	public IEditorSite getEditorSite() {
 		return editorSite;
 	}
+
+	public void setViewEditor(ViewEditor viewEditor) {
+		this.viewEditor = viewEditor;
+	}
+
 
 
 

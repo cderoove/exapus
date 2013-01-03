@@ -39,7 +39,7 @@ public class ViewEditor extends MultiPageEditorPart {
 		super.init(site, input);
 		setPartName(input.getName());
 	}
-
+	
 	@Override
 	protected void createPages() {
 		forestTree = new ForestTreeEditor();
@@ -49,10 +49,13 @@ public class ViewEditor extends MultiPageEditorPart {
 		try {
 			index = addPage(viewDefinition, getEditorInput());
 			setPageText(index, "View");
+			viewDefinition.setViewEditor(this);
 			index = addPage(forestTree, getEditorInput());
 			setPageText(index, "Table");
+			forestTree.setViewEditor(this);
 			index = addPage(forestGraph, getEditorInput());
 			setPageText(index, "Graph");
+			forestGraph.setViewEditor(this);
 		} catch( PartInitException e ) {
 			e.printStackTrace();
 		}

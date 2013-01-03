@@ -17,11 +17,13 @@ import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
+import exapus.gui.editors.view.IViewEditorPage;
+import exapus.gui.editors.view.ViewEditor;
 import exapus.gui.views.forest.reference.ForestReferenceViewPart;
 import exapus.model.forest.FactForest;
 import exapus.model.store.Store;
 
-public class ForestTreeEditor implements IEditorPart, IDoubleClickListener {
+public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IViewEditorPage {
 
 	private IEditorSite editorSite; 
 	private IEditorInput editorInput;
@@ -46,6 +48,7 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener {
 	//public static final String ID_DUAL = "exapus.gui.views.DualFactForestTreeView";
 
 	private TreeViewer viewer;
+	private ViewEditor viewEditor;
 
 	/*
 	public boolean isDualFactForestViewer() {
@@ -152,9 +155,9 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener {
 	 */
 	
 	
-	private void update() {
+	public void updateControls() {
 		String viewName = getEditorInput().getName();
-		FactForest forest = Store.getCurrent().forestForRegisteredView(viewName,false);
+		FactForest forest = Store.getCurrent().forestForRegisteredView(viewName);
 		viewer.setInput(forest);
 		viewer.expandToLevel(3);
 	}
@@ -162,7 +165,7 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener {
 	
 	public void setFocus() {
 		viewer.getControl().setFocus();
-		update();
+		updateControls();
 	}
 
 	@Override
@@ -269,6 +272,11 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener {
 	@Override
 	public IEditorSite getEditorSite() {
 		return editorSite;
+	}
+
+	public void setViewEditor(ViewEditor viewEditor) {
+		this.viewEditor = viewEditor;
+		
 	}
 
 

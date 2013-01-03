@@ -50,22 +50,22 @@ import org.eclipse.swt.widgets.ToolItem;
 import com.google.common.collect.Iterables;
 
 import exapus.gui.editors.forest.tree.ForestTreeLabelProviders;
+import exapus.gui.editors.view.IViewEditorPage;
+import exapus.gui.editors.view.ViewEditor;
 import exapus.model.store.Store;
 import exapus.model.view.Perspective;
 import exapus.model.view.Selection;
 import exapus.model.view.View;
 
 //todo: implement view change listener, also in other editor parts
-public class ViewDefinitionEditor extends EditorPart {
+public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 
 	private ComboViewer comboVWPerspective;
 	private Button checkRenderable;
 	private TableViewer tableVWAPI;
 	private TableViewer tableVWProjects;
+	private ViewEditor viewEditor;
 
-
-	public ViewDefinitionEditor() {
-	}
 
 	@Override
 	public void doSave(IProgressMonitor monitor) {
@@ -116,7 +116,6 @@ public class ViewDefinitionEditor extends EditorPart {
 				Object selected = selection.getFirstElement();
 				if(selected instanceof Perspective) {
 					getView().setPerspective((Perspective)selected);
-					hasUpdatedView();
 				}
 			}
 		});
@@ -224,20 +223,18 @@ public class ViewDefinitionEditor extends EditorPart {
 		updateControls();
 	}
 
-	private void hasUpdatedView() {
-		
-		
-		
-	}
 
-	private void updateControls() {
+	public void updateControls() {
 		View view = getView();
 		comboVWPerspective.setSelection(new StructuredSelection(view.getPerspective()));
 		checkRenderable.setSelection(view.getRenderable());
 		tableVWAPI.setInput(Iterables.toArray(view.getAPISelections(),Object.class));
 		tableVWProjects.setInput(Iterables.toArray(view.getProjectSelections(),Object.class));
+	}
 
 
+	public void setViewEditor(ViewEditor viewEditor) {
+		this.viewEditor = viewEditor;
 	}
 
 }
