@@ -1,7 +1,15 @@
 package exapus.model.view;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import exapus.model.forest.FactForest;
+import exapus.model.view.evaluator.Evaluator;
+import exapus.model.view.graphbuilder.ForestGraph;
+import exapus.model.view.graphbuilder.GraphBuilder;
+import exapus.model.view.graphdrawer.GraphDrawer;
 
 public abstract class View {
 
@@ -12,6 +20,10 @@ public abstract class View {
 		projectselection = new ArrayList<Selection>();
 		renderable = true;
 	}
+
+	
+	private FactForest forest = null;
+	private File graph = null;
 	
 	private static 	Perspective[] supportedPerspectives = {Perspective.API_CENTRIC, Perspective.PROJECT_CENTRIC};
 
@@ -39,10 +51,12 @@ public abstract class View {
 	
 	public void setRenderable(boolean renderable) {
 		this.renderable = renderable;
+		makeDirty();
 	}
 	
 	public void setPerspective(Perspective perspective) {
 		this.perspective = perspective;
+		makeDirty();
 	}
 
 	public Iterable<Selection> getAPISelections() {
@@ -51,10 +65,13 @@ public abstract class View {
 
 	public void addAPISelection(Selection selection) {
 		apiselection.add(selection);
+		makeDirty();
 	}
 	
 	public boolean removeAPISelection(Selection selection) {
-		return apiselection.remove(selection);
+		boolean result = apiselection.remove(selection);
+		makeDirty();
+		return result;
 	}
 
 	public Iterable<Selection> getProjectSelections() {
@@ -62,11 +79,19 @@ public abstract class View {
 	}
 
 	public void addProjectSelection(Selection selection) {
-		projectselection.add(selection) ;
+		projectselection.add(selection);
+		makeDirty();
 	}
 	
 	public boolean removeProjectSelection(Selection selection) {
-		return projectselection.remove(selection);
+		boolean result = projectselection.remove(selection);
+		makeDirty();
+		return result;
+	}
+	
+	protected void makeDirty() {
+		forest = null;
+		graph = null;
 	}
 
 	public String getName() {
@@ -80,6 +105,34 @@ public abstract class View {
 	public abstract boolean isAPICentric();
 	
 	public abstract boolean isProjectCentric();
+	
+	
+	private FactForest lazyEvaluate() {
+		if(forest == null) 
+			forest = Evaluator.evaluate(this);
+		return forest;
+	}
+	
+	public FactForest evaluate() {
+		return lazyEvaluate();
+	}
+	
+	public File draw() {
+		return lazyDraw();
+	}
+	
+	private File lazyDraw() {
+		if(graph == null) {
+			FactForest forest = evaluate();
+			ForestGraph fg = GraphBuilder.forView(this).build(forest);
+			try {
+				graph = GraphDrawer.forView(this).draw(fg);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return graph;
+	}
 	
 	
 }
