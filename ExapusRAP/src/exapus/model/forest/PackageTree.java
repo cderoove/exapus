@@ -33,6 +33,11 @@ public class PackageTree extends ForestElement  implements ILayerContainer  {
 		root.setParent(this); // TODO: this might cause the root layer to show
 		// up in views
 	}
+	
+	@Override
+	public QName getQName() {
+		return new QName(getName());
+	}
 
 	public PackageLayer getHiddenRootLayer() {
 		return root;
