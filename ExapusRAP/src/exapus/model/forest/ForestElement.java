@@ -1,19 +1,18 @@
 package exapus.model.forest;
 
-import java.util.LinkedList;
-
+import exapus.gui.editors.forest.graph.INode;
+import exapus.model.metrics.Metric;
+import exapus.model.metrics.TotalNumberAPIReferences;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 
-import com.google.common.collect.Iterables;
-
-import exapus.gui.editors.forest.graph.INode;
+import java.util.LinkedList;
 
 public abstract class ForestElement implements INode {
+    private Metric metric;
 
 	private ForestElement parent;
 
@@ -138,5 +137,12 @@ public abstract class ForestElement implements INode {
 		return 0;
 	}
 
-	
+    public Metric getMetric() {
+        if (metric == null) {
+            // Currently hard-coded calculation of one metric.
+            // TODO: accept metric selection
+            metric = new TotalNumberAPIReferences();
+        }
+        return metric;
+    }
 }

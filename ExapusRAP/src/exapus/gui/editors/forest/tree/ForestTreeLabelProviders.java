@@ -1,16 +1,9 @@
 package exapus.gui.editors.forest.tree;
 
+import exapus.model.forest.*;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-
-import exapus.model.forest.Element;
-import exapus.model.forest.InboundRef;
-import exapus.model.forest.Member;
-import exapus.model.forest.OutboundRef;
-import exapus.model.forest.PackageLayer;
-import exapus.model.forest.PackageTree;
-import exapus.model.forest.Ref;
 
 public class ForestTreeLabelProviders {
 
@@ -116,5 +109,26 @@ public class ForestTreeLabelProviders {
 
 	}
 
+    public static class MetricColumnLabelProvider extends ColumnLabelProvider {
+
+        public String getText(Object element) {
+            if (element instanceof ForestElement) {
+                ForestElement fe = (ForestElement) element;
+                return fe.getMetric().getValue();
+            }
+
+            return null;
+        }
+
+    }
+
+    // For debugging purposes
+    public static class DebugColumnLabelProvider extends ColumnLabelProvider {
+
+        public String getText(Object element) {
+            return element.getClass().getCanonicalName();
+        }
+
+    }
 
 }

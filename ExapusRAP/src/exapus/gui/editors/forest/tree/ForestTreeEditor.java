@@ -1,5 +1,10 @@
 package exapus.gui.editors.forest.tree;
 
+import exapus.gui.editors.view.IViewEditorPage;
+import exapus.gui.editors.view.ViewEditor;
+import exapus.gui.views.forest.reference.ForestReferenceViewPart;
+import exapus.model.forest.FactForest;
+import exapus.model.store.Store;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -9,19 +14,7 @@ import org.eclipse.rwt.RWT;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IEditorSite;
-import org.eclipse.ui.IPropertyListener;
-import org.eclipse.ui.IWorkbenchPartSite;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
-
-import exapus.gui.editors.view.IViewEditorPage;
-import exapus.gui.editors.view.ViewEditor;
-import exapus.gui.views.forest.reference.ForestReferenceViewPart;
-import exapus.model.forest.FactForest;
-import exapus.model.store.Store;
+import org.eclipse.ui.*;
 
 public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IViewEditorPage {
 
@@ -92,8 +85,23 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 		lineCol.getColumn().setText("Line");
 		lineCol.getColumn().setWidth(50);
 		lineCol.setLabelProvider(new ForestTreeLabelProviders.LineColumnLabelProvider());
-		
-		getSite().setSelectionProvider(viewer);
+
+        // Currently hard-coded calculation of one metric.
+        // TODO: accept metric selection and change column caption appropriately
+        TreeViewerColumn metricCol = new TreeViewerColumn(viewer, SWT.RIGHT);
+        metricCol.getColumn().setText("#APIRefs");
+        metricCol.getColumn().setWidth(100);
+        metricCol.setLabelProvider(new ForestTreeLabelProviders.MetricColumnLabelProvider());
+
+/*
+        // For debugging purposes
+        TreeViewerColumn debug = new TreeViewerColumn(viewer, SWT.RIGHT);
+        debug.getColumn().setText("Debug");
+        debug.getColumn().setWidth(150);
+        debug.setLabelProvider(new ForestTreeLabelProviders.DebugColumnLabelProvider());
+*/
+
+        getSite().setSelectionProvider(viewer);
 
 
 		/*
