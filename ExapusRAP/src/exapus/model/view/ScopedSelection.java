@@ -1,28 +1,26 @@
 package exapus.model.view;
 
-import java.util.List;
-
 import exapus.model.forest.Member;
 import exapus.model.forest.PackageLayer;
 import exapus.model.forest.PackageTree;
-import exapus.model.forest.UqName;
+import exapus.model.forest.QName;
 
 public class ScopedSelection extends Selection {
 
-	public ScopedSelection(UqName name, Scope scope) {
+	public ScopedSelection(QName name, Scope scope) {
 		super();
 		this.name = name;
 		this.scope = scope;
 	}
 	
-	public ScopedSelection(UqName name) {
-		this(name,RootScope.getCurrent());
+	public ScopedSelection(QName name) {
+		this(name, Scope.ROOT_SCOPE);
 	}
 	
 
 	private Scope scope;
 		
-	private UqName name;
+	private QName name;
 
 
 	@Override
@@ -69,11 +67,11 @@ public class ScopedSelection extends Selection {
 		this.scope = scope;
 	}
 
-	private UqName getName() {
+	private QName getName() {
 		return name;
 	}
 
-	private void setName(UqName name) {
+	private void setName(QName name) {
 		this.name = name;
 	}
 
