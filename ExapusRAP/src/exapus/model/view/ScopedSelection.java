@@ -21,12 +21,16 @@ public class ScopedSelection extends Selection {
 	private Scope scope;
 		
 	private QName name;
-
-
+	
+	
+	private boolean matchPackageTree(PackageTree packageTree) {
+		return scope.equals(Scope.ROOT_SCOPE) && packageTree.getQName().equals(name);
+	}
+	
 	@Override
 	public boolean matchAPIPackageTree(PackageTree packageTree) {
-		// TODO Auto-generated method stub
-		return false;
+		return matchPackageTree(packageTree);
+	
 	}
 
 	@Override
@@ -43,8 +47,7 @@ public class ScopedSelection extends Selection {
 
 	@Override
 	public boolean matchProjectPackageTree(PackageTree packageTree) {
-		// TODO Auto-generated method stub
-		return false;
+		return matchPackageTree(packageTree);
 	}
 
 	@Override
