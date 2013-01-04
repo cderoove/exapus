@@ -54,6 +54,10 @@ public class QName {
 	public QName(String s) {
 		this(Splitter.on('.').split(s));
 	}
+
+	public QName(UqName n) {
+		this(n.toString());
+	}
 	
 	public boolean hasMultipleComponents() {
 		return components.size() > 1;
@@ -69,7 +73,11 @@ public class QName {
 
 	// TODO: clean up equals/hashcode
 	public boolean equals(Object o) {
-		return identifier.equals(o);
+		if(o instanceof QName) {
+			QName other = (QName)  o;
+			return identifier.equals(other.identifier);
+		}
+		return false;
 	}
 
 	public int hashCode() {
