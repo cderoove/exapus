@@ -3,7 +3,6 @@ package exapus.model.view.evaluator;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import exapus.model.forest.*;
-import exapus.model.metrics.Tmp;
 import exapus.model.metrics.TotalNumberAPIReferencesVisitor;
 import exapus.model.store.Store;
 import exapus.model.view.Selection;

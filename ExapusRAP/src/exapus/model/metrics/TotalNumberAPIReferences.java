@@ -6,7 +6,7 @@ import exapus.model.forest.ForestElement;
  * Direct sum of all references below the node
  */
 
-public class TotalNumberAPIReferences implements Metric {
+public class TotalNumberAPIReferences implements IMetric {
 
     private int value = 0;
 

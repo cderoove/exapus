@@ -1,7 +1,7 @@
 package exapus.model.forest;
 
 import exapus.gui.editors.forest.graph.INode;
-import exapus.model.metrics.Metric;
+import exapus.model.metrics.IMetric;
 import exapus.model.metrics.TotalNumberAPIReferences;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jdt.core.ICompilationUnit;
@@ -12,7 +12,7 @@ import org.eclipse.jdt.core.JavaModelException;
 import java.util.LinkedList;
 
 public abstract class ForestElement implements INode {
-    private Metric metric;
+    private IMetric metric;
 
 	private ForestElement parent;
 
@@ -137,7 +137,7 @@ public abstract class ForestElement implements INode {
 		return 0;
 	}
 
-    public Metric getMetric() {
+    public IMetric getMetric() {
         if (metric == null) {
             // Currently hard-coded calculation of one metric.
             // TODO: accept metric selection
