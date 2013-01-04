@@ -1,55 +1,37 @@
 package exapus.gui.editors.view.definition;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.action.IMenuCreator;
-import org.eclipse.jface.action.IMenuListener;
-import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellLabelProvider;
 import org.eclipse.jface.viewers.ComboViewer;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
-import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.viewers.ViewerCell;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorSite;
-import org.eclipse.ui.ISelectionListener;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.part.EditorPart;
-import org.eclipse.swt.events.HelpListener;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.TableItem;
-import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.widgets.Combo;
-import org.eclipse.swt.widgets.List;
-import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.part.EditorPart;
 
 import com.google.common.collect.Iterables;
 
-import exapus.gui.editors.forest.tree.ForestTreeLabelProviders;
 import exapus.gui.editors.view.IViewEditorPage;
 import exapus.gui.editors.view.ViewEditor;
 import exapus.model.store.Store;
@@ -108,7 +90,7 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 		Combo combo = comboVWPerspective.getCombo();
 		combo.setLayoutData(gd_ComboPerspective);
 		comboVWPerspective.setContentProvider(ArrayContentProvider.getInstance());
-		comboVWPerspective.setInput(View.supportedPerspectives());
+		comboVWPerspective.setInput(Perspective.supportedPerspectives());
 		comboVWPerspective.addSelectionChangedListener(new ISelectionChangedListener() {
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
@@ -149,7 +131,7 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 
 		tableVWAPI = new TableViewer(parent, SWT.BORDER | SWT.V_SCROLL);
 		ToolBar toolbarAPI = new ToolBar(parent, SWT.VERTICAL);
-		configureSelectionTableAndToolBar(tableVWAPI, toolbarAPI);
+		configureSelectionTableAndToolBar(tableVWAPI, toolbarAPI, Perspective.API_CENTRIC);
 		
 		//Projects
 		Label lblProjectsLabel = new Label(parent, SWT.NONE);
@@ -158,12 +140,12 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 		
 		tableVWProjects = new TableViewer(parent, SWT.BORDER | SWT.V_SCROLL);
 		ToolBar toolbarProjects = new ToolBar(parent, SWT.VERTICAL);
-		configureSelectionTableAndToolBar(tableVWProjects, toolbarProjects);
+		configureSelectionTableAndToolBar(tableVWProjects, toolbarProjects, Perspective.PROJECT_CENTRIC);
 
 
 	}
 
-	private void configureSelectionTableAndToolBar(final TableViewer tableVW, ToolBar toolbar) {
+	private void configureSelectionTableAndToolBar(final TableViewer tableVW, ToolBar toolbar, final Perspective perspective) {
 		Table tableAPI = tableVW.getTable();
 		GridData gd_tableAPI = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
 		gd_tableAPI.heightHint = tableAPI.getItemHeight() * 4;
@@ -195,24 +177,61 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 		
 		
 	    ToolItem toolItemAddAPI = new ToolItem(toolbar, SWT.PUSH);
-	    toolItemAddAPI.setText("New");
+	    toolItemAddAPI.setText("Add");
+	    toolItemAddAPI.addSelectionListener(new SelectionAdapter() {
+	    	public void widgetSelected( final SelectionEvent event ) {
+	    		showSelectionDialog(perspective);
+	    	}
+	    });
+
+	    /*
 	    final ToolItem toolItemEditAPI = new ToolItem(toolbar, SWT.PUSH);
 	    toolItemEditAPI.setEnabled(false);
 	    toolItemEditAPI.setText("Edit");
+	    */
+	    
 	    final ToolItem toolItemDeleteAPI = new ToolItem(toolbar, SWT.PUSH);
 	    toolItemDeleteAPI.setEnabled(false);
 	    toolItemDeleteAPI.setText("Delete");
+	    toolItemDeleteAPI.addSelectionListener(new SelectionAdapter() {
+	    	public void widgetSelected( final SelectionEvent event ) {
+	    		IStructuredSelection sel = (IStructuredSelection) tableVW.getSelection();
+	    		if(sel.isEmpty())
+	    			return;
+	    		Selection selectedSelection = (Selection) sel.getFirstElement();
+		    	if(perspective.equals(Perspective.API_CENTRIC))
+		    		getView().removeAPISelection(selectedSelection);
+		    	if(perspective.equals(Perspective.PROJECT_CENTRIC))
+		    		getView().removeProjectSelection(selectedSelection);
+		    	updateControls();
+	    	}
+	    });
+
+	    
 
 	    tableVW.addSelectionChangedListener(new ISelectionChangedListener() {
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				boolean enabled = !event.getSelection().isEmpty();
-				toolItemEditAPI.setEnabled(enabled);
+				//toolItemEditAPI.setEnabled(enabled);
 				toolItemDeleteAPI.setEnabled(enabled);
 			}
 		});
 	}
 	
+	protected void showSelectionDialog(Perspective perspective) {
+	    SelectionDialog selectionDialog  = new SelectionDialog(getSite().getShell(), perspective);
+	    int returnCode = selectionDialog.open();
+	    if(returnCode == IDialogConstants.OK_ID) {
+	    	Selection newSelection = selectionDialog.getSelection();
+	    	if(perspective.equals(Perspective.API_CENTRIC))
+	    		getView().addAPISelection(newSelection);
+	    	if(perspective.equals(Perspective.PROJECT_CENTRIC))
+	    		getView().addProjectSelection(newSelection);
+	    }
+	    updateControls();
+	}
+
 	private View getView() {
 		return Store.getCurrent().getView(getEditorInput().getName());
 

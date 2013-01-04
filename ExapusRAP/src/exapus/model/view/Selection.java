@@ -22,4 +22,11 @@ public abstract class Selection {
 	
 	public abstract String getScopeString();
 	
+	
+	private static Class<?>[] supportedSelections = {UniversalSelection.class, ScopedSelection.class};
+	public static Object supportedSelections() {
+		return supportedSelections;
+	}
+
+	
 }

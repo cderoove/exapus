@@ -24,12 +24,10 @@ public abstract class View {
 	
 	private FactForest forest = null;
 	private File graph = null;
-	
-	private static 	Perspective[] supportedPerspectives = {Perspective.API_CENTRIC, Perspective.PROJECT_CENTRIC};
+		
 
-	public static Perspective[] supportedPerspectives() {
-		return supportedPerspectives;
-	}
+	
+	
 
 	private boolean renderable;
 	
@@ -133,6 +131,7 @@ public abstract class View {
 		}
 		return graph;
 	}
+
 	
 	
 }
