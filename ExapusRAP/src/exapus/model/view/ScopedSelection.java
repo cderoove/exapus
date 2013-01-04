@@ -24,43 +24,58 @@ public class ScopedSelection extends Selection {
 	
 	
 	private boolean matchPackageTree(PackageTree packageTree) {
-		return scope.equals(Scope.ROOT_SCOPE) && packageTree.getQName().equals(name);
-	}
-	
-	@Override
-	public boolean matchAPIPackageTree(PackageTree packageTree) {
-		return matchPackageTree(packageTree);
-	
-	}
-
-	@Override
-	public boolean matchAPIPackageLayer(PackageLayer packageLayer) {
-		// TODO Auto-generated method stub
+		if(scope.equals(Scope.ROOT_SCOPE)) {
+			 return packageTree.getQName().equals(name);
+		}
 		return false;
 	}
-
-	@Override
-	public boolean matchAPIMember(Member member) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
+	
 	@Override
 	public boolean matchProjectPackageTree(PackageTree packageTree) {
 		return matchPackageTree(packageTree);
 	}
 
 	@Override
+	public boolean matchAPIPackageTree(PackageTree packageTree) {
+		return matchPackageTree(packageTree);
+	}
+
+	@Override
+	public boolean matchAPIPackageLayer(PackageLayer packageLayer) {
+		return matchPackageLayer(packageLayer);
+	}
+	
+	@Override
 	public boolean matchProjectPackageLayer(PackageLayer packageLayer) {
-		// TODO Auto-generated method stub
+		return matchPackageLayer(packageLayer);
+	}
+
+	private boolean matchPackageLayer(PackageLayer packageLayer) {
+		if(scope.equals(Scope.ROOT_SCOPE)) {
+			PackageTree tree = packageLayer.getParentPackageTree();
+			return matchPackageTree(tree);
+		}
 		return false;
 	}
 
 	@Override
+	public boolean matchAPIMember(Member member) {
+		return matchMember(member);
+	}
+
+	@Override
 	public boolean matchProjectMember(Member member) {
-		// TODO Auto-generated method stub
+		return matchMember(member);
+	}
+
+	private boolean matchMember(Member member) {
+		if(scope.equals(Scope.ROOT_SCOPE)) {
+			PackageTree tree = member.getParentPackageTree();
+			return matchPackageTree(tree);
+		}
 		return false;
 	}
+
 
 	private Scope getScope() {
 		return scope;
