@@ -118,7 +118,7 @@ public class Store extends Observable {
     }
 
     public static enum Settings {
-        DOT_EXC("dot.path", "/usr/local/bin/dot");
+        DOT_EXC("dot.path", "/usr/local/Cellar/graphviz/2.28.0/bin/dot");
 
         private Settings(String key, String defaultValue) {
             this.key = key;
