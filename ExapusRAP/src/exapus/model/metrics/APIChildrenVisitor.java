@@ -3,11 +3,11 @@ package exapus.model.metrics;
 import exapus.model.forest.*;
 import exapus.model.visitors.IForestVisitor;
 
-public class TotalNumberAPIReferencesVisitor implements IForestVisitor {
+public class APIChildrenVisitor implements IForestVisitor {
 
     private static void initMetric(ForestElement fe) {
         if (fe.getMetric() == null) {
-            fe.setMetric(new TotalNumberAPIReferences());
+            fe.setMetric(new APIChildren());
         }
     }
 
@@ -47,9 +47,19 @@ public class TotalNumberAPIReferencesVisitor implements IForestVisitor {
     @Override
     public boolean visitOutboundReference(OutboundRef outboundRef) {
         initMetric(outboundRef);
-        if (outboundRef.getMetric() instanceof TotalNumberAPIReferences) {
-            ((TotalNumberAPIReferences) outboundRef.getMetric()).pp(outboundRef);
+        Pattern pattern = outboundRef.getReferencingPattern();
+
+        switch (pattern) {
+            case EXTENDS_CLASS:
+            case IMPLEMENTS_INTERFACE:
+            case EXTENDS_INTERFACE:
+                if (outboundRef.getMetric() instanceof APIChildren) {
+                    ((APIChildren) outboundRef.getMetric()).pp(outboundRef);
+                }
+		default:
+			break;
         }
+
         return true;
     }
 }

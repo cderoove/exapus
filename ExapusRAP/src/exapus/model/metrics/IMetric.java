@@ -1,6 +1,6 @@
 package exapus.model.metrics;
 
-public interface Metric {
+public interface IMetric {
     /**
      * @return formatted value
      */
