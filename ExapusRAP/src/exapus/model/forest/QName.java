@@ -1,5 +1,6 @@
 package exapus.model.forest;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.AbstractList;
 import java.util.ArrayList;
@@ -46,7 +47,7 @@ public class QName {
 				components.add(new UqName(s));
 		identifier = Joiner.on('.').join(i);
 	}
-
+	
 	public QName(IPackageFragment f) {
 		this(f.getElementName());
 	}
@@ -58,7 +59,7 @@ public class QName {
 	public QName(UqName n) {
 		this(n.toString());
 	}
-	
+		
 	public boolean hasMultipleComponents() {
 		return components.size() > 1;
 	}
@@ -83,5 +84,29 @@ public class QName {
 	public int hashCode() {
 		return identifier.hashCode();
 	}
+	
+	public boolean isPrefixOf(QName other) {
+		Iterator<UqName> myComponents = components.iterator();
+		Iterator<UqName> otherComponents = other.getComponents().iterator();
+		while(myComponents.hasNext()) {
+			UqName myComponent = myComponents.next();
+			if(!otherComponents.hasNext())
+				return false;
+			UqName otherComponent = otherComponents.next();
+			if(!myComponent.equals(otherComponent))
+				return false;
+		}
+		return true;
+	}
+	
+	public QName getPackageName() {
+		int size = components.size();
+		if(size == 0)
+			return null;
+		return new QName(Joiner.on('.').join(components.subList(0, size - 1)));		
+	}
+	
+	
+
 
 }

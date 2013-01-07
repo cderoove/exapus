@@ -220,16 +220,17 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 	}
 	
 	protected void showSelectionDialog(Perspective perspective) {
-	    SelectionDialog selectionDialog  = new SelectionDialog(getSite().getShell(), perspective);
-	    int returnCode = selectionDialog.open();
-	    if(returnCode == IDialogConstants.OK_ID) {
-	    	Selection newSelection = selectionDialog.getSelection();
-	    	if(perspective.equals(Perspective.API_CENTRIC))
-	    		getView().addAPISelection(newSelection);
-	    	if(perspective.equals(Perspective.PROJECT_CENTRIC))
-	    		getView().addProjectSelection(newSelection);
-	    }
-	    updateControls();
+		SelectionDialog selectionDialog  = new SelectionDialog(getSite().getShell(), perspective);
+		int returnCode = selectionDialog.open();
+		if(returnCode == IDialogConstants.OK_ID) {
+			Selection newSelection = selectionDialog.getSelection();
+			if(newSelection != null) {
+				if(perspective.equals(Perspective.API_CENTRIC))
+					getView().addAPISelection(newSelection);
+				if(perspective.equals(Perspective.PROJECT_CENTRIC))
+					getView().addProjectSelection(newSelection);
+			}}
+		updateControls();
 	}
 
 	private View getView() {
