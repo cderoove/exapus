@@ -11,6 +11,7 @@ import exapus.model.forest.OutboundFactForest;
 import exapus.model.forest.OutboundRef;
 import exapus.model.forest.PackageLayer;
 import exapus.model.forest.PackageTree;
+import exapus.model.metrics.APIParentsVisitor;
 import exapus.model.store.Store;
 import exapus.model.view.Selection;
 import exapus.model.view.View;
@@ -96,7 +97,16 @@ public class APICentricEvaluator extends Evaluator {
 		SelectiveCopyingForestVisitor v = newVisitor();
 		InboundFactForest workspaceForest = Store.getCurrent().getWorkspaceModel().getAPICentricForest();
 		FactForest forest = v.copy(workspaceForest);
-		modelResult.setAPICentricForest((InboundFactForest) forest);
+
+        // Currently hard-coded calculation of one metric.
+        // TODO: accept metric selection
+        long startTime = System.currentTimeMillis();
+        forest.acceptVisitor(new APIParentsVisitor());
+        long stopTime = System.currentTimeMillis();
+        long elapsedTime = stopTime - startTime;
+        System.err.printf("Metric calculation: %d ms\n", elapsedTime);
+
+        modelResult.setAPICentricForest((InboundFactForest) forest);
 	}
 
 }
