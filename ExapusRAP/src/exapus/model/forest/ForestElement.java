@@ -2,7 +2,6 @@ package exapus.model.forest;
 
 import exapus.gui.editors.forest.graph.INode;
 import exapus.model.metrics.IMetric;
-import exapus.model.metrics.TotalNumberAPIReferences;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaProject;
@@ -138,11 +137,10 @@ public abstract class ForestElement implements INode {
 	}
 
     public IMetric getMetric() {
-        if (metric == null) {
-            // Currently hard-coded calculation of one metric.
-            // TODO: accept metric selection
-            metric = new TotalNumberAPIReferences();
-        }
         return metric;
+    }
+
+    public void setMetric(IMetric metric) {
+        this.metric = metric;
     }
 }
