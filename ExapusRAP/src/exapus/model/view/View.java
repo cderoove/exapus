@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import exapus.model.forest.FactForest;
+import exapus.model.metrics.Metrics;
 import exapus.model.view.evaluator.Evaluator;
 import exapus.model.view.graphbuilder.ForestGraph;
 import exapus.model.view.graphbuilder.GraphBuilder;
@@ -36,6 +37,8 @@ public abstract class View {
 	private List<Selection> apiselection;
 	
 	private List<Selection> projectselection;
+
+    private Metrics metrics;
 	
 	private String name;
 
@@ -95,8 +98,16 @@ public abstract class View {
 	public String getName() {
 		return name;
 	}
-	
-	public String toString() {
+
+    public Metrics getMetrics() {
+        return metrics;
+    }
+
+    public void setMetrics(Metrics metrics) {
+        this.metrics = metrics;
+    }
+
+    public String toString() {
 		return name;
 	}
 	

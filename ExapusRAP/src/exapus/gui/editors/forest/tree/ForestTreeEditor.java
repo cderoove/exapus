@@ -23,19 +23,21 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 	
 	public static final String ID = "exapus.gui.views.forest.ForestTreeView";
 
-	/*
-	public static int viewerCount = 0;
+    private TreeViewerColumn metricCol;
 
-	private String viewID;
+    /*
+     public static int viewerCount = 0;
 
-	public String getViewID() {
-		return viewID;
-	}
+     private String viewID;
 
-	public void setViewID(String secondaryId) {
-		this.viewID = secondaryId;
-	}
-	 */
+     public String getViewID() {
+         return viewID;
+     }
+
+     public void setViewID(String secondaryId) {
+         this.viewID = secondaryId;
+     }
+      */
 
 
 	//public static final String ID_DUAL = "exapus.gui.views.DualFactForestTreeView";
@@ -86,10 +88,8 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 		lineCol.getColumn().setWidth(50);
 		lineCol.setLabelProvider(new ForestTreeLabelProviders.LineColumnLabelProvider());
 
-        // Currently hard-coded calculation of one metric.
-        // TODO: accept metric selection and change column caption appropriately
-        TreeViewerColumn metricCol = new TreeViewerColumn(viewer, SWT.RIGHT);
-        metricCol.getColumn().setText("#APIRefs");
+        metricCol = new TreeViewerColumn(viewer, SWT.RIGHT);
+        metricCol.getColumn().setText("#");
         metricCol.getColumn().setWidth(100);
         metricCol.setLabelProvider(new ForestTreeLabelProviders.MetricColumnLabelProvider());
 
@@ -164,6 +164,8 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 	
 	
 	public void updateControls() {
+        metricCol.getColumn().setText(viewEditor.getCurrentMetric().getShortName());
+
 		String viewName = getEditorInput().getName();
 		FactForest forest = Store.getCurrent().forestForRegisteredView(viewName);
 		viewer.setInput(forest);

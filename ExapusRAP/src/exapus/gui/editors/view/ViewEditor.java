@@ -1,13 +1,11 @@
 package exapus.gui.editors.view;
 
+import exapus.model.metrics.Metrics;
+import exapus.model.store.Store;
+import exapus.model.view.View;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.*;
 import org.eclipse.ui.part.MultiPageEditorPart;
-import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
 import exapus.gui.editors.forest.graph.ForestGraphEditor;
 import exapus.gui.editors.forest.tree.ForestTreeEditor;
@@ -60,4 +58,8 @@ public class ViewEditor extends MultiPageEditorPart {
 			e.printStackTrace();
 		}
 	}
+
+    public Metrics getCurrentMetric() {
+        return viewDefinition.getCurrentMetric();
+    }
 }

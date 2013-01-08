@@ -3,7 +3,6 @@ package exapus.model.view.evaluator;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import exapus.model.forest.*;
-import exapus.model.metrics.TotalNumberAPIReferencesVisitor;
 import exapus.model.store.Store;
 import exapus.model.view.Selection;
 import exapus.model.view.View;
@@ -87,13 +86,13 @@ public class ProjectCentricEvaluator extends Evaluator {
         OutboundFactForest workspaceForest = Store.getCurrent().getWorkspaceModel().getProjectCentricForest();
         FactForest forest = v.copy(workspaceForest);
 
-        // Currently hard-coded calculation of one metric.
-        // TODO: accept metric selection
-        long startTime = System.currentTimeMillis();
-        forest.acceptVisitor(new TotalNumberAPIReferencesVisitor());
-        long stopTime = System.currentTimeMillis();
-        long elapsedTime = stopTime - startTime;
-        System.err.printf("Metric calculation: %d ms\n", elapsedTime);
+        if (getView().getMetrics() != null) {
+            long startTime = System.currentTimeMillis();
+            forest.acceptVisitor(getView().getMetrics().getVisitor());
+            long stopTime = System.currentTimeMillis();
+            long elapsedTime = stopTime - startTime;
+            System.err.printf("Metric calculation: %d ms\n", elapsedTime);
+        }
 
         modelResult.setProjectCentricForest((OutboundFactForest) forest);
     }
