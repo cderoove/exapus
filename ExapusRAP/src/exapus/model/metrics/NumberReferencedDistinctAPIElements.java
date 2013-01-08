@@ -32,4 +32,14 @@ public class NumberReferencedDistinctAPIElements implements IMetric {
     public String getValue() {
         return Integer.toString(names.size());
     }
+
+    @Override
+    public int compareTo(IMetric other) {
+        if (other instanceof NumberReferencedDistinctAPIElements) {
+            NumberReferencedDistinctAPIElements another = (NumberReferencedDistinctAPIElements) other;
+            return this.names.size() < another.names.size() ? -1 : (this.names.size() > another.names.size() ? 1 : 0);
+        } else {
+            return 0;
+        }
+    }
 }
