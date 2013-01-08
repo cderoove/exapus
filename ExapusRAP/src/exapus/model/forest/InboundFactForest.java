@@ -14,7 +14,7 @@ public class InboundFactForest extends FactForest {
 	
 	public InboundFactForest(ExapusModel m) {
 		super(m, Direction.INBOUND);
-		UqName rootName = new UqName("<Non-API packages>"); //will have others once user-provided api names are supported
+		UqName rootName = new UqName("<Packages>"); //will have others once user-provided api names are supported
 		root = new PackageTree(rootName);
 		addPackageTree(root);
 	}
