@@ -77,10 +77,13 @@ public class Store extends Observable {
 	public void registerView(View view) {
 		unregisterView(view.getName()); 
 		registry.put(view.getName(), view);
+		fireUpdate(view);
 	}
 	
 	public void unregisterView(String name) {
-		registry.remove(name);
+		View removed = registry.remove(name);
+		if(removed != null)
+			fireRemove(removed);
 	}
 	
 	public View getView(String name) {
@@ -100,7 +103,6 @@ public class Store extends Observable {
 		registerView(ViewFactory.getCurrent().testAPICentricSelectionView()); 
 		registerView(ViewFactory.getCurrent().testAPICentricSelectionView2());
 		registerView(ViewFactory.getCurrent().testProjectCentricSelectionView());
-		
 	}
 		
 	public FactForest forestForRegisteredView(String name) {

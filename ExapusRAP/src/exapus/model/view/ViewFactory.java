@@ -33,7 +33,7 @@ public class ViewFactory {
 
 		
 	}
-	
+		
 	public View completePackageView() {
 		return completePackageView;
 	}

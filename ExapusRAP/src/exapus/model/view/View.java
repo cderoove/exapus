@@ -27,9 +27,6 @@ public abstract class View {
 	private File graph = null;
 		
 
-	
-	
-
 	private boolean renderable;
 	
 	private Perspective perspective;
