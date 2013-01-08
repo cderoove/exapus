@@ -34,6 +34,16 @@ public abstract class Selection {
 	public static Object supportedSelections() {
 		return supportedSelections;
 	}
+	
+	public static Selection fromSelection(Selection sel) {
+		if(sel instanceof UniversalSelection)
+			return sel;
+		if(sel instanceof ScopedSelection) {
+			ScopedSelection original = (ScopedSelection) sel;
+			return new ScopedSelection(original.getQName(), original.getScope());
+		}
+		return null;
+	}
 
 
 	

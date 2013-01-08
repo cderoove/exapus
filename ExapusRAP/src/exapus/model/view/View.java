@@ -144,6 +144,22 @@ public abstract class View {
 		return graph;
 	}
 
+	public static View fromView(View original) {
+		View duplicate;	
+		String name = "Copy of " + original.getName();
+		if(original.isAPICentric())
+			duplicate = new APICentricView(name);
+		else
+			duplicate = new ProjectCentricView(name);
+		duplicate.setRenderable(original.getRenderable());
+		for(Selection sel : original.getAPISelections())
+			duplicate.addAPISelection(Selection.fromSelection(sel));
+		for(Selection sel : original.getProjectSelections())
+			duplicate.addProjectSelection(Selection.fromSelection(sel));
+		duplicate.setMetrics(original.getMetrics());
+		return duplicate;
+	}
+
 	
 	
 }

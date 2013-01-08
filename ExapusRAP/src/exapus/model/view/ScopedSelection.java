@@ -20,6 +20,7 @@ public class ScopedSelection extends Selection {
 		this(name, Scope.PREFIX_SCOPE);
 	}
 	
+	
 
 	private Scope scope;
 		
@@ -155,25 +156,25 @@ public class ScopedSelection extends Selection {
 
 
 	
-	private Scope getScope() {
+	public Scope getScope() {
 		return scope;
 	}
 
-	private void setScope(Scope scope) {
+	public void setScope(Scope scope) {
 		this.scope = scope;
 	}
 
-	private QName getName() {
+	public QName getQName() {
 		return name;
 	}
 
-	private void setName(QName name) {
+	private void setQName(QName name) {
 		this.name = name;
 	}
 
 	@Override
 	public String getNameString() {
-		return getName().toString();
+		return getQName().toString();
 	}
 
 	@Override

@@ -13,6 +13,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
@@ -33,6 +34,24 @@ public class StoreView extends ViewPart implements IDoubleClickListener {
 
 	private ListViewer listView;
 	
+	private String promptForUniqueViewName(String dialogTitle) {
+		IInputValidator viewNameValidator = new IInputValidator() {
+			@Override
+			public String isValid(String newText) {
+				if(newText.trim().length() < 1)
+					return "Name is too short!";
+				if(Store.getCurrent().hasRegisteredView(newText))
+					return "Name is not unique!";
+				return null;
+			}
+		};
+		InputDialog dlg = new InputDialog(getSite().getShell(), dialogTitle, "Please enter a name for the view.", "New view", viewNameValidator);
+		if(dlg.open() == Window.OK) 
+			return dlg.getValue();
+		else
+			return null;
+	}
+	
 	@Override
 	public void createPartControl(final Composite parent) {
 		parent.setLayout(new FillLayout());
@@ -44,21 +63,9 @@ public class StoreView extends ViewPart implements IDoubleClickListener {
 		Action newViewAction = new Action() {
 			@Override
 			public void run() {
-				IInputValidator viewNameValidator = new IInputValidator() {
-					@Override
-					public String isValid(String newText) {
-						if(newText.trim().length() < 1)
-							return "Name is too short!";
-						if(Store.getCurrent().hasRegisteredView(newText))
-							return "Name is not unique!";
-						return null;
-					}
-				};
-				InputDialog dlg = new InputDialog(getSite().getShell(), "Create new view", "Please enter a name for the new view.", "New View", viewNameValidator);
-				if(dlg.open() == Window.OK) {
-					Store.getCurrent().registerView(new ProjectCentricView(dlg.getValue()));
-				}
-				
+				String name = promptForUniqueViewName("Create new view");
+				if(name != null)
+					Store.getCurrent().registerView(new ProjectCentricView(name));
 			}			
 		};
 		newViewAction.setText("Create new view");
@@ -66,6 +73,35 @@ public class StoreView extends ViewPart implements IDoubleClickListener {
 		newViewAction.setImageDescriptor(getImageDescriptor(ISharedImages.IMG_TOOL_NEW_WIZARD));
 		registerAction(newViewAction);
 		
+		final Action duplicateViewAction = new Action() {
+			@Override
+			public void run() {
+				IStructuredSelection selection = (IStructuredSelection) listView.getSelection();
+				if(selection.isEmpty())
+					return;
+				Object selected = selection.getFirstElement();
+				if(selected instanceof View) {
+					View selectedView = (View) selected;
+					String name = promptForUniqueViewName("Duplicate existing view");
+					if(name != null) {
+						View duplicatedView = View.fromView(selectedView);
+						duplicatedView.setName(name);
+						Store.getCurrent().registerView(duplicatedView);
+					}
+				}
+			}						
+		};
+		duplicateViewAction.setText("Duplicate selected view");
+		duplicateViewAction.setId("exapus.gui.views.store.actions.DuplicateViewAction");
+		duplicateViewAction.setImageDescriptor(getImageDescriptor(ISharedImages.IMG_TOOL_COPY));
+		duplicateViewAction.setEnabled(false);
+		registerAction(duplicateViewAction);
+		listView.addSelectionChangedListener(new ISelectionChangedListener() {			
+			@Override
+			public void selectionChanged(SelectionChangedEvent event) {
+				duplicateViewAction.setEnabled(!event.getSelection().isEmpty());
+			}
+		});
 		
 		final Action deleteViewAction = new Action() {
 			@Override
@@ -77,6 +113,10 @@ public class StoreView extends ViewPart implements IDoubleClickListener {
 				if(selected instanceof View) {
 					String name = ((View) selected).getName();
 					Store.getCurrent().unregisterView(name);
+					IWorkbenchPage wbPage = getSite().getPage();
+					IEditorPart openedEditor = wbPage.findEditor(new ViewEditorInput(name));
+					if(openedEditor != null)
+						wbPage.closeEditor(openedEditor, false);
 				}
 			}						
 		};
@@ -91,6 +131,7 @@ public class StoreView extends ViewPart implements IDoubleClickListener {
 				deleteViewAction.setEnabled(!event.getSelection().isEmpty());
 			}
 		});
+		
 
 	}
 

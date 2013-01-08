@@ -16,7 +16,7 @@ public class ExplorationPerspective implements IPerspectiveFactory {
 		String editorArea = layout.getEditorArea();
 		layout.setEditorAreaVisible(true); 
 
-		layout.addStandaloneView(StoreView.ID, true, IPageLayout.LEFT, 0.25f, editorArea);
+		layout.addStandaloneView(StoreView.ID, true, IPageLayout.LEFT, 0.27f, editorArea);
 		layout.addStandaloneView(ForestReferenceViewPart.ID, true, IPageLayout.BOTTOM, 0.60f, editorArea);
 		
 		
