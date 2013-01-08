@@ -91,8 +91,9 @@ public class Store extends Observable {
 	}
 		
 	protected void registerDefaultViews() {
-		registerView(ViewFactory.getCurrent().completeAPIView());
+		registerView(ViewFactory.getCurrent().completePackageView());
 		registerView(ViewFactory.getCurrent().completeProjectView());
+		
 	}		
 		
 	public FactForest forestForRegisteredView(String name) {
