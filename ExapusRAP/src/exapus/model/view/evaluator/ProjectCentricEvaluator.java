@@ -10,90 +10,102 @@ import exapus.model.visitors.SelectiveCopyingForestVisitor;
 
 public class ProjectCentricEvaluator extends Evaluator {
 
-    protected ProjectCentricEvaluator(View v) {
-        super(v);
-    }
+	protected ProjectCentricEvaluator(View v) {
+		super(v);
+	}
 
-    @Override
-    public FactForest getResult() {
-        return getModelResult().getProjectCentricForest();
-    }
+	@Override
+	public FactForest getResult() {
+		return getModelResult().getProjectCentricForest();
+	}
 
-    protected SelectiveCopyingForestVisitor newVisitor() {
-        SelectiveCopyingForestVisitor visitor = new SelectiveCopyingForestVisitor() {
+	protected SelectiveCopyingForestVisitor newVisitor() {
+		SelectiveCopyingForestVisitor visitor = new SelectiveCopyingForestVisitor() {
 
-            Iterable<Selection> selections = getView().getProjectSelections();
+			Iterable<Selection> selections = getView().getProjectSelections();
 
-            @Override
-            protected boolean select(InboundFactForest forest) {
-                return false;
-            }
+			@Override
+			protected boolean select(InboundFactForest forest) {
+				return false;
+			}
 
-            @Override
-            protected boolean select(OutboundFactForest forest) {
-                return true;
-            }
+			@Override
+			protected boolean select(OutboundFactForest forest) {
+				return true;
+			}
 
-            @Override
-            protected boolean select(final PackageTree packageTree) {
-                return Iterables.any(selections, new Predicate<Selection>() {
-                    @Override
-                    public boolean apply(Selection selection) {
-                        return selection.matchProjectPackageTree(packageTree);
-                    }
-                });
-            }
+			@Override
+			protected boolean select(final PackageTree packageTree) {
+				return Iterables.any(selections, new Predicate<Selection>() {
+					@Override
+					public boolean apply(Selection selection) {
+						return selection.matchProjectPackageTree(packageTree);
+					}
+				});
+			}
 
-            @Override
-            protected boolean select(final PackageLayer packageLayer) {
-                return Iterables.any(selections, new Predicate<Selection>() {
-                    @Override
-                    public boolean apply(Selection selection) {
-                        return selection.matchProjectPackageLayer(packageLayer);
+			@Override
+			protected boolean select(final PackageLayer packageLayer) {
+				return Iterables.any(selections, new Predicate<Selection>() {
+					@Override
+					public boolean apply(Selection selection) {
+						return selection.matchProjectPackageLayer(packageLayer);
 
-                    }
-                });
-            }
+					}
+				});
+			}
 
-            @Override
-            protected boolean select(final Member member) {
-                return Iterables.any(selections, new Predicate<Selection>() {
-                    @Override
-                    public boolean apply(Selection selection) {
-                        return selection.matchAPIMember(member);
-                    }
-                });
-            }
+			@Override
+			protected boolean select(final Member member) {
+				return Iterables.any(selections, new Predicate<Selection>() {
+					@Override
+					public boolean apply(Selection selection) {
+						return selection.matchAPIMember(member);
+					}
+				});
+			}
 
-            @Override
-            protected boolean select(InboundRef inboundRef) {
-                return false;
-            }
+			@Override
+			protected boolean select(InboundRef inboundRef) {
+				return false;
+			}
 
-            @Override
-            protected boolean select(OutboundRef outboundRef) {
-                return true;
-            }
+			@Override
+			protected boolean select(final OutboundRef outboundRef) {
+				return Iterables.any(selections, new Predicate<Selection>() {
+					@Override
+					public boolean apply(Selection selection) {
+						return selection.matchProjectRef(outboundRef);
+					}
+				}) && Iterables.any(getView().getAPISelections(),
+						new Predicate<Selection>() {
+					@Override
+					public boolean apply(Selection selection) {
+						return selection.matchAPIRef((InboundRef)outboundRef.getDual());
+					}
+				});
+			}
 
-        };
-        return visitor;
-    }
 
-    @Override
-    public void evaluate() {
-        SelectiveCopyingForestVisitor v = newVisitor();
-        OutboundFactForest workspaceForest = Store.getCurrent().getWorkspaceModel().getProjectCentricForest();
-        FactForest forest = v.copy(workspaceForest);
+		};
+		return visitor;
+	}
 
-        if (getView().getMetrics() != null) {
-            long startTime = System.currentTimeMillis();
-            forest.acceptVisitor(getView().getMetrics().getVisitor());
-            long stopTime = System.currentTimeMillis();
-            long elapsedTime = stopTime - startTime;
-            System.err.printf("Metric calculation: %d ms\n", elapsedTime);
-        }
+	@Override
+	public void evaluate() {
+		SelectiveCopyingForestVisitor v = newVisitor();
+		OutboundFactForest workspaceForest = Store.getCurrent().getWorkspaceModel().getProjectCentricForest();
+		FactForest forest = v.copy(workspaceForest);
 
-        modelResult.setProjectCentricForest((OutboundFactForest) forest);
-    }
+		if (getView().getMetrics() != null) {
+			long startTime = System.currentTimeMillis();
+			forest.acceptVisitor(getView().getMetrics().getVisitor());
+			long stopTime = System.currentTimeMillis();
+			long elapsedTime = stopTime - startTime;
+			System.err.printf("Metric calculation: %d ms\n", elapsedTime);
+		}
+
+		modelResult.setProjectCentricForest((OutboundFactForest) forest);
+	}
 
 }
