@@ -99,7 +99,7 @@ public class QName {
 		return true;
 	}
 	
-	public QName getPackageName() {
+	public QName getButLast() {
 		int size = components.size();
 		if(size == 0)
 			return null;

@@ -25,20 +25,28 @@ public class ScopedSelection extends Selection {
 	
 	//to avoid recomputation for type/method scopes, could go into QName but there it would consume bytes
 	//should move to type/method scopes when refactored into a scope hierarchy 
-	private QName packageName;
-	private QName getPackageNameOfName() {
-		if(packageName == null) {
-			packageName = name.getPackageName();
-			
+	private QName methodPackageName;
+	private QName typePackageName;
+	
+	private QName getMethodPackageName() {
+		if(methodPackageName == null) {
+			methodPackageName = getTypePackageName().getButLast();
 		}
-		return packageName;
+		return methodPackageName;
+	}
+	
+	private QName getTypePackageName() {
+		if(typePackageName == null) {
+			typePackageName = name.getButLast();
+		}
+		return typePackageName;
 	}
 	
 	@Override
 	public boolean matchProjectPackageTree(PackageTree packageTree) {
 		//projects correspond to package trees, this is the only place where ROOT_SCOPE makes sense
 		if(scope.equals(Scope.ROOT_SCOPE)) 
-			return packageTree.getName().equals(name);
+			return packageTree.getQName().equals(name);
 		
 		return true;
 
@@ -73,15 +81,13 @@ public class ScopedSelection extends Selection {
 			return name.isPrefixOf(pName);
 		
 		if(scope.equals(Scope.TYPE_SCOPE)) {
-			QName packageName = this.getPackageNameOfName();
+			QName packageName = this.getTypePackageName();
 			return pName.isPrefixOf(packageName);
 		}
 		
-		//TODO: debug
 		if(scope.equals(Scope.METHOD_SCOPE)) {
-			QName packageName = this.getPackageNameOfName();
+			QName packageName = this.getMethodPackageName();
 			return pName.isPrefixOf(packageName);
-			
 		}
 			
 			
@@ -116,11 +122,12 @@ public class ScopedSelection extends Selection {
 		if(scope.equals(Scope.TYPE_SCOPE))
 			return name.isPrefixOf(member.getQName());
 		
-			
-		if(scope.equals(Scope.METHOD_SCOPE)) {
-			if(!member.isTopLevel()) {
-				return name.isPrefixOf(member.getQName());
+		if(scope.equals(Scope.METHOD_SCOPE)) {	
+			//prefix members have to be included to preserve hierarchy
+			if(getTypePackageName().isPrefixOf(member.getQName())) {
+				//TODO
 			}
+					
 		}
 		return false;
 	}
