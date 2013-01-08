@@ -8,6 +8,8 @@ import exapus.model.store.Store;
 import exapus.model.view.ProjectCentricView;
 import exapus.model.view.View;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.rwt.RWT;
 import org.eclipse.swt.SWT;
@@ -220,8 +222,21 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 		viewer.addDoubleClickListener(this);
 
 
+		Action expandAllAction = new Action() {
+			@Override
+			public void run() {
+				viewer.expandAll();
+			}			
+		};
+		expandAllAction.setText("Expand all packages");
+		expandAllAction.setId("exapus.gui.editors.forest.tree.ExpandAllAction");
+		expandAllAction.setImageDescriptor(getImageDescriptor(ISharedImages.IMG_ELCL_COLLAPSEALL));
+		registerAction(expandAllAction);
+
+		
 	}
 
+	
 
 	/*
 	private void createSelectionListener() {
@@ -382,8 +397,21 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 
 	public void setViewEditor(ViewEditor viewEditor) {
 		this.viewEditor = viewEditor;
-		
 	}
+	
+	
+	private void registerAction(Action action) {
+		getEditorSite().getActionBars().getToolBarManager().add(action);  
+	}
+
+	private IWorkbench getWorkBench() {
+		return getSite().getWorkbenchWindow().getWorkbench();
+	}
+	
+	private ImageDescriptor getImageDescriptor(String name) {
+		return getWorkBench().getSharedImages().getImageDescriptor(name);
+	}
+
 
 
 }
