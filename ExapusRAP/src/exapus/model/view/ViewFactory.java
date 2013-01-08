@@ -49,8 +49,19 @@ public class ViewFactory {
 		view.addAPISelection(new ScopedSelection(new QName("javax"), Scope.PREFIX_SCOPE));
 		view.addAPISelection(new ScopedSelection(new QName("org.apache.commons"), Scope.PREFIX_SCOPE));
 		view.addAPISelection(new ScopedSelection(new QName("org.apache.tools.ant"), Scope.PACKAGE_SCOPE));
-
+		view.addProjectSelection(UniversalSelection.getCurrent());
 		return view;
 	}
+	
+	public View testAPICentricSelectionView2() {
+		View view = testAPICentricSelectionView();
+		view.setName("API-centric selection test 2");
+		view.removeProjectSelection(UniversalSelection.getCurrent());
+		view.addProjectSelection(new ScopedSelection(new QName("org.sunflow"), Scope.PREFIX_SCOPE));
+		view.addProjectSelection(new ScopedSelection(new QName("tomcat"), Scope.ROOT_SCOPE));		
+		return view;
+	}
+	
+	
 
 }

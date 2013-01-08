@@ -97,7 +97,8 @@ public class Store extends Observable {
 	}		
 	
 	private void registerDebugViews() {
-		registerView(ViewFactory.getCurrent().testAPICentricSelectionView());
+		registerView(ViewFactory.getCurrent().testAPICentricSelectionView()); 
+		registerView(ViewFactory.getCurrent().testAPICentricSelectionView2());
 	}
 		
 	public FactForest forestForRegisteredView(String name) {
