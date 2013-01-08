@@ -2,9 +2,11 @@ package exapus.model.view;
 
 import exapus.model.forest.InboundRef;
 import exapus.model.forest.Member;
+import exapus.model.forest.OutboundRef;
 import exapus.model.forest.PackageLayer;
 import exapus.model.forest.PackageTree;
 import exapus.model.forest.QName;
+import exapus.model.forest.Ref;
 
 public class ScopedSelection extends Selection {
 
@@ -122,27 +124,36 @@ public class ScopedSelection extends Selection {
 	}
 
 	//do the actual work here, other methods only attempt to filter out unwanted elements beforehand
-	@Override
-	public boolean matchAPIRef(InboundRef inboundRef) {
+	private boolean matchRef(Ref ref) {
 		if(scope.equals(Scope.ROOT_SCOPE)) 
-			return inboundRef.getParentPackageTree().getQName().equals(name);
+			return ref.getParentPackageTree().getQName().equals(name);
 	
 		if(scope.equals(Scope.PACKAGE_SCOPE))
-			return inboundRef.getParentPackageLayer().getQName().equals(name);
+			return ref.getParentPackageLayer().getQName().equals(name);
 		
 		if(scope.equals(Scope.PREFIX_SCOPE)) 
-			return name.isPrefixOf(inboundRef.getQName());
+			return name.isPrefixOf(ref.getQName());
 		
 		if(scope.equals(Scope.TYPE_SCOPE))
-			return name.isPrefixOf(inboundRef.getQName());
+			return name.isPrefixOf(ref.getQName());
 		
 		if(scope.equals(Scope.METHOD_SCOPE)) 
-			return name.isPrefixOf(inboundRef.getQName());
+			return name.isPrefixOf(ref.getQName());
 		
 		return false;
 	}
 	
+	@Override
+	public boolean matchAPIRef(InboundRef ref) {
+		return matchRef(ref);
+	}
 	
+	@Override
+	public boolean matchProjectRef(OutboundRef ref) {
+		return matchRef(ref);
+	}
+
+
 	
 	private Scope getScope() {
 		return scope;
@@ -169,6 +180,8 @@ public class ScopedSelection extends Selection {
 	public String getScopeString() {
 		return getScope().toString();
 	}
+
+
 
 	
 	

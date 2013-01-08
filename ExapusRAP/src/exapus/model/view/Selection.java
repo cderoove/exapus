@@ -2,8 +2,10 @@ package exapus.model.view;
 
 import exapus.model.forest.InboundRef;
 import exapus.model.forest.Member;
+import exapus.model.forest.OutboundRef;
 import exapus.model.forest.PackageLayer;
 import exapus.model.forest.PackageTree;
+import exapus.model.forest.Ref;
 
 public abstract class Selection {
 
@@ -20,7 +22,9 @@ public abstract class Selection {
 	public abstract boolean matchProjectMember(Member member);
 	
 	public abstract boolean matchAPIRef(InboundRef inboundRef);
-
+	
+	public abstract boolean matchProjectRef(OutboundRef outboundRef);
+	
 	public abstract String getNameString();
 	
 	public abstract String getScopeString();

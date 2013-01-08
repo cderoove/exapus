@@ -85,6 +85,12 @@ public class APICentricEvaluator extends Evaluator {
 					public boolean apply(Selection selection) {
 						return selection.matchAPIRef(inboundRef);
 					}
+				}) && Iterables.any(getView().getProjectSelections(),
+						new Predicate<Selection>() {
+					@Override
+					public boolean apply(Selection selection) {
+						return selection.matchProjectRef((OutboundRef)inboundRef.getDual());
+					}
 				});
 			}
 
@@ -103,15 +109,15 @@ public class APICentricEvaluator extends Evaluator {
 		InboundFactForest workspaceForest = Store.getCurrent().getWorkspaceModel().getAPICentricForest();
 		FactForest forest = v.copy(workspaceForest);
 
-        if (getView().getMetrics() != null) {
-            long startTime = System.currentTimeMillis();
-            forest.acceptVisitor(getView().getMetrics().getVisitor());
-            long stopTime = System.currentTimeMillis();
-            long elapsedTime = stopTime - startTime;
-            System.err.printf("Metric calculation: %d ms\n", elapsedTime);
-        }
+		if (getView().getMetrics() != null) {
+			long startTime = System.currentTimeMillis();
+			forest.acceptVisitor(getView().getMetrics().getVisitor());
+			long stopTime = System.currentTimeMillis();
+			long elapsedTime = stopTime - startTime;
+			System.err.printf("Metric calculation: %d ms\n", elapsedTime);
+		}
 
-        modelResult.setAPICentricForest((InboundFactForest) forest);
+		modelResult.setAPICentricForest((InboundFactForest) forest);
 	}
 
 }

@@ -61,7 +61,6 @@ public class ProjectCentricEvaluator extends Evaluator {
                     @Override
                     public boolean apply(Selection selection) {
                         return selection.matchAPIMember(member);
-
                     }
                 });
             }
