@@ -1,5 +1,7 @@
 package exapus.model.view;
 
+import exapus.model.forest.QName;
+
 public class ViewFactory {
 	
 	private static ViewFactory current;
@@ -13,30 +15,42 @@ public class ViewFactory {
 	}
 	
 	
-	private View completeAPIView;
+	private View completePackageView;
 	private View completeProjectView;
 	
 	
 	private ViewFactory() {
 		Selection universal = UniversalSelection.getCurrent();
-		completeAPIView = new APICentricView("All APIs");
-		completeAPIView.addAPISelection(universal);
-		completeAPIView.addProjectSelection(universal);
-		completeAPIView.setRenderable(false);
+		completePackageView = new APICentricView("All Packages");
+		completePackageView.addAPISelection(universal);
+		completePackageView.addProjectSelection(universal);
+		completePackageView.setRenderable(false);
 		
 		completeProjectView = new ProjectCentricView("All Projects");
 		completeProjectView.addAPISelection(universal);
 		completeProjectView.addProjectSelection(universal);
 		completeProjectView.setRenderable(false);
 
+		
 	}
 	
-	public View completeAPIView() {
-		return completeAPIView;
+	public View completePackageView() {
+		return completePackageView;
 	}
 	
 	public View completeProjectView() {
 		return completeProjectView;
+	}
+
+	public View testAPICentricSelectionView() {
+		View view = new APICentricView("API-centric selection test");
+		view.addAPISelection(new ScopedSelection(new QName("java.lang.Integer"), Scope.TYPE_SCOPE));
+		view.addAPISelection(new ScopedSelection(new QName("java.util.Iterator.hasNext()"), Scope.METHOD_SCOPE));
+		view.addAPISelection(new ScopedSelection(new QName("javax"), Scope.PREFIX_SCOPE));
+		view.addAPISelection(new ScopedSelection(new QName("org.apache.commons"), Scope.PREFIX_SCOPE));
+		view.addAPISelection(new ScopedSelection(new QName("org.apache.tools.ant"), Scope.PACKAGE_SCOPE));
+
+		return view;
 	}
 
 }

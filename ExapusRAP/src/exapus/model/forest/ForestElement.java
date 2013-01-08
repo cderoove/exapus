@@ -16,6 +16,8 @@ public abstract class ForestElement implements INode {
 	private ForestElement parent;
 
 	private UqName id;
+	
+	private QName qid;
 
 		
 	public ForestElement(UqName id) {
@@ -31,14 +33,16 @@ public abstract class ForestElement implements INode {
 	}
 
 	public QName getQName() {
-		LinkedList<String> components = new LinkedList<String>();
-		ForestElement parent = this;
-		while (parent != null && !(parent instanceof PackageTree)) {
-			components.addFirst(parent.getName().toString());
-			parent = parent.getParent();
+		if(qid == null) {
+			LinkedList<String> components = new LinkedList<String>();
+			ForestElement parent = this;
+			while (parent != null && !(parent instanceof PackageTree)) {
+				components.addFirst(parent.getName().toString());
+				parent = parent.getParent();
+			}
+			qid = new QName(components);
 		}
-		QName name = new QName(components);
-		return name;
+		return qid;
 	}
 
 	public ForestElement getParent() {

@@ -1,5 +1,6 @@
 package exapus.model.view;
 
+import exapus.model.forest.InboundRef;
 import exapus.model.forest.Member;
 import exapus.model.forest.PackageLayer;
 import exapus.model.forest.PackageTree;
@@ -47,9 +48,7 @@ public class ScopedSelection extends Selection {
 		//projects correspond to package trees, this is the only place where ROOT_SCOPE makes sense
 		if(scope.equals(Scope.ROOT_SCOPE)) 
 			return packageTree.getQName().equals(name);
-		
 		return true;
-
 	}
 
 	@Override
@@ -69,28 +68,23 @@ public class ScopedSelection extends Selection {
 	}
 
 	private boolean matchPackageLayer(PackageLayer packageLayer) {
-		QName pName = packageLayer.getQName();
+		//multiple scopes can be selected at the same time, cannot trust filtering to have happened above
 		if(scope.equals(Scope.ROOT_SCOPE)) 
-			return true;
+			return packageLayer.getParentPackageTree().getQName().equals(name);
 		
-		//scope java.lang, include parent layer java to preserve hierarchy .. filter later on members
+		//scope java.lang, include parent layer java to preserve hierarchy .. filter later on 
 		if(scope.equals(Scope.PACKAGE_SCOPE)) 
-			return pName.isPrefixOf(name);
+			return packageLayer.getQName().isPrefixOf(name);
 		
+		//scope java.lang, include parent layer java to preserve hierarchy .. filter later on 
 		if(scope.equals(Scope.PREFIX_SCOPE)) 
-			return name.isPrefixOf(pName);
+			return packageLayer.getQName().isPrefixOf(name) || name.isPrefixOf(packageLayer.getQName());
 		
-		if(scope.equals(Scope.TYPE_SCOPE)) {
-			QName packageName = this.getTypePackageName();
-			return pName.isPrefixOf(packageName);
-		}
-		
-		if(scope.equals(Scope.METHOD_SCOPE)) {
-			QName packageName = this.getMethodPackageName();
-			return pName.isPrefixOf(packageName);
-		}
+		if(scope.equals(Scope.TYPE_SCOPE)) 
+			return packageLayer.getQName().isPrefixOf(getTypePackageName());
 			
-			
+		if(scope.equals(Scope.METHOD_SCOPE)) 
+			return packageLayer.getQName().isPrefixOf(getMethodPackageName());
 		
 		return false;
 	}
@@ -105,34 +99,51 @@ public class ScopedSelection extends Selection {
 		return matchMember(member);
 	}
 
-	//could also try comparing UqName to avoid recomputing QName
 	private boolean matchMember(Member member) {
 		if(scope.equals(Scope.ROOT_SCOPE)) 
-			return true;
+			return member.getParentPackageTree().getQName().equals(name);
 		
-		//unwanted members from prefix layers are also visited
 		if(scope.equals(Scope.PACKAGE_SCOPE))
 			return member.getParentPackageLayer().getQName().equals(name);
 	
-		//parent visit already filtered out unwanted members
 		if(scope.equals(Scope.PREFIX_SCOPE)) 
-			return true;
+			return name.isPrefixOf(member.getQName());
 		
 		//methods/fields/inner classes are also members, should be included
 		if(scope.equals(Scope.TYPE_SCOPE))
 			return name.isPrefixOf(member.getQName());
 		
-		if(scope.equals(Scope.METHOD_SCOPE)) {	
-			//prefix members have to be included to preserve hierarchy
-			if(getTypePackageName().isPrefixOf(member.getQName())) {
-				//TODO
-			}
-					
-		}
+		if(scope.equals(Scope.METHOD_SCOPE)) 
+			//prefix parent members have to be included to preserve hierarchy
+			//unwanted inner members will have to be filtered out at the reference level
+			return getTypePackageName().isPrefixOf(member.getQName());
+			
 		return false;
 	}
 
-
+	//do the actual work here, other methods only attempt to filter out unwanted elements beforehand
+	@Override
+	public boolean matchAPIRef(InboundRef inboundRef) {
+		if(scope.equals(Scope.ROOT_SCOPE)) 
+			return inboundRef.getParentPackageTree().getQName().equals(name);
+	
+		if(scope.equals(Scope.PACKAGE_SCOPE))
+			return inboundRef.getParentPackageLayer().getQName().equals(name);
+		
+		if(scope.equals(Scope.PREFIX_SCOPE)) 
+			return name.isPrefixOf(inboundRef.getQName());
+		
+		if(scope.equals(Scope.TYPE_SCOPE))
+			return name.isPrefixOf(inboundRef.getQName());
+		
+		if(scope.equals(Scope.METHOD_SCOPE)) 
+			return name.isPrefixOf(inboundRef.getQName());
+		
+		return false;
+	}
+	
+	
+	
 	private Scope getScope() {
 		return scope;
 	}
@@ -158,6 +169,7 @@ public class ScopedSelection extends Selection {
 	public String getScopeString() {
 		return getScope().toString();
 	}
+
 	
 	
 	

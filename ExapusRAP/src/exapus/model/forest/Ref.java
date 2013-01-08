@@ -109,7 +109,7 @@ public abstract class Ref extends ForestElement {
 
 	public abstract Element getReferencedElement();
 
-
+	@Override
 	public QName getQName() {
 		Member parentMember = getParentMember();
 		if(parentMember == null)
