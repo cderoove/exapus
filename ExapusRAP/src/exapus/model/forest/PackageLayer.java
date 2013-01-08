@@ -128,7 +128,7 @@ public class PackageLayer extends MemberContainer implements ILayerContainer {
 	public ICompilationUnit getCorrespondingICompilationUnit() {
 		return null;
 	}
-	
+		
 	public Iterable<Member> getAllMembers() {
 		Iterable<Member> members = getMembers();
 		for(PackageLayer l : getLayers()) {

@@ -73,6 +73,18 @@ public abstract class ForestElement implements INode {
 			return parentMember.getParentMember();
 		}
 	}
+	
+	public Member getParentMethodMember() {
+		Member parentMember = getParentMember();
+		if(parentMember == null)
+			return null;
+		if(parentMember.getElement().isMethod()) {
+			return parentMember;
+		} else {
+			return parentMember.getParentMethodMember();
+		}
+	}
+
 
 	public PackageTree getParentPackageTree() {
 		ForestElement parent = getParent();

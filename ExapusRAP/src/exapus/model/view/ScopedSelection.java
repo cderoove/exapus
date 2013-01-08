@@ -14,7 +14,7 @@ public class ScopedSelection extends Selection {
 	}
 	
 	public ScopedSelection(QName name) {
-		this(name, Scope.ROOT_SCOPE);
+		this(name, Scope.PREFIX_SCOPE);
 	}
 	
 
@@ -23,21 +23,31 @@ public class ScopedSelection extends Selection {
 	private QName name;
 	
 	
-	private boolean matchPackageTree(PackageTree packageTree) {
-		if(scope.equals(Scope.ROOT_SCOPE)) {
-			 return packageTree.getQName().equals(name);
+	//to avoid recomputation for type/method scopes, could go into QName but there it would consume bytes
+	//should move to type/method scopes when refactored into a scope hierarchy 
+	private QName packageName;
+	private QName getPackageNameOfName() {
+		if(packageName == null) {
+			packageName = name.getPackageName();
+			
 		}
-		return false;
+		return packageName;
 	}
 	
 	@Override
 	public boolean matchProjectPackageTree(PackageTree packageTree) {
-		return matchPackageTree(packageTree);
+		//projects correspond to package trees, this is the only place where ROOT_SCOPE makes sense
+		if(scope.equals(Scope.ROOT_SCOPE)) 
+			return packageTree.getName().equals(name);
+		
+		return true;
+
 	}
 
 	@Override
 	public boolean matchAPIPackageTree(PackageTree packageTree) {
-		return matchPackageTree(packageTree);
+		//package layers are grouped in one dummy packagetree
+		return true;
 	}
 
 	@Override
@@ -51,10 +61,31 @@ public class ScopedSelection extends Selection {
 	}
 
 	private boolean matchPackageLayer(PackageLayer packageLayer) {
-		if(scope.equals(Scope.ROOT_SCOPE)) {
-			PackageTree tree = packageLayer.getParentPackageTree();
-			return matchPackageTree(tree);
+		QName pName = packageLayer.getQName();
+		if(scope.equals(Scope.ROOT_SCOPE)) 
+			return true;
+		
+		//scope java.lang, include parent layer java to preserve hierarchy .. filter later on members
+		if(scope.equals(Scope.PACKAGE_SCOPE)) 
+			return pName.isPrefixOf(name);
+		
+		if(scope.equals(Scope.PREFIX_SCOPE)) 
+			return name.isPrefixOf(pName);
+		
+		if(scope.equals(Scope.TYPE_SCOPE)) {
+			QName packageName = this.getPackageNameOfName();
+			return pName.isPrefixOf(packageName);
 		}
+		
+		//TODO: debug
+		if(scope.equals(Scope.METHOD_SCOPE)) {
+			QName packageName = this.getPackageNameOfName();
+			return pName.isPrefixOf(packageName);
+			
+		}
+			
+			
+		
 		return false;
 	}
 
@@ -68,10 +99,28 @@ public class ScopedSelection extends Selection {
 		return matchMember(member);
 	}
 
+	//could also try comparing UqName to avoid recomputing QName
 	private boolean matchMember(Member member) {
-		if(scope.equals(Scope.ROOT_SCOPE)) {
-			PackageTree tree = member.getParentPackageTree();
-			return matchPackageTree(tree);
+		if(scope.equals(Scope.ROOT_SCOPE)) 
+			return true;
+		
+		//unwanted members from prefix layers are also visited
+		if(scope.equals(Scope.PACKAGE_SCOPE))
+			return member.getParentPackageLayer().getQName().equals(name);
+	
+		//parent visit already filtered out unwanted members
+		if(scope.equals(Scope.PREFIX_SCOPE)) 
+			return true;
+		
+		//methods/fields/inner classes are also members, should be included
+		if(scope.equals(Scope.TYPE_SCOPE))
+			return name.isPrefixOf(member.getQName());
+		
+			
+		if(scope.equals(Scope.METHOD_SCOPE)) {
+			if(!member.isTopLevel()) {
+				return name.isPrefixOf(member.getQName());
+			}
 		}
 		return false;
 	}
