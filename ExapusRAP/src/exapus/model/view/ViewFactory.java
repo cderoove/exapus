@@ -1,5 +1,7 @@
 package exapus.model.view;
 
+import exapus.model.forest.QName;
+
 public class ViewFactory {
 	
 	private static ViewFactory current;
@@ -29,6 +31,7 @@ public class ViewFactory {
 		completeProjectView.addProjectSelection(universal);
 		completeProjectView.setRenderable(false);
 
+		
 	}
 	
 	public View completePackageView() {
@@ -37,6 +40,17 @@ public class ViewFactory {
 	
 	public View completeProjectView() {
 		return completeProjectView;
+	}
+
+	public View testAPICentricSelectionView() {
+		View view = new APICentricView("API-centric selection test");
+		view.addAPISelection(new ScopedSelection(new QName("java.lang.Integer"), Scope.TYPE_SCOPE));
+		view.addAPISelection(new ScopedSelection(new QName("java.util.Iterator.hasNext()"), Scope.METHOD_SCOPE));
+		view.addAPISelection(new ScopedSelection(new QName("javax"), Scope.PREFIX_SCOPE));
+		view.addAPISelection(new ScopedSelection(new QName("org.apache.commons"), Scope.PREFIX_SCOPE));
+		view.addAPISelection(new ScopedSelection(new QName("org.apache.tools.ant"), Scope.PACKAGE_SCOPE));
+
+		return view;
 	}
 
 }

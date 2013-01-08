@@ -36,6 +36,7 @@ public class Store extends Observable {
 		registry = new HashMap<String, View>();
 		workspaceModel = null;
 		registerDefaultViews();
+		registerDebugViews();
 	}
 	
 	
@@ -93,8 +94,11 @@ public class Store extends Observable {
 	protected void registerDefaultViews() {
 		registerView(ViewFactory.getCurrent().completePackageView());
 		registerView(ViewFactory.getCurrent().completeProjectView());
-		
 	}		
+	
+	private void registerDebugViews() {
+		registerView(ViewFactory.getCurrent().testAPICentricSelectionView());
+	}
 		
 	public FactForest forestForRegisteredView(String name) {
 		return getView(name).evaluate();
