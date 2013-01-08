@@ -102,6 +102,7 @@ public class CopyingForestVisitor implements IForestVisitor {
 	@Override
 	public boolean visitInboundReference(InboundRef inboundRef) {
 		InboundRef copy = new InboundRef(inboundRef.getReferencingPattern(), inboundRef.getReferencingElement(), inboundRef.getReferencingName(), inboundRef.getSourceRange(), inboundRef.getLineNumber());
+		copy.setDual(inboundRef.getDual());
 		ForestElement parentCopy = getCopy(inboundRef.getParent());
 		Member parentCopyAsMember = (Member) parentCopy;
 		parentCopyAsMember.addAPIReference(copy);
@@ -113,6 +114,7 @@ public class CopyingForestVisitor implements IForestVisitor {
 	@Override
 	public boolean visitOutboundReference(OutboundRef outboundRef) {
 		OutboundRef copy = new OutboundRef(outboundRef.getReferencingPattern(), outboundRef.getReferencedElement(), outboundRef.getReferencedName(), outboundRef.getSourceRange(), outboundRef.getLineNumber());
+		copy.setDual(outboundRef.getDual());
 		ForestElement parentCopy = getCopy(outboundRef.getParent());
 		Member parentCopyAsMember = (Member) parentCopy;
 		parentCopyAsMember.addAPIReference(copy);
