@@ -48,13 +48,17 @@ public abstract class View {
 	}
 	
 	public void setRenderable(boolean renderable) {
-		this.renderable = renderable;
-		makeDirty();
+		if(renderable != this.renderable) {
+			this.renderable = renderable;
+			makeDirty();
+		}
 	}
 	
 	public void setPerspective(Perspective perspective) {
-		this.perspective = perspective;
-		makeDirty();
+		if(perspective != this.perspective) {
+			this.perspective = perspective;
+			makeDirty();
+		}
 	}
 
 	public Iterable<Selection> getAPISelections() {
@@ -105,7 +109,10 @@ public abstract class View {
     }
 
     public void setMetrics(Metrics metrics) {
-        this.metrics = metrics;
+    	if(this.metrics != metrics) {
+            this.metrics = metrics;
+            makeDirty();
+    	}
     }
 
     public String toString() {
