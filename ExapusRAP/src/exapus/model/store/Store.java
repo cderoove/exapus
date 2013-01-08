@@ -46,7 +46,7 @@ public class Store extends Observable {
 	}
 	
 	public void populateWorkspaceModel() {
-		Job job = new Job("Populating fact forests.") {
+		Job job = new Job("Populating fact forests") {
 			protected IStatus run(final IProgressMonitor m) {
 				try {
 					if(workspaceModel == null)

@@ -21,4 +21,14 @@ public class APIChildren implements IMetric {
     public String getValue() {
         return Integer.toString(value);
     }
+
+    @Override
+    public int compareTo(IMetric other) {
+        if (other instanceof APIChildren) {
+            APIChildren another = (APIChildren) other;
+            return this.value < another.value ? -1 : (this.value > another.value ? 1 : 0);
+        } else {
+            return 0;
+        }
+    }
 }

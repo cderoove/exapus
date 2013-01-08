@@ -28,4 +28,14 @@ public class TotalNumberAPIReferences implements IMetric {
             ((TotalNumberAPIReferences) current.getParent().getMetric()).pp(current.getParent());
         }
     }
+
+    @Override
+    public int compareTo(IMetric other) {
+        if (other instanceof TotalNumberAPIReferences) {
+            TotalNumberAPIReferences another = (TotalNumberAPIReferences) other;
+            return this.value < another.value ? -1 : (this.value > another.value ? 1 : 0);
+        } else {
+            return 0;
+        }
+    }
 }

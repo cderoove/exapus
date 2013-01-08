@@ -3,17 +3,20 @@ package exapus.gui.editors.forest.tree;
 import exapus.gui.editors.view.IViewEditorPage;
 import exapus.gui.editors.view.ViewEditor;
 import exapus.gui.views.forest.reference.ForestReferenceViewPart;
-import exapus.model.forest.FactForest;
+import exapus.model.forest.*;
 import exapus.model.store.Store;
+import exapus.model.view.ProjectCentricView;
+import exapus.model.view.View;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.viewers.TreeViewerColumn;
+import org.eclipse.jface.viewers.*;
 import org.eclipse.rwt.RWT;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.*;
 
 public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IViewEditorPage {
@@ -24,6 +27,11 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 	public static final String ID = "exapus.gui.views.forest.ForestTreeView";
 
     private TreeViewerColumn metricCol;
+
+    private SortBy current = SortBy.NAME;
+    private static enum SortBy {
+        NAME, METRIC
+    }
 
     /*
      public static int viewerCount = 0;
@@ -45,11 +53,56 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 	private TreeViewer viewer;
 	private ViewEditor viewEditor;
 
+    private MetricComparator comparator;
+
 	/*
 	public boolean isDualFactForestViewer() {
 		return getViewSite().getId().equals(ID_DUAL);
 	}
 	 */
+
+    class MetricComparator extends ViewerComparator {
+        private int direction = SWT.DOWN;
+
+        @Override
+        public int compare(Viewer viewer, Object e1, Object e2) {
+            if (e1.getClass() == e2.getClass() && e1 instanceof ForestElement) {
+                ForestElement fe1 = (ForestElement) e1;
+                ForestElement fe2 = (ForestElement) e2;
+
+                int result = 0;
+                switch (current) {
+                    case NAME:
+                        result = fe1.getName().toString().compareToIgnoreCase(fe2.getName().toString());
+                        break;
+                    case METRIC:
+                        result = fe1.getMetric().compareTo(fe2.getMetric());
+                        break;
+
+                }
+                if (direction == SWT.UP) {
+                    result = -result;
+                }
+
+                return result;
+            } else {
+                return 0;
+            }
+        }
+
+        public int change() {
+            if (direction == SWT.UP) {
+                direction = SWT.DOWN;
+            } else {
+                direction = SWT.UP;
+            }
+            return direction;
+        }
+
+        public void setDirection(int direction) {
+            this.direction = direction;
+        }
+    }
 
 	public void createPartControl(Composite parent) {
 		viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
@@ -58,6 +111,9 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 		viewer.getTree().setHeaderVisible(true);
 		viewer.getTree().setLinesVisible(true);
 		viewer.setUseHashlookup(true);
+
+        comparator = new MetricComparator();
+        viewer.setComparator(comparator);
 
 		/*
 		 * int style = SWT.BORDER | SWT.FULL_SELECTION ; Tree tree = new
@@ -68,10 +124,26 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 
 		viewer.setContentProvider(new ForestTreeContentProvider());
 
-		TreeViewerColumn patternCol = new TreeViewerColumn(viewer, SWT.NONE);
+		final TreeViewerColumn patternCol = new TreeViewerColumn(viewer, SWT.NONE);
 		patternCol.getColumn().setText("Pattern");
 		patternCol.getColumn().setWidth(350);
 		patternCol.setLabelProvider(new ForestTreeLabelProviders.PatternColumnLabelProvider());
+
+        patternCol.getColumn().addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                viewer.getTree().setSortColumn(patternCol.getColumn());
+                if (current == SortBy.NAME) {
+                    viewer.getTree().setSortDirection(comparator.change());
+                } else {
+                    current = SortBy.NAME;
+                    comparator.setDirection(SWT.DOWN);
+                }
+                TreePath[] expanded = viewer.getExpandedTreePaths();
+                viewer.refresh();
+                viewer.setExpandedTreePaths(expanded);
+            }
+        });
 
 		TreeViewerColumn elementCol = new TreeViewerColumn(viewer, SWT.NONE);
 		elementCol.getColumn().setText("Element");
@@ -92,6 +164,22 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
         metricCol.getColumn().setText("#");
         metricCol.getColumn().setWidth(100);
         metricCol.setLabelProvider(new ForestTreeLabelProviders.MetricColumnLabelProvider());
+
+        metricCol.getColumn().addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                viewer.getTree().setSortColumn(metricCol.getColumn());
+                if (current == SortBy.METRIC) {
+                    viewer.getTree().setSortDirection(comparator.change());
+                } else {
+                    current = SortBy.METRIC;
+                    comparator.setDirection(SWT.DOWN);
+                }
+                TreePath[] expanded = viewer.getExpandedTreePaths();
+                viewer.refresh();
+                viewer.setExpandedTreePaths(expanded);
+            }
+        });
 
 /*
         // For debugging purposes
@@ -169,9 +257,17 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 		String viewName = getEditorInput().getName();
 		FactForest forest = Store.getCurrent().forestForRegisteredView(viewName);
 		viewer.setInput(forest);
-		viewer.expandToLevel(3);
+        if (getView() instanceof ProjectCentricView) {
+            viewer.expandToLevel(4);
+        } else {
+            viewer.expandToLevel(3);
+        }
 	}
-	
+
+    private View getView() {
+        return Store.getCurrent().getView(getEditorInput().getName());
+
+    }
 	
 	public void setFocus() {
 		viewer.getControl().setFocus();
