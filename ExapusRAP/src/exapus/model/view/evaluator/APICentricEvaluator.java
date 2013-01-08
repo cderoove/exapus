@@ -79,8 +79,13 @@ public class APICentricEvaluator extends Evaluator {
 			}
 
 			@Override
-			protected boolean select(InboundRef inboundRef) {
-				return true;
+			protected boolean select(final InboundRef inboundRef) {
+				return Iterables.any(selections, new Predicate<Selection>() {
+					@Override
+					public boolean apply(Selection selection) {
+						return selection.matchAPIRef(inboundRef);
+					}
+				});
 			}
 
 			@Override

@@ -1,5 +1,6 @@
 package exapus.model.view;
 
+import exapus.model.forest.InboundRef;
 import exapus.model.forest.Member;
 import exapus.model.forest.PackageLayer;
 import exapus.model.forest.PackageTree;
@@ -52,6 +53,11 @@ public class UniversalSelection extends Selection {
 
 	@Override
 	public boolean matchProjectMember(Member member) {
+		return true;
+	}
+
+	@Override
+	public boolean matchAPIRef(InboundRef inboundRef) {
 		return true;
 	}
 
