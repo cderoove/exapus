@@ -54,8 +54,12 @@ public class ForestReferenceViewPart extends SelectedForestElementBrowserViewPar
 
 
 	protected String textToRender(ForestElement fe) {
-		if(fe.getParentFactForest().getDirection().equals(Direction.INBOUND))
-				return "";
+		if(fe.getParentFactForest().getDirection().equals(Direction.INBOUND)) {
+			if(fe instanceof Ref)
+				fe = ((Ref) fe).getDual();
+			else
+				return "Cannot show source of binary file.";
+		}
 		String source = fe.getSourceString();
 		String html = "";
 		if(null != source)  {
