@@ -20,6 +20,7 @@ public abstract class View {
 		apiselection = new ArrayList<Selection>();
 		projectselection = new ArrayList<Selection>();
 		renderable = true;
+        metrics = Metrics.defaultValue(this);
 	}
 
 	

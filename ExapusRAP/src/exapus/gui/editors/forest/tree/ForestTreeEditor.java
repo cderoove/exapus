@@ -17,8 +17,6 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.*;
 
 public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IViewEditorPage {
@@ -267,7 +265,7 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 	
 	
 	public void updateControls() {
-        metricCol.getColumn().setText(viewEditor.getCurrentMetric().getShortName());
+        metricCol.getColumn().setText(getView().getMetrics().getShortName());
 
 		String viewName = getEditorInput().getName();
 		FactForest forest = Store.getCurrent().forestForRegisteredView(viewName);

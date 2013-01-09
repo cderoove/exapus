@@ -1,8 +1,5 @@
 package exapus.gui.editors.view;
 
-import exapus.model.metrics.Metrics;
-import exapus.model.store.Store;
-import exapus.model.view.View;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.ui.*;
 import org.eclipse.ui.part.MultiPageEditorPart;
@@ -59,7 +56,4 @@ public class ViewEditor extends MultiPageEditorPart {
 		}
 	}
 
-    public Metrics getCurrentMetric() {
-        return viewDefinition.getCurrentMetric();
-    }
 }

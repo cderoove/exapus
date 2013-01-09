@@ -1,5 +1,7 @@
 package exapus.model.metrics;
 
+import exapus.model.view.APICentricView;
+import exapus.model.view.View;
 import exapus.model.visitors.IForestVisitor;
 
 /**
@@ -33,5 +35,21 @@ public enum Metrics {
 
     public String getShortName() {
         return shortName;
+    }
+
+    public static Metrics[] supportedMetrics(View view) {
+        if (view instanceof APICentricView) {
+            return new Metrics[] {API_PARENTS};
+        } else {
+            return new Metrics[] {API_REFS, API_ELEM, API_CHILDREN};
+        }
+    }
+
+    public static Metrics defaultValue(View view) {
+        if (view instanceof APICentricView) {
+            return API_PARENTS;
+        } else {
+            return API_REFS;
+        }
     }
 }

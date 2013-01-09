@@ -40,7 +40,7 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 	private TableViewer tableVWAPI;
 	private TableViewer tableVWProjects;
 	private ViewEditor viewEditor;
-    private MetricsSelection metrics;
+    private ComboViewer comboMetrics;
 
 
 	@Override
@@ -79,10 +79,8 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 		lblPerspective.setLayoutData(gd_lblPerspective);
 		lblPerspective.setText("Perspective:");
 
-		comboVWPerspective = new ComboViewer(parent, SWT.NONE);
-		GridData gd_ComboPerspective = new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1);
-		Combo combo = comboVWPerspective.getCombo();
-		combo.setLayoutData(gd_ComboPerspective);
+		comboVWPerspective = new ComboViewer(parent, SWT.READ_ONLY);
+		comboVWPerspective.getCombo().setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		comboVWPerspective.setContentProvider(ArrayContentProvider.getInstance());
 		comboVWPerspective.setInput(Perspective.supportedPerspectives());
 		comboVWPerspective.addSelectionChangedListener(new ISelectionChangedListener() {
@@ -141,29 +139,23 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
         lblMetrics.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP, false, false, 1, 1));
         lblMetrics.setText("Metrics:");
 
-        SelectionListener metricsListener = new SelectionListener() {
+        comboMetrics = new ComboViewer(parent, SWT.READ_ONLY);
+        comboMetrics.getCombo().setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+        comboMetrics.setContentProvider(ArrayContentProvider.getInstance());
+        comboMetrics.setInput(Metrics.supportedMetrics(getView()));
+        comboMetrics.addSelectionChangedListener(new ISelectionChangedListener() {
             @Override
-            public void widgetSelected(SelectionEvent selectionEvent) {
-                getView().setMetrics(metrics.getCurrent());
+            public void selectionChanged(SelectionChangedEvent event) {
+                IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+                Object selected = selection.getFirstElement();
+                if (selected instanceof Metrics) {
+                    getView().setMetrics((Metrics) selected);
+                }
             }
-
-            @Override
-            public void widgetDefaultSelected(SelectionEvent selectionEvent) {
-                getView().setMetrics(metrics.getCurrent());
-            }
-        };
-
-        if (getView() instanceof APICentricView) {
-            metrics = new APIMetrics(parent, SWT.BORDER | SWT.V_SCROLL, metricsListener);
-        } else if (getView() instanceof ProjectCentricView) {
-            metrics = new ProjectMetrics(parent, SWT.BORDER | SWT.V_SCROLL, metricsListener);
-        } else {
-            throw new UnsupportedOperationException("Unknown view: " + getView().getClass().getCanonicalName());
-        }
-        metrics.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+        });
     }
 
-	private void configureSelectionTableAndToolBar(final TableViewer tableVW, ToolBar toolbar, final Perspective perspective) {
+    private void configureSelectionTableAndToolBar(final TableViewer tableVW, ToolBar toolbar, final Perspective perspective) {
 		Table tableAPI = tableVW.getTable();
 		GridData gd_tableAPI = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
 		gd_tableAPI.heightHint = tableAPI.getItemHeight() * 4;
@@ -268,9 +260,7 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 		checkRenderable.setSelection(view.getRenderable());
 		tableVWAPI.setInput(Iterables.toArray(view.getAPISelections(),Object.class));
 		tableVWProjects.setInput(Iterables.toArray(view.getProjectSelections(),Object.class));
-
-        metrics.setDefaultChoice();
-        getView().setMetrics(metrics.getCurrent());
+        comboMetrics.setSelection(new StructuredSelection(view.getMetrics()));
 	}
 
 
@@ -278,96 +268,4 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 		this.viewEditor = viewEditor;
 	}
 
-    public Metrics getCurrentMetric() {
-        return metrics.getCurrent();
-    }
-
-    private static abstract class MetricsSelection {
-        protected Group group;
-
-        public abstract Metrics getCurrent();
-        public abstract void setDefaultChoice();
-
-        protected MetricsSelection(Composite c, int style) {
-            group = new Group(c, style);
-        }
-
-        public void setLayoutData(Object layoutData) {
-            group.setLayoutData(layoutData);
-        }
-
-    }
-
-    private static class ProjectMetrics extends MetricsSelection {
-        final Button bAPIRefs;
-        final Button bAPIElem;
-        final Button bAPIChildren;
-
-        public ProjectMetrics(Composite c, int style, SelectionListener sl) {
-            super(c, style);
-
-            bAPIRefs = new Button(group, SWT. RADIO);
-            bAPIRefs.setBounds(10, 0, 275, 25);
-            bAPIRefs.setText("Total API references");
-            bAPIRefs.addSelectionListener(sl);
-
-            bAPIElem = new Button(group, SWT.RADIO);
-            bAPIElem.setBounds(10, 25, 275, 25);
-            bAPIElem.setText("Distinct API elements");
-            bAPIElem.addSelectionListener(sl);
-
-            bAPIChildren = new Button(group, SWT.RADIO);
-            bAPIChildren.setBounds(10, 50, 280, 25);
-            bAPIChildren.setText("Total types derived from APIs");
-            bAPIChildren.addSelectionListener(sl);
-
-            setDefaultChoice();
-        }
-
-        public void setDefaultChoice() {
-            if (getCurrent() == null) {
-                bAPIRefs.setSelection(true);
-            }
-        }
-
-        public Metrics getCurrent() {
-            if (bAPIRefs.getSelection())
-                return Metrics.API_REFS;
-            if (bAPIElem.getSelection())
-                return Metrics.API_ELEM;
-            if (bAPIChildren.getSelection())
-                return Metrics.API_CHILDREN;
-
-            return null;
-        }
-    }
-
-
-    private static class APIMetrics extends MetricsSelection {
-        final Button bAPIParents;
-
-        public APIMetrics(Composite c, int style, SelectionListener sl) {
-            super(c, style);
-
-            bAPIParents = new Button(group, SWT.RADIO);
-            bAPIParents.setBounds(10, 0, 380, 25);
-            bAPIParents.setText("Total API types extended/implemented");
-            bAPIParents.addSelectionListener(sl);
-
-            setDefaultChoice();
-        }
-
-        public void setDefaultChoice() {
-            if (getCurrent() == null) {
-                bAPIParents.setSelection(true);
-            }
-        }
-
-        public Metrics getCurrent() {
-            if (bAPIParents.getSelection())
-                return Metrics.API_PARENTS;
-
-            return null;
-        }
-    }
 }
