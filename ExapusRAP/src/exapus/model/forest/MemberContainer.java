@@ -27,7 +27,7 @@ public abstract class MemberContainer extends ForestElement {
 	
 	
 	public boolean hasMembers() {
-		return members.isEmpty();
+		return (!members.isEmpty());
 	}
 	
 	public void addMember(Member m) {
