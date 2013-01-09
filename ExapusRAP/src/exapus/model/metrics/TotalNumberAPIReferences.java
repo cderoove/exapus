@@ -1,6 +1,8 @@
 package exapus.model.metrics;
 
 import exapus.model.forest.ForestElement;
+import exapus.model.forest.Member;
+import exapus.model.forest.Ref;
 
 /**
  * Direct sum of all references below the node
@@ -9,8 +11,10 @@ import exapus.model.forest.ForestElement;
 public class TotalNumberAPIReferences implements IMetric {
 
     private int value = 0;
+    private int groupedValue = 0;
 
-    public String getValue() {
+    public String getValue(boolean groupedPackages) {
+        if (groupedPackages) return Integer.toString(groupedValue);
         return Integer.toString(value);
     }
 
@@ -22,17 +26,20 @@ public class TotalNumberAPIReferences implements IMetric {
      *
      * @param current forest element
      */
-    public void pp(ForestElement current) {
+    public void pp(ForestElement current, boolean fromDirectMember) {
         this.value++;
+        if (fromDirectMember) this.groupedValue++;
+
         if (current.getParent() != null) {
-            ((TotalNumberAPIReferences) current.getParent().getMetric()).pp(current.getParent());
+            ((TotalNumberAPIReferences) current.getParent().getMetric()).pp(current.getParent(), (current instanceof Member || current instanceof Ref));
         }
     }
 
     @Override
-    public int compareTo(IMetric other) {
+    public int compareTo(IMetric other, boolean groupedPackages) {
         if (other instanceof TotalNumberAPIReferences) {
             TotalNumberAPIReferences another = (TotalNumberAPIReferences) other;
+            if (groupedPackages) return this.groupedValue < another.groupedValue ? -1 : (this.groupedValue > another.groupedValue ? 1 : 0);
             return this.value < another.value ? -1 : (this.value > another.value ? 1 : 0);
         } else {
             return 0;

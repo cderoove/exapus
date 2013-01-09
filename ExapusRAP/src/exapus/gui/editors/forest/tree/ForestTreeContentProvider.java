@@ -50,7 +50,7 @@ public class ForestTreeContentProvider implements ITreeContentProvider, IDeltaLi
 	}
 
 	@Override
-	public PackageTree[] getElements(Object inputElement) {
+	public Object[] getElements(Object inputElement) {
 		// build roots of tree
 		if (inputElement instanceof FactForest)
 			return Iterables.toArray(((FactForest) inputElement).getPackageTrees(), PackageTree.class);

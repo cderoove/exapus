@@ -54,7 +54,7 @@ public class APIChildrenVisitor implements IForestVisitor {
             case IMPLEMENTS_INTERFACE:
             case EXTENDS_INTERFACE:
                 if (outboundRef.getMetric() instanceof APIChildren) {
-                    ((APIChildren) outboundRef.getMetric()).pp(outboundRef);
+                    ((APIChildren) outboundRef.getMetric()).pp(outboundRef, true);
                 }
 		default:
 			break;

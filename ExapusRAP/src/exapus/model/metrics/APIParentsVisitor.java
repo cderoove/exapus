@@ -49,7 +49,7 @@ public class APIParentsVisitor implements IForestVisitor {
             case IMPLEMENTS_INTERFACE:
             case EXTENDS_INTERFACE:
                 if (inboundRef.getMetric() instanceof APIParents) {
-                    ((APIParents) inboundRef.getMetric()).pp(inboundRef);
+                    ((APIParents) inboundRef.getMetric()).pp(inboundRef, true);
                 }
             default:
                 break;

@@ -48,7 +48,7 @@ public class TotalNumberAPIReferencesVisitor implements IForestVisitor {
     public boolean visitOutboundReference(OutboundRef outboundRef) {
         initMetric(outboundRef);
         if (outboundRef.getMetric() instanceof TotalNumberAPIReferences) {
-            ((TotalNumberAPIReferences) outboundRef.getMetric()).pp(outboundRef);
+            ((TotalNumberAPIReferences) outboundRef.getMetric()).pp(outboundRef, true);
         }
         return true;
     }

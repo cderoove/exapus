@@ -1,10 +1,10 @@
 package exapus.model.metrics;
 
-public interface IMetric extends Comparable<IMetric> {
+public interface IMetric /*extends Comparable<IMetric>*/ {
     /**
      * @return formatted value
      */
-    String getValue();
+    String getValue(boolean groupedPackages);
 
-    int compareTo(IMetric other);
+    int compareTo(IMetric other, boolean groupedPackages);
 }

@@ -20,7 +20,13 @@ public class ForestTreeLabelProviders {
 
 		// TODO: use foreground/background colors for metrics
 
-		public Image getImage(Object element) {
+        private boolean groupedPackageNames = false;
+
+        public PatternColumnLabelProvider(boolean groupedPackageNames) {
+            this.groupedPackageNames = groupedPackageNames;
+        }
+
+        public Image getImage(Object element) {
 			if (element instanceof PackageTree)
 				return PKTREE_IMG;
 			if (element instanceof PackageLayer)
@@ -55,6 +61,7 @@ public class ForestTreeLabelProviders {
 			}
 
 			if (element instanceof PackageLayer) {
+                if (groupedPackageNames) return ((PackageLayer) element).getQName().toString();
 				return ((PackageLayer) element).getName().toString();
 			}
 
@@ -111,10 +118,16 @@ public class ForestTreeLabelProviders {
 
     public static class MetricColumnLabelProvider extends ColumnLabelProvider {
 
+        private boolean groupedPackageNames = false;
+
+        public MetricColumnLabelProvider(boolean groupedPackageNames) {
+            this.groupedPackageNames = groupedPackageNames;
+        }
+
         public String getText(Object element) {
             if (element instanceof ForestElement) {
                 ForestElement fe = (ForestElement) element;
-                return fe.getMetric().getValue();
+                return fe.getMetric().getValue(groupedPackageNames);
             }
 
             return null;

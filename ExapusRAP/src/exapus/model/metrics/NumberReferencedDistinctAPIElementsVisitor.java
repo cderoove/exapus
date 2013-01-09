@@ -42,7 +42,7 @@ public class NumberReferencedDistinctAPIElementsVisitor implements IForestVisito
     public boolean visitOutboundReference(OutboundRef outboundRef) {
         initMetric(outboundRef);
         if (outboundRef.getMetric() instanceof NumberReferencedDistinctAPIElements) {
-            ((NumberReferencedDistinctAPIElements) outboundRef.getMetric()).addName(outboundRef.getReferencedName().toString(), outboundRef);
+            ((NumberReferencedDistinctAPIElements) outboundRef.getMetric()).addName(outboundRef.getReferencedName().toString(), outboundRef, true);
         }
         return true;
     }
