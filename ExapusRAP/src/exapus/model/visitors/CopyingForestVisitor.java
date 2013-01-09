@@ -97,8 +97,6 @@ public class CopyingForestVisitor implements IForestVisitor {
 		return true;
 	}
 
-
-
 	@Override
 	public boolean visitInboundReference(InboundRef inboundRef) {
 		InboundRef copy = new InboundRef(inboundRef.getReferencingPattern(), inboundRef.getReferencingElement(), inboundRef.getReferencingName(), inboundRef.getSourceRange(), inboundRef.getLineNumber());
@@ -109,7 +107,6 @@ public class CopyingForestVisitor implements IForestVisitor {
 		registerCopy(inboundRef,copy);
 		return true;
 	}
-
 
 	@Override
 	public boolean visitOutboundReference(OutboundRef outboundRef) {
