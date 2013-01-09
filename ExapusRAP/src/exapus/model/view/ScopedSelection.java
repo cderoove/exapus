@@ -20,11 +20,24 @@ public class ScopedSelection extends Selection {
 		this(name, Scope.PREFIX_SCOPE);
 	}
 	
-	
 
 	private Scope scope;
 		
 	private QName name;
+	
+	private String tag;
+	
+	public String getTag() {
+		return tag;
+	}
+	
+	public void setTag(String tag) {
+		this.tag = tag;
+	}
+	
+	public boolean hasTag() {
+		return tag != null;
+	}
 	
 	
 	//to avoid recomputation for type/method scopes, could go into QName but there it would consume bytes
