@@ -36,7 +36,7 @@ public class Store extends Observable {
 		registry = new HashMap<String, View>();
 		workspaceModel = null;
 		registerDefaultViews();
-		registerDebugViews();
+		registerCustomViews();
 	}
 	
 	
@@ -89,20 +89,36 @@ public class Store extends Observable {
 	public View getView(String name) {
 		return registry.get(name);
 	}
+	
 
 	public boolean hasRegisteredView(String name) {
 		return registry.containsKey(name);
 	}
 		
+	
 	protected void registerDefaultViews() {
 		registerView(ViewFactory.getCurrent().completePackageView());
 		registerView(ViewFactory.getCurrent().completeProjectView());
 	}		
 	
+	protected void registerCustomViews() {
+		registerDebugViews();
+		registerCSVTagView();
+	}
+
+	
 	private void registerDebugViews() {
 		registerView(ViewFactory.getCurrent().testAPICentricSelectionView()); 
 		registerView(ViewFactory.getCurrent().testAPICentricSelectionView2());
 		registerView(ViewFactory.getCurrent().testProjectCentricSelectionView());
+	}
+	
+	private void registerCSVTagView() {
+		try {
+			registerView(ViewFactory.getCurrent().viewFromCSVTags(new File(Settings.API_TAGS.getValue())));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 		
 	public FactForest forestForRegisteredView(String name) {
@@ -122,13 +138,15 @@ public class Store extends Observable {
         try {
             prop.load(new FileInputStream(CONFIG_FILENAME));
             Settings.DOT_EXC.setValue(prop.getProperty(Settings.DOT_EXC.key));
+            Settings.API_TAGS.setValue(prop.getProperty(Settings.API_TAGS.key));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
     }
 
     public static enum Settings {
-        DOT_EXC("dot.path", "/usr/local/Cellar/graphviz/2.28.0/bin/dot");
+        DOT_EXC("dot.path", "/usr/local/Cellar/graphviz/2.28.0/bin/dot"),
+        API_TAGS("tags.path", "/Users/cderoove/Documents/Docs/VUB/research/papers/authored/quaatlas/data/apis.csv");
 
         private Settings(String key, String defaultValue) {
             this.key = key;
