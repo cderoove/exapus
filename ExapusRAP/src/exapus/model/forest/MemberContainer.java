@@ -105,8 +105,16 @@ public abstract class MemberContainer extends ForestElement {
 		else
 			return getOrAddMemberWithoutRecursing(typeBinding);
 	}
-
-
+	
+	public void copyReference(Iterator<ForestElement> ancestors, Ref original) {
+		ForestElement ancestor = ancestors.next();
+		if(ancestor instanceof Member) {
+			Member originalMember = (Member) ancestor;
+			Member destinationMember = getOrAddMember(originalMember.getName(), originalMember.getElement());
+			destinationMember.copyReference(ancestors, original);
+		}
+	}
+	
 
 
 }

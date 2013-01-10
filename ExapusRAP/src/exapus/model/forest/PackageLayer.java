@@ -178,6 +178,20 @@ public class PackageLayer extends MemberContainer implements ILayerContainer {
 		l.setParent(this);
 	}
 
+	public void copyReference(Iterator<ForestElement> ancestors, Ref original) {
+		ForestElement ancestor = ancestors.next();
+		if(ancestor instanceof PackageLayer) {
+			PackageLayer destinationLayer = getOrAddLayer(ancestor.getName(), this.getParentPackageTree());
+			destinationLayer.copyReference(ancestors, original);
+		}
+		if(ancestor instanceof Member) {
+			Member originalMember = (Member) ancestor;
+			Member destinationMember = getOrAddMember(originalMember.getName(), originalMember.getElement());
+			destinationMember.copyReference(ancestors, original);
+		}
+		assert(false);
+	}
+
 
 
 }

@@ -93,9 +93,14 @@ public class PackageTree extends ForestElement  implements ILayerContainer  {
 		return root.getAllReferences();
 	}
 
+	
 	public void addLayer(PackageLayer l) {
 		root.addLayer(l);
 		l.setParent(this);
+	}
+	
+	public PackageLayer getOrAddLayer(UqName name) {
+		return root.getOrAddLayer(name, this);
 	}
 	
 	
@@ -135,26 +140,26 @@ public class PackageTree extends ForestElement  implements ILayerContainer  {
 				l.acceptVisitor(v);
 	}
 
-	public void insertReferenceCopy(Ref original) {
-		PackageLayer originalLayer = original.getParentPackageLayer();
-		PackageLayer destinationLayer = root.getOrAddLayer(originalLayer.getQName(), this);
-		Member originalMember = original.getParentMember();
-		
-		//destinationLayer.getOrAddMember(originalMember.getQName(), originalMember.getElement());
-		
-		//destinationLayer.
-		
-		
-		/*
-		ForestElement parent = ref.getParent();
+	public void copyReference(Ref original) {
+		ForestElement parent = original.getParent();
 		LinkedList<ForestElement> parents = new LinkedList<ForestElement>();
 		while (parent != null && !(parent instanceof PackageTree)) {
 			parents.addFirst(parent);
 			parent = parent.getParent();
 		}
 		Iterator<ForestElement> ancestor = parents.iterator();
-		insertReference(ancestor, ref);
-		*/
+		copyReference(ancestor, original);
 	}
+
+	public void copyReference(Iterator<ForestElement> ancestors, Ref original) {
+		ForestElement originalAncestor = ancestors.next();
+		PackageLayer  originalLayer = (PackageLayer) originalAncestor;
+		if(originalLayer == null)
+			return;
+		PackageLayer destinationLayer = getOrAddLayer(originalLayer.getName());
+		destinationLayer.copyReference(ancestors, original);
+	}
+	
+	
 
 }

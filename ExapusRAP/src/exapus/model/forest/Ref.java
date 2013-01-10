@@ -73,7 +73,13 @@ public abstract class Ref extends ForestElement {
 	protected static SourceRange getSourceRange(ASTNode n) {
 		return new SourceRange(n.getStartPosition(), n.getLength());
 	}
-
+	
+	static public Ref fromRef(Ref r) {
+		if(r instanceof InboundRef)
+			return InboundRef.fromInboundRef((InboundRef) r);
+		else
+			return OutboundRef.fromOutboundRef((OutboundRef) r);
+	}
 
 	public SourceRange getSourceRange() {
 		return range;

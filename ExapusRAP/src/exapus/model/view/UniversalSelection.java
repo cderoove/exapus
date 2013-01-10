@@ -1,10 +1,9 @@
 package exapus.model.view;
 
-import exapus.model.forest.InboundRef;
 import exapus.model.forest.Member;
-import exapus.model.forest.OutboundRef;
 import exapus.model.forest.PackageLayer;
 import exapus.model.forest.PackageTree;
+import exapus.model.forest.Ref;
 
 public class UniversalSelection extends Selection {
 	
@@ -32,50 +31,29 @@ public class UniversalSelection extends Selection {
 		return "";
 	}
 
-
-	@Override
-	public boolean matchAPIPackageTree(PackageTree packageTree) {
-		return true;
-	}
-
-	@Override
-	public boolean matchAPIPackageLayer(PackageLayer packageLayer) {
-		return true;
-	}
-
-	@Override
-	public boolean matchAPIMember(Member member) {
-		return true;
-	}
-
-	@Override
-	public boolean matchProjectPackageTree(PackageTree packageTree) {
-		return true;
-	}
-
-	@Override
-	public boolean matchProjectPackageLayer(PackageLayer packageLayer) {
-		return true;
-	}
-
-	@Override
-	public boolean matchProjectMember(Member member) {
-		return true;
-	}
-
-	@Override
-	public boolean matchAPIRef(InboundRef inboundRef) {
-		return true;
-	}
-
-	@Override
-	public boolean matchProjectRef(OutboundRef outboundRef) {
-		return true;
-	}
-
 	@Override
 	public boolean hasTag() {
-		return false;
+		return true;
+	}
+
+	@Override
+	public boolean matchPackageTree(PackageTree packageTree) {
+		return true;
+	}
+
+	@Override
+	public boolean matchPackageLayer(PackageLayer packageLayer) {
+		return true;
+	}
+
+	@Override
+	public boolean matchMember(Member member) {
+		return true;
+	}
+
+	@Override
+	public boolean matchRef(Ref ref) {
+		return true;
 	}
 
 

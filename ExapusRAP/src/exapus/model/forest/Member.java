@@ -2,6 +2,7 @@ package exapus.model.forest;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -167,5 +168,14 @@ public class Member extends MemberContainer {
 
 		}
 	}
-
+	
+	@Override
+	public void copyReference(Iterator<ForestElement> ancestors, Ref original) {
+		if(ancestors.hasNext()) {
+			super.copyReference(ancestors, original);
+			return;
+		}
+		addAPIReference(Ref.fromRef(original));		
+	}
+	
 }

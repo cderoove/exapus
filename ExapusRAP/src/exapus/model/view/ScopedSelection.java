@@ -1,8 +1,7 @@
 package exapus.model.view;
 
-import exapus.model.forest.InboundRef;
+import exapus.model.forest.Direction;
 import exapus.model.forest.Member;
-import exapus.model.forest.OutboundRef;
 import exapus.model.forest.PackageLayer;
 import exapus.model.forest.PackageTree;
 import exapus.model.forest.QName;
@@ -60,30 +59,19 @@ public class ScopedSelection extends Selection {
 	}
 	
 	@Override
-	public boolean matchProjectPackageTree(PackageTree packageTree) {
-		//projects correspond to package trees, this is the only place where ROOT_SCOPE makes sense
-		if(scope.equals(Scope.ROOT_SCOPE)) 
-			return packageTree.getQName().equals(name);
+	public boolean matchPackageTree(PackageTree packageTree) {
+		if(scope.equals(Scope.ROOT_SCOPE)) { 
+			//projects correspond to package trees, this is the only place where ROOT_SCOPE makes sense
+			if(packageTree.getParentFactForest().getDirection().equals(Direction.OUTBOUND))
+				return packageTree.getQName().equals(name);
+			//package layers are grouped in one dummy packagetree
+			return true;
+		}
 		return true;
 	}
 
 	@Override
-	public boolean matchAPIPackageTree(PackageTree packageTree) {
-		//package layers are grouped in one dummy packagetree
-		return true;
-	}
-
-	@Override
-	public boolean matchAPIPackageLayer(PackageLayer packageLayer) {
-		return matchPackageLayer(packageLayer);
-	}
-	
-	@Override
-	public boolean matchProjectPackageLayer(PackageLayer packageLayer) {
-		return matchPackageLayer(packageLayer);
-	}
-
-	private boolean matchPackageLayer(PackageLayer packageLayer) {
+	public boolean matchPackageLayer(PackageLayer packageLayer) {
 		//multiple scopes can be selected at the same time, cannot trust filtering to have happened above
 		if(scope.equals(Scope.ROOT_SCOPE)) 
 			return packageLayer.getParentPackageTree().getQName().equals(name);
@@ -106,16 +94,7 @@ public class ScopedSelection extends Selection {
 	}
 
 	@Override
-	public boolean matchAPIMember(Member member) {
-		return matchMember(member);
-	}
-
-	@Override
-	public boolean matchProjectMember(Member member) {
-		return matchMember(member);
-	}
-
-	private boolean matchMember(Member member) {
+	public boolean matchMember(Member member) {
 		if(scope.equals(Scope.ROOT_SCOPE)) 
 			return member.getParentPackageTree().getQName().equals(name);
 		
@@ -138,7 +117,8 @@ public class ScopedSelection extends Selection {
 	}
 
 	//do the actual work here, other methods only attempt to filter out unwanted elements beforehand
-	private boolean matchRef(Ref ref) {
+	@Override
+	public boolean matchRef(Ref ref) {
 		if(scope.equals(Scope.ROOT_SCOPE)) 
 			return ref.getParentPackageTree().getQName().equals(name);
 	
@@ -156,18 +136,6 @@ public class ScopedSelection extends Selection {
 		
 		return false;
 	}
-	
-	@Override
-	public boolean matchAPIRef(InboundRef ref) {
-		return matchRef(ref);
-	}
-	
-	@Override
-	public boolean matchProjectRef(OutboundRef ref) {
-		return matchRef(ref);
-	}
-
-
 	
 	public Scope getScope() {
 		return scope;

@@ -1,11 +1,9 @@
 package exapus.model.view.evaluator;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
-import exapus.model.forest.*;
+import exapus.model.forest.FactForest;
+import exapus.model.forest.OutboundFactForest;
 import exapus.model.metrics.Metrics;
 import exapus.model.store.Store;
-import exapus.model.view.Selection;
 import exapus.model.view.View;
 import exapus.model.visitors.SelectiveCopyingForestVisitor;
 
@@ -21,75 +19,7 @@ public class ProjectCentricEvaluator extends Evaluator {
 	}
 
 	protected SelectiveCopyingForestVisitor newVisitor() {
-		SelectiveCopyingForestVisitor visitor = new SelectiveCopyingForestVisitor() {
-
-			Iterable<Selection> selections = getView().getProjectSelections();
-
-			@Override
-			protected boolean select(InboundFactForest forest) {
-				return false;
-			}
-
-			@Override
-			protected boolean select(OutboundFactForest forest) {
-				return true;
-			}
-
-			@Override
-			protected boolean select(final PackageTree packageTree) {
-				return Iterables.any(selections, new Predicate<Selection>() {
-					@Override
-					public boolean apply(Selection selection) {
-						return selection.matchProjectPackageTree(packageTree);
-					}
-				});
-			}
-
-			@Override
-			protected boolean select(final PackageLayer packageLayer) {
-				return Iterables.any(selections, new Predicate<Selection>() {
-					@Override
-					public boolean apply(Selection selection) {
-						return selection.matchProjectPackageLayer(packageLayer);
-
-					}
-				});
-			}
-
-			@Override
-			protected boolean select(final Member member) {
-				return Iterables.any(selections, new Predicate<Selection>() {
-					@Override
-					public boolean apply(Selection selection) {
-						return selection.matchAPIMember(member);
-					}
-				});
-			}
-
-			@Override
-			protected boolean select(InboundRef inboundRef) {
-				return false;
-			}
-
-			@Override
-			protected boolean select(final OutboundRef outboundRef) {
-				return Iterables.any(selections, new Predicate<Selection>() {
-					@Override
-					public boolean apply(Selection selection) {
-						return selection.matchProjectRef(outboundRef);
-					}
-				}) && Iterables.any(getView().getAPISelections(),
-						new Predicate<Selection>() {
-					@Override
-					public boolean apply(Selection selection) {
-						return selection.matchAPIRef((InboundRef)outboundRef.getDual());
-					}
-				});
-			}
-
-
-		};
-		return visitor;
+		return new ProjectCentricSelectionVisitor(getView().getProjectSelections(), getView().getAPISelections());
 	}
 
 	@Override
@@ -97,7 +27,7 @@ public class ProjectCentricEvaluator extends Evaluator {
 		SelectiveCopyingForestVisitor v = newVisitor();
 		OutboundFactForest workspaceForest = Store.getCurrent().getWorkspaceModel().getProjectCentricForest();
 		FactForest forest = v.copy(workspaceForest);
-        calculateMetrics(forest);
+		calculateMetrics(forest);
 		modelResult.setProjectCentricForest((OutboundFactForest) forest);
 	}
 
