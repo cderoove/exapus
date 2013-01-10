@@ -237,7 +237,7 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 
         chosen = getView().getMetrics();
         idxFirstMetricCol = viewer.getTree().getColumnCount();
-        for (Metrics metric : Metrics.supportedMetrics(getView())) {
+        for (Metrics metric : Metrics.supportedMetrics()) {
             if (metric == Metrics.ALL) continue;
             MetricColumn col = new MetricColumn(viewer.getTree().getColumnCount(), metric, viewer, SWT.RIGHT);
             metricCols.add(col);

@@ -1,8 +1,9 @@
 package exapus.model.metrics;
 
-import exapus.model.view.APICentricView;
 import exapus.model.view.View;
 import exapus.model.visitors.IForestVisitor;
+
+import java.lang.reflect.Constructor;
 
 /**
  * Keeping together metric visitors
@@ -10,8 +11,7 @@ import exapus.model.visitors.IForestVisitor;
 public enum Metrics {
     API_REFS(TotalNumberAPIReferencesVisitor.class.getCanonicalName(), "#APIRefs"),
     API_ELEM(NumberReferencedDistinctAPIElementsVisitor.class.getCanonicalName(), "#APIElem"),
-    API_CHILDREN(APIChildrenVisitor.class.getCanonicalName(), "#APIChildren"),
-    API_PARENTS(APIParentsVisitor.class.getCanonicalName(), "#APIParents"),
+    API_CHILDREN(APIChildrenVisitor.class.getCanonicalName(), "#APIDerived"),
     ALL(null, "");
 
     private String qName;
@@ -22,11 +22,11 @@ public enum Metrics {
         this.shortName = shortName;
     }
 
-    public IForestVisitor getVisitor() {
-        Class<?> clazz = null;
+    public IForestVisitor getVisitor(View view) {
         try {
-            clazz = Class.forName(qName);
-            return (IForestVisitor) clazz.newInstance();
+            Class<?> clazz = Class.forName(qName);
+            Constructor constructor = clazz.getConstructor(new Class[]{View.class});
+            return (IForestVisitor) constructor.newInstance(view);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -38,19 +38,11 @@ public enum Metrics {
         return shortName;
     }
 
-    public static Metrics[] supportedMetrics(View view) {
-        if (view instanceof APICentricView) {
-            return new Metrics[] {API_PARENTS};
-        } else {
-            return new Metrics[] {ALL, API_REFS, API_ELEM, API_CHILDREN};
-        }
+    public static Metrics[] supportedMetrics() {
+        return Metrics.class.getEnumConstants();
     }
 
-    public static Metrics defaultValue(View view) {
-        if (view instanceof APICentricView) {
-            return API_PARENTS;
-        } else {
-            return ALL;
-        }
+    public static Metrics defaultValue() {
+        return ALL;
     }
 }

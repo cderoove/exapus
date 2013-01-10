@@ -4,6 +4,7 @@ import exapus.model.forest.ExapusModel;
 import exapus.model.forest.FactForest;
 import exapus.model.forest.InboundFactForest;
 import exapus.model.forest.OutboundFactForest;
+import exapus.model.metrics.Metrics;
 import exapus.model.view.Perspective;
 import exapus.model.view.View;
 
@@ -38,12 +39,28 @@ public abstract class Evaluator {
 	public View getView() {
 		return view;
 	}
-	
+
 	public abstract FactForest getResult();
 	
 	public abstract void evaluate();
-	
 
+    protected void calculateMetrics(FactForest forest) {
+        if (getView().getMetrics() != null) {
+            long startTime = System.currentTimeMillis();
 
+            if (getView().getMetrics() == Metrics.ALL) {
+                for (Metrics metric : Metrics.supportedMetrics()) {
+                    if (metric == Metrics.ALL) continue;
+                    forest.acceptVisitor(metric.getVisitor(getView()));
+                }
+            } else {
+                forest.acceptVisitor(getView().getMetrics().getVisitor(getView()));
+            }
+
+            long stopTime = System.currentTimeMillis();
+            long elapsedTime = stopTime - startTime;
+            System.err.printf("Metric calculation: %d ms\n", elapsedTime);
+        }
+    }
 
 }

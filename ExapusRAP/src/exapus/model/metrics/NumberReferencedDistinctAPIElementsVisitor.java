@@ -1,9 +1,14 @@
 package exapus.model.metrics;
 
 import exapus.model.forest.*;
-import exapus.model.visitors.IForestVisitor;
+import exapus.model.view.View;
 
-public class NumberReferencedDistinctAPIElementsVisitor implements IForestVisitor {
+public class NumberReferencedDistinctAPIElementsVisitor extends MetricVisitor {
+
+    public NumberReferencedDistinctAPIElementsVisitor(View view) {
+        super(view);
+    }
+
     private static void initMetric(ForestElement fe) {
         if (fe.getMetric(Metrics.API_ELEM.getShortName()) == null) {
             fe.setMetric(new NumberReferencedDistinctAPIElements());
@@ -12,12 +17,12 @@ public class NumberReferencedDistinctAPIElementsVisitor implements IForestVisito
 
     @Override
     public boolean visitInboundFactForest(InboundFactForest forest) {
-        return false;
+        return view.isAPICentric();
     }
 
     @Override
     public boolean visitOutboundFactForest(OutboundFactForest forest) {
-        return true;
+        return view.isProjectCentric();
     }
 
     @Override
@@ -40,13 +45,19 @@ public class NumberReferencedDistinctAPIElementsVisitor implements IForestVisito
 
     @Override
     public boolean visitOutboundReference(OutboundRef outboundRef) {
-        initMetric(outboundRef);
-        ((NumberReferencedDistinctAPIElements) outboundRef.getMetric(Metrics.API_ELEM.getShortName())).addName(outboundRef.getReferencedName().toString(), outboundRef, true);
-        return true;
+        if (view.isProjectCentric()) {
+            initMetric(outboundRef);
+            ((NumberReferencedDistinctAPIElements) outboundRef.getMetric(Metrics.API_ELEM.getShortName())).addName(outboundRef.getReferencedName().toString(), outboundRef, true);
+        }
+        return view.isProjectCentric();
     }
 
     @Override
     public boolean visitInboundReference(InboundRef inboundRef) {
-        return false;
+        if (view.isAPICentric()) {
+            initMetric(inboundRef);
+            ((NumberReferencedDistinctAPIElements) inboundRef.getMetric(Metrics.API_ELEM.getShortName())).addName(inboundRef.getReferencedName().toString(), inboundRef, true);
+        }
+        return view.isAPICentric();
     }
 }

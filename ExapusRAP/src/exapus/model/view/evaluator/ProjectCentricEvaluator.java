@@ -97,24 +97,7 @@ public class ProjectCentricEvaluator extends Evaluator {
 		SelectiveCopyingForestVisitor v = newVisitor();
 		OutboundFactForest workspaceForest = Store.getCurrent().getWorkspaceModel().getProjectCentricForest();
 		FactForest forest = v.copy(workspaceForest);
-
-		if (getView().getMetrics() != null) {
-			long startTime = System.currentTimeMillis();
-
-            if (getView().getMetrics() == Metrics.ALL) {
-                for (Metrics metric : Metrics.supportedMetrics(getView())) {
-                    if (metric == Metrics.ALL) continue;
-                    forest.acceptVisitor(metric.getVisitor());
-                }
-            } else {
-                forest.acceptVisitor(getView().getMetrics().getVisitor());
-            }
-
-			long stopTime = System.currentTimeMillis();
-			long elapsedTime = stopTime - startTime;
-			System.err.printf("Metric calculation: %d ms\n", elapsedTime);
-		}
-
+        calculateMetrics(forest);
 		modelResult.setProjectCentricForest((OutboundFactForest) forest);
 	}
 

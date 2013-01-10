@@ -1,9 +1,13 @@
 package exapus.model.metrics;
 
 import exapus.model.forest.*;
-import exapus.model.visitors.IForestVisitor;
+import exapus.model.view.View;
 
-public class TotalNumberAPIReferencesVisitor implements IForestVisitor {
+public class TotalNumberAPIReferencesVisitor extends MetricVisitor {
+
+    public TotalNumberAPIReferencesVisitor(View view) {
+        super(view);
+    }
 
     private static void initMetric(ForestElement fe) {
         if (fe.getMetric(Metrics.API_REFS.getShortName()) == null) {
@@ -13,12 +17,12 @@ public class TotalNumberAPIReferencesVisitor implements IForestVisitor {
 
     @Override
     public boolean visitInboundFactForest(InboundFactForest forest) {
-        return false;
+        return view.isAPICentric();
     }
 
     @Override
     public boolean visitOutboundFactForest(OutboundFactForest forest) {
-        return true;
+        return view.isProjectCentric();
     }
 
     @Override
@@ -41,13 +45,19 @@ public class TotalNumberAPIReferencesVisitor implements IForestVisitor {
 
     @Override
     public boolean visitInboundReference(InboundRef inboundRef) {
-        return false;
+        if (view.isAPICentric()) {
+            initMetric(inboundRef);
+            ((TotalNumberAPIReferences) inboundRef.getMetric(Metrics.API_REFS.getShortName())).pp(inboundRef, true);
+        }
+        return view.isAPICentric();
     }
 
     @Override
     public boolean visitOutboundReference(OutboundRef outboundRef) {
-        initMetric(outboundRef);
-        ((TotalNumberAPIReferences) outboundRef.getMetric(Metrics.API_REFS.getShortName())).pp(outboundRef, true);
-        return true;
+        if (view.isProjectCentric()) {
+            initMetric(outboundRef);
+            ((TotalNumberAPIReferences) outboundRef.getMetric(Metrics.API_REFS.getShortName())).pp(outboundRef, true);
+        }
+        return view.isProjectCentric();
     }
 }

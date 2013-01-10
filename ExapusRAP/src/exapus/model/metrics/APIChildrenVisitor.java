@@ -1,9 +1,13 @@
 package exapus.model.metrics;
 
 import exapus.model.forest.*;
-import exapus.model.visitors.IForestVisitor;
+import exapus.model.view.View;
 
-public class APIChildrenVisitor implements IForestVisitor {
+public class APIChildrenVisitor extends MetricVisitor {
+
+    public APIChildrenVisitor(View view) {
+        super(view);
+    }
 
     private static void initMetric(ForestElement fe) {
         if (fe.getMetric(Metrics.API_CHILDREN.getShortName()) == null) {
@@ -13,12 +17,12 @@ public class APIChildrenVisitor implements IForestVisitor {
 
     @Override
     public boolean visitInboundFactForest(InboundFactForest forest) {
-        return false;
+        return view.isAPICentric();
     }
 
     @Override
     public boolean visitOutboundFactForest(OutboundFactForest forest) {
-        return true;
+        return view.isProjectCentric();
     }
 
     @Override
@@ -41,23 +45,38 @@ public class APIChildrenVisitor implements IForestVisitor {
 
     @Override
     public boolean visitInboundReference(InboundRef inboundRef) {
-        return false;
+        if (view.isAPICentric()) {
+            initMetric(inboundRef);
+            Pattern pattern = inboundRef.getReferencingPattern();
+
+            switch (pattern) {
+                case EXTENDS_CLASS:
+                case IMPLEMENTS_INTERFACE:
+                case EXTENDS_INTERFACE:
+                    ((APIChildren) inboundRef.getMetric(Metrics.API_CHILDREN.getShortName())).pp(inboundRef, true);
+                default:
+                    break;
+            }
+        }
+        return view.isAPICentric();
     }
 
     @Override
     public boolean visitOutboundReference(OutboundRef outboundRef) {
-        initMetric(outboundRef);
-        Pattern pattern = outboundRef.getReferencingPattern();
+        if (view.isProjectCentric()) {
+            initMetric(outboundRef);
+            Pattern pattern = outboundRef.getReferencingPattern();
 
-        switch (pattern) {
-            case EXTENDS_CLASS:
-            case IMPLEMENTS_INTERFACE:
-            case EXTENDS_INTERFACE:
-                ((APIChildren) outboundRef.getMetric(Metrics.API_CHILDREN.getShortName())).pp(outboundRef, true);
-            default:
-                break;
+            switch (pattern) {
+                case EXTENDS_CLASS:
+                case IMPLEMENTS_INTERFACE:
+                case EXTENDS_INTERFACE:
+                    ((APIChildren) outboundRef.getMetric(Metrics.API_CHILDREN.getShortName())).pp(outboundRef, true);
+                default:
+                    break;
+            }
         }
 
-        return true;
+        return view.isProjectCentric();
     }
 }

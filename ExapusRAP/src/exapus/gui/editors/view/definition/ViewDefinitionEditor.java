@@ -142,7 +142,7 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
         comboMetrics = new ComboViewer(parent, SWT.READ_ONLY);
         comboMetrics.getCombo().setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
         comboMetrics.setContentProvider(ArrayContentProvider.getInstance());
-        comboMetrics.setInput(Metrics.supportedMetrics(getView()));
+        comboMetrics.setInput(Metrics.supportedMetrics());
         comboMetrics.addSelectionChangedListener(new ISelectionChangedListener() {
             @Override
             public void selectionChanged(SelectionChangedEvent event) {

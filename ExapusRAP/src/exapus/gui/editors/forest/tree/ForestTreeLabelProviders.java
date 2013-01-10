@@ -56,7 +56,7 @@ public class ForestTreeLabelProviders {
 				Ref out = ((Ref) element);
 				return out.getReferencingPattern().toString();
 			}
-			
+
 			if (element instanceof PackageTree) {
 				return ((PackageTree) element).getName().toString();
 			}
@@ -106,13 +106,17 @@ public class ForestTreeLabelProviders {
 			}
 			if (element instanceof InboundRef) {
 				InboundRef in = ((InboundRef) element);
-				return in.getReferencingName().toString();
+
+                PackageTree packageTree = in.getDual().getParentPackageTree();
+                if (packageTree != null && !"<Packages>".equals(packageTree.getName().toString())) {
+                    return packageTree.getName().toString() + ":" + in.getReferencingName().toString();
+                }
 			}
 			return null;
 		}
 
 	}
-	
+
 	public static class LineColumnLabelProvider extends ColumnLabelProvider {
 
 		public String getText(Object element) {
