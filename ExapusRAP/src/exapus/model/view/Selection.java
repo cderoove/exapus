@@ -29,6 +29,8 @@ public abstract class Selection {
 	
 	public abstract String getScopeString();
 	
+	public abstract String getTagString();
+	
 	
 	private static Class<?>[] supportedSelections = {UniversalSelection.class, ScopedSelection.class};
 	public static Object supportedSelections() {
@@ -44,6 +46,7 @@ public abstract class Selection {
 		}
 		return null;
 	}
+
 
 
 	

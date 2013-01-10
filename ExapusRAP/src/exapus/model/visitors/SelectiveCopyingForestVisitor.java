@@ -1,5 +1,6 @@
 package exapus.model.visitors;
 
+import exapus.model.forest.FactForest;
 import exapus.model.forest.InboundFactForest;
 import exapus.model.forest.InboundRef;
 import exapus.model.forest.Member;

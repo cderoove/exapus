@@ -195,6 +195,11 @@ public class ScopedSelection extends Selection {
 		return getScope().toString();
 	}
 
+	@Override
+	public String getTagString() {
+		return (hasTag() ? getTag() : "");
+	}
+
 
 
 	
