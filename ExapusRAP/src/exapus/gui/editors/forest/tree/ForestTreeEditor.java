@@ -1,10 +1,12 @@
 package exapus.gui.editors.forest.tree;
 
+import com.google.common.primitives.Ints;
 import exapus.gui.editors.view.IViewEditorPage;
 import exapus.gui.editors.view.ViewEditor;
 import exapus.gui.views.forest.reference.ForestReferenceViewPart;
 import exapus.model.forest.FactForest;
 import exapus.model.forest.ForestElement;
+import exapus.model.metrics.Metrics;
 import exapus.model.store.Store;
 import exapus.model.view.View;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -25,6 +27,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IViewEditorPage {
 
     private IEditorSite editorSite;
@@ -32,10 +37,15 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 
     public static final String ID = "exapus.gui.views.forest.ForestTreeView";
 
-    private TreeViewerColumn metricCol;
+    private List<MetricColumn> metricCols = new ArrayList<MetricColumn>();
+    private Metrics chosen;
+    private int idxFirstMetricCol;
+
     private TreeViewerColumn patternCol;
+    private Combo comboGroupingPackages;
 
     private SortBy sorting = SortBy.NAME;
+    private Metrics sortingMetric;
 
     private static enum SortBy {
         NAME, METRIC
@@ -113,7 +123,7 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
                         }
                         break;
                     case METRIC:
-                        result = fe1.getMetric().compareTo(fe2.getMetric(), packageStyle == PackageStyle.GROUPED);
+                        result = fe1.getMetric(sortingMetric.getShortName()).compareTo(fe2.getMetric(sortingMetric.getShortName()), packageStyle == PackageStyle.GROUPED);
                         break;
 
                 }
@@ -150,12 +160,12 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
         tbMgr.createControl(parent);
 
         ToolItem sep = new ToolItem(tbMgr.getControl(), SWT.SEPARATOR);
-        final Combo combo = new Combo(tbMgr.getControl(), SWT.READ_ONLY);
-        combo.add(PackageStyle.NON_GROUPED.desc);
-        combo.add(PackageStyle.GROUPED.desc);
-        combo.select(PackageStyle.NON_GROUPED.index);
+        comboGroupingPackages = new Combo(tbMgr.getControl(), SWT.READ_ONLY);
+        comboGroupingPackages.add(PackageStyle.NON_GROUPED.desc);
+        comboGroupingPackages.add(PackageStyle.GROUPED.desc);
+        comboGroupingPackages.select(PackageStyle.NON_GROUPED.index);
 
-        combo.addSelectionListener(new SelectionListener() {
+        comboGroupingPackages.addSelectionListener(new SelectionListener() {
             @Override
             public void widgetSelected(SelectionEvent selectionEvent) {
                 changeGrouping(((Combo) selectionEvent.getSource()).getSelectionIndex());
@@ -167,9 +177,9 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
             }
         });
 
-        combo.pack();
-        sep.setWidth(combo.getSize().x);
-        sep.setControl(combo);
+        comboGroupingPackages.pack();
+        sep.setWidth(comboGroupingPackages.getSize().x);
+        sep.setControl(comboGroupingPackages);
 
         tbMgr.getControl().pack();
 
@@ -225,32 +235,13 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
         lineCol.getColumn().setWidth(50);
         lineCol.setLabelProvider(new ForestTreeLabelProviders.LineColumnLabelProvider());
 
-        metricCol = new TreeViewerColumn(viewer, SWT.RIGHT);
-        metricCol.getColumn().setText("#");
-        metricCol.getColumn().setWidth(100);
-        metricCol.setLabelProvider(new ForestTreeLabelProviders.MetricColumnLabelProvider(packageStyle == PackageStyle.GROUPED));
-
-        metricCol.getColumn().addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                viewer.getTree().setSortColumn(metricCol.getColumn());
-
-                changeGrouping(PackageStyle.GROUPED.index);
-                if (combo.getSelectionIndex() != PackageStyle.GROUPED.index) {
-                    combo.select(PackageStyle.GROUPED.index);
-                }
-
-                if (sorting == SortBy.METRIC) {
-                    viewer.getTree().setSortDirection(comparator.change());
-                } else {
-                    sorting = SortBy.METRIC;
-                    comparator.setDirection(SWT.DOWN);
-                }
-                TreePath[] expanded = viewer.getExpandedTreePaths();
-                viewer.refresh();
-                viewer.setExpandedTreePaths(expanded);
-            }
-        });
+        chosen = getView().getMetrics();
+        idxFirstMetricCol = viewer.getTree().getColumnCount();
+        for (Metrics metric : Metrics.supportedMetrics(getView())) {
+            if (metric == Metrics.ALL) continue;
+            MetricColumn col = new MetricColumn(viewer.getTree().getColumnCount(), metric, viewer, SWT.RIGHT);
+            metricCols.add(col);
+        }
 
 /*
         // For debugging purposes
@@ -323,7 +314,9 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
         }
 
         patternCol.setLabelProvider(new ForestTreeLabelProviders.PatternColumnLabelProvider(packageStyle == PackageStyle.GROUPED));
-        metricCol.setLabelProvider(new ForestTreeLabelProviders.MetricColumnLabelProvider(packageStyle == PackageStyle.GROUPED));
+        for (MetricColumn metricCol : metricCols) {
+            metricCol.column.setLabelProvider(new ForestTreeLabelProviders.MetricColumnLabelProvider(packageStyle == PackageStyle.GROUPED, metricCol.metric.getShortName()));
+        }
 
         viewer.refresh();
         viewer.expandToLevel(packageStyle.expandedDepth);
@@ -359,7 +352,37 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 
 
     public void updateControls() {
-        metricCol.getColumn().setText(getView().getMetrics().getShortName());
+        if (chosen != getView().getMetrics()) {
+            chosen = getView().getMetrics();
+            sorting = SortBy.NAME;
+            sortingMetric = chosen;
+            changeGrouping(PackageStyle.NON_GROUPED.index);
+
+            List<Integer> idx = new ArrayList<Integer>();
+            for (int i = 0; i < viewer.getTree().getColumnCount(); i++) {
+                idx.add(i);
+            }
+
+            if (getView().getMetrics() != Metrics.ALL) {
+                for (MetricColumn metricCol : metricCols) {
+                    if (metricCol.metric != getView().getMetrics()) metricCol.clear();
+                    else {
+                        int swapIdx = idx.get(idxFirstMetricCol);
+                        idx.set(idxFirstMetricCol, metricCol.idx);
+                        idx.set(metricCol.idx, swapIdx);
+
+                        metricCol.init();
+                    }
+                }
+
+            } else {
+                for (MetricColumn metricCol : metricCols) {
+                    metricCol.init();
+                }
+            }
+
+            viewer.getTree().setColumnOrder(Ints.toArray(idx));
+        }
 
         String viewName = getEditorInput().getName();
         FactForest forest = Store.getCurrent().forestForRegisteredView(viewName);
@@ -500,4 +523,57 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
         return getWorkBench().getSharedImages().getImageDescriptor(name);
     }
 
+    private class MetricColumn {
+        private int idx;
+        private Metrics metric;
+        private TreeViewerColumn column;
+        private SelectionAdapter selectionAdapter;
+
+        public MetricColumn(int idx, Metrics metric, TreeViewer viewer, int style) {
+            this.idx = idx;
+            this.metric = metric;
+            this.column = new TreeViewerColumn(viewer, style);
+            init();
+        }
+
+        private void init() {
+            if (selectionAdapter == null) {
+                selectionAdapter = new SelectionAdapter() {
+                    @Override
+                    public void widgetSelected(SelectionEvent e) {
+                        viewer.getTree().setSortColumn(column.getColumn());
+                        sortingMetric = metric;
+
+                        changeGrouping(PackageStyle.GROUPED.index);
+                        if (comboGroupingPackages.getSelectionIndex() != PackageStyle.GROUPED.index) {
+                            comboGroupingPackages.select(PackageStyle.GROUPED.index);
+                        }
+
+                        if (sorting == SortBy.METRIC) {
+                            viewer.getTree().setSortDirection(comparator.change());
+                        } else {
+                            sorting = SortBy.METRIC;
+                            comparator.setDirection(SWT.DOWN);
+                        }
+                        TreePath[] expanded = viewer.getExpandedTreePaths();
+                        viewer.refresh();
+                        viewer.setExpandedTreePaths(expanded);
+                    }
+                };
+            }
+
+            column.getColumn().setText(metric.getShortName());
+            column.getColumn().setWidth(100);
+            column.setLabelProvider(new ForestTreeLabelProviders.MetricColumnLabelProvider(packageStyle == PackageStyle.GROUPED, metric.getShortName()));
+
+            column.getColumn().addSelectionListener(selectionAdapter);
+        }
+
+        private void clear() {
+            column.getColumn().setText("");
+            column.setLabelProvider(new ForestTreeLabelProviders.EmptyColumnLabelProvider());
+            column.getColumn().removeSelectionListener(selectionAdapter);
+        }
+
+    }
 }

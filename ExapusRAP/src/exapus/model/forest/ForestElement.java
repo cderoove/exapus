@@ -8,10 +8,12 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 public abstract class ForestElement implements INode {
-    private IMetric metric;
+    private Map<String, IMetric> metrics = new HashMap<String, IMetric>();
 
 	private ForestElement parent;
 
@@ -152,11 +154,11 @@ public abstract class ForestElement implements INode {
 		return 0;
 	}
 
-    public IMetric getMetric() {
-        return metric;
+    public IMetric getMetric(String name) {
+        return metrics.get(name);
     }
 
     public void setMetric(IMetric metric) {
-        this.metric = metric;
+        metrics.put(metric.getName(), metric);
     }
 }

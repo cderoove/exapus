@@ -3,6 +3,7 @@ package exapus.model.view.evaluator;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import exapus.model.forest.*;
+import exapus.model.metrics.Metrics;
 import exapus.model.store.Store;
 import exapus.model.view.Selection;
 import exapus.model.view.View;
@@ -99,7 +100,16 @@ public class ProjectCentricEvaluator extends Evaluator {
 
 		if (getView().getMetrics() != null) {
 			long startTime = System.currentTimeMillis();
-			forest.acceptVisitor(getView().getMetrics().getVisitor());
+
+            if (getView().getMetrics() == Metrics.ALL) {
+                for (Metrics metric : Metrics.supportedMetrics(getView())) {
+                    if (metric == Metrics.ALL) continue;
+                    forest.acceptVisitor(metric.getVisitor());
+                }
+            } else {
+                forest.acceptVisitor(getView().getMetrics().getVisitor());
+            }
+
 			long stopTime = System.currentTimeMillis();
 			long elapsedTime = stopTime - startTime;
 			System.err.printf("Metric calculation: %d ms\n", elapsedTime);

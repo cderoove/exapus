@@ -6,7 +6,7 @@ import exapus.model.visitors.IForestVisitor;
 public class TotalNumberAPIReferencesVisitor implements IForestVisitor {
 
     private static void initMetric(ForestElement fe) {
-        if (fe.getMetric() == null) {
+        if (fe.getMetric(Metrics.API_REFS.getShortName()) == null) {
             fe.setMetric(new TotalNumberAPIReferences());
         }
     }
@@ -47,9 +47,7 @@ public class TotalNumberAPIReferencesVisitor implements IForestVisitor {
     @Override
     public boolean visitOutboundReference(OutboundRef outboundRef) {
         initMetric(outboundRef);
-        if (outboundRef.getMetric() instanceof TotalNumberAPIReferences) {
-            ((TotalNumberAPIReferences) outboundRef.getMetric()).pp(outboundRef, true);
-        }
+        ((TotalNumberAPIReferences) outboundRef.getMetric(Metrics.API_REFS.getShortName())).pp(outboundRef, true);
         return true;
     }
 }

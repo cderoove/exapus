@@ -19,7 +19,7 @@ public class NumberReferencedDistinctAPIElements implements IMetric {
      * Collects names of API elements in the bottom-up fashion, starting from the outbound reference.
      * (Approx. 1500 times faster than if to collect names from getAllReferences() on each node.)
      *
-     * @param name API element
+     * @param name    API element
      * @param current forest element
      */
     public void addName(String name, ForestElement current, boolean fromDirectMember) {
@@ -27,9 +27,7 @@ public class NumberReferencedDistinctAPIElements implements IMetric {
         if (fromDirectMember) groupedNames.add(name);
 
         if (current.getParent() != null) {
-            if (current.getParent().getMetric() instanceof NumberReferencedDistinctAPIElements) {
-                ((NumberReferencedDistinctAPIElements) current.getParent().getMetric()).addName(name, current.getParent(), (current instanceof Member || current instanceof Ref));
-            }
+            ((NumberReferencedDistinctAPIElements) current.getParent().getMetric(getName())).addName(name, current.getParent(), (current instanceof Member || current instanceof Ref));
         }
     }
 
@@ -43,10 +41,17 @@ public class NumberReferencedDistinctAPIElements implements IMetric {
     public int compareTo(IMetric other, boolean groupedPackages) {
         if (other instanceof NumberReferencedDistinctAPIElements) {
             NumberReferencedDistinctAPIElements another = (NumberReferencedDistinctAPIElements) other;
-            if (groupedPackages) return this.groupedNames.size() < another.groupedNames.size() ? -1 : (this.groupedNames.size() > another.groupedNames.size() ? 1 : 0);
+            if (groupedPackages)
+                return this.groupedNames.size() < another.groupedNames.size() ? -1 : (this.groupedNames.size() > another.groupedNames.size() ? 1 : 0);
             return this.names.size() < another.names.size() ? -1 : (this.names.size() > another.names.size() ? 1 : 0);
         } else {
             return 0;
         }
     }
+
+    @Override
+    public String getName() {
+        return Metrics.API_ELEM.getShortName();
+    }
+
 }

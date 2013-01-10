@@ -5,7 +5,7 @@ import exapus.model.visitors.IForestVisitor;
 
 public class NumberReferencedDistinctAPIElementsVisitor implements IForestVisitor {
     private static void initMetric(ForestElement fe) {
-        if (fe.getMetric() == null) {
+        if (fe.getMetric(Metrics.API_ELEM.getShortName()) == null) {
             fe.setMetric(new NumberReferencedDistinctAPIElements());
         }
     }
@@ -41,9 +41,7 @@ public class NumberReferencedDistinctAPIElementsVisitor implements IForestVisito
     @Override
     public boolean visitOutboundReference(OutboundRef outboundRef) {
         initMetric(outboundRef);
-        if (outboundRef.getMetric() instanceof NumberReferencedDistinctAPIElements) {
-            ((NumberReferencedDistinctAPIElements) outboundRef.getMetric()).addName(outboundRef.getReferencedName().toString(), outboundRef, true);
-        }
+        ((NumberReferencedDistinctAPIElements) outboundRef.getMetric(Metrics.API_ELEM.getShortName())).addName(outboundRef.getReferencedName().toString(), outboundRef, true);
         return true;
     }
 

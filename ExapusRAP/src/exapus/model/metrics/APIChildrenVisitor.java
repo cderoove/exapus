@@ -6,7 +6,7 @@ import exapus.model.visitors.IForestVisitor;
 public class APIChildrenVisitor implements IForestVisitor {
 
     private static void initMetric(ForestElement fe) {
-        if (fe.getMetric() == null) {
+        if (fe.getMetric(Metrics.API_CHILDREN.getShortName()) == null) {
             fe.setMetric(new APIChildren());
         }
     }
@@ -53,11 +53,9 @@ public class APIChildrenVisitor implements IForestVisitor {
             case EXTENDS_CLASS:
             case IMPLEMENTS_INTERFACE:
             case EXTENDS_INTERFACE:
-                if (outboundRef.getMetric() instanceof APIChildren) {
-                    ((APIChildren) outboundRef.getMetric()).pp(outboundRef, true);
-                }
-		default:
-			break;
+                ((APIChildren) outboundRef.getMetric(Metrics.API_CHILDREN.getShortName())).pp(outboundRef, true);
+            default:
+                break;
         }
 
         return true;

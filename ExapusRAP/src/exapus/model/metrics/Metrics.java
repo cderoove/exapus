@@ -11,7 +11,8 @@ public enum Metrics {
     API_REFS(TotalNumberAPIReferencesVisitor.class.getCanonicalName(), "#APIRefs"),
     API_ELEM(NumberReferencedDistinctAPIElementsVisitor.class.getCanonicalName(), "#APIElem"),
     API_CHILDREN(APIChildrenVisitor.class.getCanonicalName(), "#APIChildren"),
-    API_PARENTS(APIParentsVisitor.class.getCanonicalName(), "#APIParents");
+    API_PARENTS(APIParentsVisitor.class.getCanonicalName(), "#APIParents"),
+    ALL(null, "");
 
     private String qName;
     private String shortName;
@@ -41,7 +42,7 @@ public enum Metrics {
         if (view instanceof APICentricView) {
             return new Metrics[] {API_PARENTS};
         } else {
-            return new Metrics[] {API_REFS, API_ELEM, API_CHILDREN};
+            return new Metrics[] {ALL, API_REFS, API_ELEM, API_CHILDREN};
         }
     }
 
@@ -49,7 +50,7 @@ public enum Metrics {
         if (view instanceof APICentricView) {
             return API_PARENTS;
         } else {
-            return API_REFS;
+            return ALL;
         }
     }
 }

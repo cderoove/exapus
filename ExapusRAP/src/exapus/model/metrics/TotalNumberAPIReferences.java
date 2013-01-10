@@ -31,7 +31,7 @@ public class TotalNumberAPIReferences implements IMetric {
         if (fromDirectMember) this.groupedValue++;
 
         if (current.getParent() != null) {
-            ((TotalNumberAPIReferences) current.getParent().getMetric()).pp(current.getParent(), (current instanceof Member || current instanceof Ref));
+            ((TotalNumberAPIReferences) current.getParent().getMetric(getName())).pp(current.getParent(), (current instanceof Member || current instanceof Ref));
         }
     }
 
@@ -45,4 +45,10 @@ public class TotalNumberAPIReferences implements IMetric {
             return 0;
         }
     }
+
+    @Override
+    public String getName() {
+        return Metrics.API_REFS.getShortName();
+    }
+
 }

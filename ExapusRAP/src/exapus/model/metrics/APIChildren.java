@@ -18,7 +18,7 @@ public class APIChildren implements IMetric {
         if (fromDirectMember) this.groupedValue++;
 
         if (current.getParent() != null) {
-            ((APIChildren) current.getParent().getMetric()).pp(current.getParent(), (current instanceof Member || current instanceof Ref));
+            ((APIChildren) current.getParent().getMetric(getName())).pp(current.getParent(), (current instanceof Member || current instanceof Ref));
         }
     }
 
@@ -37,5 +37,10 @@ public class APIChildren implements IMetric {
         } else {
             return 0;
         }
+    }
+
+    @Override
+    public String getName() {
+        return Metrics.API_CHILDREN.getShortName();
     }
 }

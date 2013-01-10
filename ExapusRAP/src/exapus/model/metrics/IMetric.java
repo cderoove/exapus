@@ -7,4 +7,6 @@ public interface IMetric /*extends Comparable<IMetric>*/ {
     String getValue(boolean groupedPackages);
 
     int compareTo(IMetric other, boolean groupedPackages);
+
+    String getName();
 }

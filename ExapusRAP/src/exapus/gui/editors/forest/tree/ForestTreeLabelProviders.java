@@ -1,6 +1,7 @@
 package exapus.gui.editors.forest.tree;
 
 import exapus.model.forest.*;
+import exapus.model.metrics.Metrics;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -119,18 +120,28 @@ public class ForestTreeLabelProviders {
     public static class MetricColumnLabelProvider extends ColumnLabelProvider {
 
         private boolean groupedPackageNames = false;
+        private String metric;
 
-        public MetricColumnLabelProvider(boolean groupedPackageNames) {
+        public MetricColumnLabelProvider(boolean groupedPackageNames, String metric) {
             this.groupedPackageNames = groupedPackageNames;
+            this.metric = metric;
         }
 
         public String getText(Object element) {
             if (element instanceof ForestElement) {
                 ForestElement fe = (ForestElement) element;
-                return fe.getMetric().getValue(groupedPackageNames);
+                return fe.getMetric(metric).getValue(groupedPackageNames);
             }
 
             return null;
+        }
+
+    }
+
+    public static class EmptyColumnLabelProvider extends ColumnLabelProvider {
+
+        public String getText(Object element) {
+            return "";
         }
 
     }
