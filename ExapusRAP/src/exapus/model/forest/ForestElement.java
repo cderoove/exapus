@@ -44,6 +44,10 @@ public abstract class ForestElement implements INode {
 		}
 		return qid;
 	}
+	
+	public void setQName(QName qid) {
+		this.qid = qid;
+	}
 
 	public ForestElement getParent() {
 		return parent;

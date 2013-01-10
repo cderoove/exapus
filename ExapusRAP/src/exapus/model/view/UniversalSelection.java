@@ -26,6 +26,12 @@ public class UniversalSelection extends Selection {
 	public String getScopeString() {
 		return "";
 	}
+	
+	@Override
+	public String getTagString() {
+		return "";
+	}
+
 
 	@Override
 	public boolean matchAPIPackageTree(PackageTree packageTree) {
@@ -66,5 +72,6 @@ public class UniversalSelection extends Selection {
 	public boolean matchProjectRef(OutboundRef outboundRef) {
 		return true;
 	}
+
 
 }
