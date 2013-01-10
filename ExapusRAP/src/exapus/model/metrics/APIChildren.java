@@ -15,10 +15,7 @@ public class APIChildren implements IMetric {
 
     public void pp(ForestElement current, boolean fromDirectMember) {
         this.value++;
-
-        if (fromDirectMember) {
-            this.groupedValue++;
-        }
+        if (fromDirectMember) this.groupedValue++;
 
         if (current.getParent() != null) {
             ((APIChildren) current.getParent().getMetric()).pp(current.getParent(), (current instanceof Member || current instanceof Ref));

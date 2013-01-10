@@ -24,6 +24,8 @@ public class NumberReferencedDistinctAPIElements implements IMetric {
      */
     public void addName(String name, ForestElement current, boolean fromDirectMember) {
         names.add(name);
+        if (fromDirectMember) groupedNames.add(name);
+
         if (current.getParent() != null) {
             if (current.getParent().getMetric() instanceof NumberReferencedDistinctAPIElements) {
                 ((NumberReferencedDistinctAPIElements) current.getParent().getMetric()).addName(name, current.getParent(), (current instanceof Member || current instanceof Ref));
