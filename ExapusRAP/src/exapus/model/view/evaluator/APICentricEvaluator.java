@@ -11,6 +11,7 @@ import exapus.model.forest.OutboundFactForest;
 import exapus.model.forest.OutboundRef;
 import exapus.model.forest.PackageLayer;
 import exapus.model.forest.PackageTree;
+import exapus.model.forest.UqName;
 import exapus.model.metrics.APIParentsVisitor;
 import exapus.model.store.Store;
 import exapus.model.view.Selection;
@@ -29,7 +30,6 @@ public class APICentricEvaluator extends Evaluator {
 		return modelResult.getAPICentricForest();
 	}
 
-
 	protected SelectiveCopyingForestVisitor newVisitor() {
 		SelectiveCopyingForestVisitor visitor = new SelectiveCopyingForestVisitor() {
 
@@ -46,7 +46,7 @@ public class APICentricEvaluator extends Evaluator {
 			}
 
 			@Override
-			protected boolean select(final PackageTree packageTree) {
+			protected boolean select(final PackageTree packageTree) {			
 				return Iterables.any(selections, new Predicate<Selection>() {
 					@Override
 					public boolean apply(Selection selection) {
@@ -62,7 +62,6 @@ public class APICentricEvaluator extends Evaluator {
 					@Override
 					public boolean apply(Selection selection) {
 						return selection.matchAPIPackageLayer(packageLayer);
-
 					}
 				});
 			}
@@ -77,21 +76,48 @@ public class APICentricEvaluator extends Evaluator {
 					}
 				});
 			}
+			
+			
+			@Override
+			public boolean visitInboundReference(final InboundRef inboundRef) {
+				//loop in regular manner over selections, 
+				//every tagged one has to be added to the pktree named that manner
+				//idea: gather ancestors in list, traverse it upside-down to add copies to pktree 
+			
+				//inner any can stay, tags are not supported in other one
+				
+				for(Selection selection : selections) {
+					//have to match all selection as they can each copy the ref to a different packagetree (Todo: optimize by checking first whether there are selections with tag)
+					if(selection.matchAPIRef(inboundRef) 
+							&& Iterables.any(getView().getProjectSelections(),
+									new Predicate<Selection>() {
+								@Override
+								public boolean apply(Selection selection) {
+									return selection.matchProjectRef((OutboundRef)inboundRef.getDual());
+								}
+							})) {
+						if(selection.hasTag()) {
+							FactForest forestCopy = getCopy();
+							PackageTree tagTree = forestCopy.getOrAddPackageTree(new UqName(selection.getTagString()));
+							tagTree.insertReferenceCopy(inboundRef);
+							copyInboundReference(inboundRef);
+							return false;
+							
+						} else {
+							copyInboundReference(inboundRef);
+							return true;
+						}
+					}
+				}
+				return false;
+			}
+			
 
+			
+			
 			@Override
 			protected boolean select(final InboundRef inboundRef) {
-				return Iterables.any(selections, new Predicate<Selection>() {
-					@Override
-					public boolean apply(Selection selection) {
-						return selection.matchAPIRef(inboundRef);
-					}
-				}) && Iterables.any(getView().getProjectSelections(),
-						new Predicate<Selection>() {
-					@Override
-					public boolean apply(Selection selection) {
-						return selection.matchProjectRef((OutboundRef)inboundRef.getDual());
-					}
-				});
+				return true;
 			}
 
 			@Override

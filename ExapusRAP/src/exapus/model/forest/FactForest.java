@@ -59,6 +59,19 @@ public abstract class FactForest extends Observable {
 		trees.put(tree.getName(), tree);
 		fireUpdate(tree);
 	}
+	
+	public PackageTree getPackageTree(UqName name) {
+		return trees.get(name);
+	}
+	
+	public PackageTree getOrAddPackageTree(UqName name) {
+		PackageTree tree = getPackageTree(name);
+		if(tree == null) {
+			tree = new PackageTree(name);
+			addPackageTree(tree);
+		}
+		return tree;
+	}
 
 	public abstract FactForest getDualFactForest();
 

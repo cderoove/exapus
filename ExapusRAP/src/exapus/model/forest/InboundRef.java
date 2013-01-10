@@ -17,6 +17,12 @@ public class InboundRef extends Ref {
 		return inbound;
 	}
 	
+	public static InboundRef fromInboundRef(InboundRef inboundRef) {
+		InboundRef copy = new InboundRef(inboundRef.getReferencingPattern(), inboundRef.getReferencingElement(), inboundRef.getReferencingName(), inboundRef.getSourceRange(), inboundRef.getLineNumber());
+		copy.setDual(inboundRef.getDual());
+		return copy;		
+	}
+	
 	public QName getReferencingName() {
 		return rname;
 	}

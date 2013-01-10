@@ -31,6 +31,8 @@ public abstract class Selection {
 	
 	public abstract String getTagString();
 	
+	public abstract boolean hasTag();
+	
 	
 	private static Class<?>[] supportedSelections = {UniversalSelection.class, ScopedSelection.class};
 	public static Object supportedSelections() {

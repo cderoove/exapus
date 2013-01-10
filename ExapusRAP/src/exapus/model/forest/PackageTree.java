@@ -2,6 +2,7 @@ package exapus.model.forest;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
@@ -97,6 +98,7 @@ public class PackageTree extends ForestElement  implements ILayerContainer  {
 		l.setParent(this);
 	}
 	
+	
 	public PackageLayer getOrAddLayerForPackageFragment(IPackageFragment packageFragment) {
 		QName qname = new QName(packageFragment);
 		PackageLayer layer = root.getOrAddLayer(qname, this);
@@ -133,6 +135,26 @@ public class PackageTree extends ForestElement  implements ILayerContainer  {
 				l.acceptVisitor(v);
 	}
 
-
+	public void insertReferenceCopy(Ref original) {
+		PackageLayer originalLayer = original.getParentPackageLayer();
+		PackageLayer destinationLayer = root.getOrAddLayer(originalLayer.getQName(), this);
+		Member originalMember = original.getParentMember();
+		
+		//destinationLayer.getOrAddMember(originalMember.getQName(), originalMember.getElement());
+		
+		//destinationLayer.
+		
+		
+		/*
+		ForestElement parent = ref.getParent();
+		LinkedList<ForestElement> parents = new LinkedList<ForestElement>();
+		while (parent != null && !(parent instanceof PackageTree)) {
+			parents.addFirst(parent);
+			parent = parent.getParent();
+		}
+		Iterator<ForestElement> ancestor = parents.iterator();
+		insertReference(ancestor, ref);
+		*/
+	}
 
 }

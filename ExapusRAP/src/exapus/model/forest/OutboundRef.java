@@ -32,10 +32,18 @@ public class OutboundRef extends Ref {
 		Pattern referencingPattern = Pattern.forMethodReferencingNode(n, mb);
 		return new OutboundRef(referencingPattern, referencedElement, referencedName, getSourceRange(n), getLineNumber(n));
 	}
+	
+	
+	public static OutboundRef fromOutboundRef(OutboundRef outboundRef) {
+		OutboundRef copy = new OutboundRef(outboundRef.getReferencingPattern(), outboundRef.getReferencedElement(), outboundRef.getReferencedName(), outboundRef.getSourceRange(), outboundRef.getLineNumber());
+		copy.setDual(outboundRef.getDual());
+		return copy;
+	}
 
 	public OutboundRef(Pattern referencingPattern, Element referencedElement, QName referencedName, SourceRange r, int l) {
 		super(Direction.OUTBOUND, referencingPattern, referencedElement, referencedName, r, l);
 	}
+	
 	
 	public QName getReferencingName() {
 		return this.getQName();

@@ -97,25 +97,32 @@ public class CopyingForestVisitor implements IForestVisitor {
 		return true;
 	}
 
-	@Override
-	public boolean visitInboundReference(InboundRef inboundRef) {
-		InboundRef copy = new InboundRef(inboundRef.getReferencingPattern(), inboundRef.getReferencingElement(), inboundRef.getReferencingName(), inboundRef.getSourceRange(), inboundRef.getLineNumber());
-		copy.setDual(inboundRef.getDual());
+	protected void copyInboundReference(InboundRef inboundRef) {
+		InboundRef copy = InboundRef.fromInboundRef(inboundRef);
 		ForestElement parentCopy = getCopy(inboundRef.getParent());
 		Member parentCopyAsMember = (Member) parentCopy;
 		parentCopyAsMember.addAPIReference(copy);
 		registerCopy(inboundRef,copy);
-		return true;
 	}
-
-	@Override
-	public boolean visitOutboundReference(OutboundRef outboundRef) {
-		OutboundRef copy = new OutboundRef(outboundRef.getReferencingPattern(), outboundRef.getReferencedElement(), outboundRef.getReferencedName(), outboundRef.getSourceRange(), outboundRef.getLineNumber());
+	
+	protected void copyOutboundReference(OutboundRef outboundRef) {
+		OutboundRef copy = OutboundRef.fromOutboundRef(outboundRef);
 		copy.setDual(outboundRef.getDual());
 		ForestElement parentCopy = getCopy(outboundRef.getParent());
 		Member parentCopyAsMember = (Member) parentCopy;
 		parentCopyAsMember.addAPIReference(copy);
 		registerCopy(outboundRef,copy);
+	}
+	
+	@Override
+	public boolean visitInboundReference(InboundRef inboundRef) {
+		copyInboundReference(inboundRef);
+		return true;
+	}
+
+	@Override
+	public boolean visitOutboundReference(OutboundRef outboundRef) {
+		copyOutboundReference(outboundRef);
 		return true;
 	}
 

@@ -160,10 +160,11 @@ public class Member extends MemberContainer {
 
 	public void acceptVisitor(IForestVisitor v) {
 		if(v.visitMember(this)) {
-			for(Ref r : getReferences())
-				r.acceptVisitor(v);
 			for(Member m : getMembers())
 				m.acceptVisitor(v);
+			for(Ref r : getReferences())
+				r.acceptVisitor(v);
+
 		}
 	}
 

@@ -37,8 +37,8 @@ public class PackageLayer extends MemberContainer implements ILayerContainer {
 	public PackageLayer(UqName n) {
 		super(n);
 		layers = new ArrayList<PackageLayer>();
-	}
-
+	}	
+	
 	public String toString() {
 		return "PL[" + getName().toString() + " | M(" + members.size() + ")" + ",PL(" + layers.size() + ")]";
 	}
