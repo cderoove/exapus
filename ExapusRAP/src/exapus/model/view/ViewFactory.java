@@ -108,6 +108,8 @@ public class ViewFactory {
 				else if(subsincluded == 1)
 					selection.setScope(Scope.PREFIX_SCOPE);
 				else throw new IOException("Fourth column should be either 0 or 1: " + line);
+				if(!tag.isEmpty())
+					selection.setTag(tag);
 				builder.add(selection);
 				return true;
 			}
@@ -122,6 +124,7 @@ public class ViewFactory {
 		for(Selection selection : selections) {
 			view.addAPISelection(selection);
 		}
+		view.addProjectSelection(UniversalSelection.getCurrent());
 		return view;
 
 	}
