@@ -36,6 +36,7 @@ public class SelectionDialog extends Dialog {
 	private Text scopedSelectionNameText;
 
 	private Selection selection;
+	private Text scopedSelectionTagText;
 
 	public Selection getSelection() {
 		return selection;
@@ -119,6 +120,12 @@ public class SelectionDialog extends Dialog {
 		nameLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1));
 		scopedSelectionNameText = new Text(scopedSelectionComposite, SWT.BORDER);
 		scopedSelectionNameText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false,1,1));
+		
+		Label tagLabel = new Label(scopedSelectionComposite, SWT.NONE);
+		tagLabel.setText("Tag:");
+		tagLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1));
+		scopedSelectionTagText = new Text(scopedSelectionComposite, SWT.BORDER);
+		scopedSelectionTagText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false,1,1));
 		return composite;
 	}
 
@@ -156,6 +163,9 @@ public class SelectionDialog extends Dialog {
 			if(selScope.isEmpty())
 				return;
 			selection = new ScopedSelection(name, (Scope) selScope.getFirstElement());
+			String scopedSelectionTag = scopedSelectionTagText.getText().trim();
+			if(!scopedSelectionTag.isEmpty())
+				((ScopedSelection) selection).setTag(scopedSelectionTag);
 			return;
 		}
 
