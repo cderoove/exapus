@@ -10,12 +10,13 @@ import exapus.model.visitors.IForestVisitor;
 
 public class InboundFactForest extends FactForest {
 
+	public static UqName DEFAULT_TREE_NAME = new UqName("<Untagged>");
+	
 	private PackageTree root;
 	
 	public InboundFactForest(ExapusModel m) {
 		super(m, Direction.INBOUND);
-		UqName rootName = new UqName("<Untagged>"); 
-		root = new PackageTree(rootName);
+		root = new PackageTree(DEFAULT_TREE_NAME);
 		addPackageTree(root);
 	}
 	

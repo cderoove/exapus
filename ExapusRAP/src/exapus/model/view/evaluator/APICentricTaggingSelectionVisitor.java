@@ -63,6 +63,8 @@ public class APICentricTaggingSelectionVisitor extends SelectiveBottomUpCopyingF
 	@Override
 	public boolean visitInboundReference(final InboundRef inboundRef) {
 		FactForest forestCopy = getCopy();
+		PackageTree untaggedTree = forestCopy.getPackageTree(InboundFactForest.DEFAULT_TREE_NAME);
+
 		for(Selection selection : selections) {
 			//have to match all selection as they can each copy the ref to a different packagetree
 			if(selection.matchRef(inboundRef) 
@@ -72,17 +74,15 @@ public class APICentricTaggingSelectionVisitor extends SelectiveBottomUpCopyingF
 							return selection.matchRef(inboundRef.getDual());
 						}
 					})) {
-				if(selection.hasTag()) {
-					PackageTree tagTree = forestCopy.getOrAddPackageTree(new UqName(selection.getTagString()));
-					tagTree.copyReference(inboundRef);
-					return false;
-				} else {
-					PackageTree untaggedTree = forestCopy.getOrAddPackageTree(new UqName("<Untagged>"));
-					untaggedTree.copyReference(inboundRef);
-					return true;
+				PackageTree destinationTree;
+				if(selection.hasTag()) 
+					destinationTree = forestCopy.getOrAddPackageTree(new UqName(selection.getTagString()));
+				else 
+					destinationTree = untaggedTree;
+				destinationTree.copyReference(inboundRef);
+				return true;
 				}
 			}
-		}
 		return false;
 	}
 
