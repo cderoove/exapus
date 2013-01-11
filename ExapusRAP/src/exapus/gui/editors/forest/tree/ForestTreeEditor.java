@@ -396,8 +396,8 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
     }
 
     public void setFocus() {
-        viewer.getControl().setFocus();
         updateControls();
+        viewer.getControl().setFocus();
     }
 
     @Override

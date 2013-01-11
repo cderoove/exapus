@@ -34,12 +34,12 @@ public class ViewFactory {
 
 	private ViewFactory() {
 		Selection universal = UniversalSelection.getCurrent();
-		completePackageView = new APICentricView("All Packages");
+		completePackageView = new View("All Packages", Perspective.API_CENTRIC);
 		completePackageView.addAPISelection(universal);
 		completePackageView.addProjectSelection(universal);
 		completePackageView.setRenderable(false);
 
-		completeProjectView = new ProjectCentricView("All Projects");
+		completeProjectView = new View("All Projects", Perspective.PROJECT_CENTRIC);
 		completeProjectView.addAPISelection(universal);
 		completeProjectView.addProjectSelection(universal);
 		completeProjectView.setRenderable(false);
@@ -56,7 +56,7 @@ public class ViewFactory {
 	}
 
 	public View testAPICentricSelectionView() {
-		View view = new APICentricView("API-centric selection test");
+		View view = new View("API-centric selection test", Perspective.API_CENTRIC);
 		view.addAPISelection(new ScopedSelection(new QName("java.lang.Integer"), Scope.TYPE_SCOPE));
 		view.addAPISelection(new ScopedSelection(new QName("java.util.Iterator.hasNext()"), Scope.METHOD_SCOPE));
 		view.addAPISelection(new ScopedSelection(new QName("javax"), Scope.PREFIX_SCOPE));
@@ -78,7 +78,7 @@ public class ViewFactory {
 	}
 
 	public View testProjectCentricSelectionView() {
-		View view = new ProjectCentricView("Project-centric selection test");
+		View view = new View("Project-centric selection test", Perspective.PROJECT_CENTRIC);
 		view.addProjectSelection(new ScopedSelection(new QName("sunflow"), Scope.ROOT_SCOPE));
 		view.addAPISelection(new ScopedSelection(new QName("java.lang.String"), Scope.TYPE_SCOPE));
 		view.setRenderable(false);
@@ -120,7 +120,7 @@ public class ViewFactory {
 			}
 		});
 		
-		View view = new APICentricView("Tagged APIs");
+		View view = new View("Tagged APIs", Perspective.API_CENTRIC);
 		for(Selection selection : selections) {
 			view.addAPISelection(selection);
 		}

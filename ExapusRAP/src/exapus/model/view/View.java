@@ -12,7 +12,7 @@ import exapus.model.view.graphbuilder.ForestGraph;
 import exapus.model.view.graphbuilder.GraphBuilder;
 import exapus.model.view.graphdrawer.GraphDrawer;
 
-public abstract class View {
+public class View {
 
 	public View(String n, Perspective p) {
 		name = n;
@@ -120,9 +120,13 @@ public abstract class View {
 		return name;
 	}
 	
-	public abstract boolean isAPICentric();
+	public boolean isAPICentric() {
+		return perspective == Perspective.API_CENTRIC;
+	}
 	
-	public abstract boolean isProjectCentric();
+	public boolean isProjectCentric() {
+		return perspective == Perspective.PROJECT_CENTRIC;
+	}
 	
 	
 	private FactForest lazyEvaluate() {
@@ -153,12 +157,7 @@ public abstract class View {
 	}
 
 	public static View fromView(View original) {
-		View duplicate;	
-		String name = "Copy of " + original.getName();
-		if(original.isAPICentric())
-			duplicate = new APICentricView(name);
-		else
-			duplicate = new ProjectCentricView(name);
+		View duplicate = new View("Copy of " + original.getName(), original.getPerspective());
 		duplicate.setRenderable(original.getRenderable());
 		for(Selection sel : original.getAPISelections())
 			duplicate.addAPISelection(Selection.fromSelection(sel));

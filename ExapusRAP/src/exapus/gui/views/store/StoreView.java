@@ -25,7 +25,6 @@ import exapus.gui.editors.view.ViewEditor;
 import exapus.gui.editors.view.ViewEditorInput;
 import exapus.model.store.Store;
 import exapus.model.view.Perspective;
-import exapus.model.view.ProjectCentricView;
 import exapus.model.view.View;
 
 public class StoreView extends ViewPart implements IDoubleClickListener {
@@ -64,8 +63,9 @@ public class StoreView extends ViewPart implements IDoubleClickListener {
 			@Override
 			public void run() {
 				String name = promptForUniqueViewName("Create new view");
-				if(name != null)
-					Store.getCurrent().registerView(new ProjectCentricView(name));
+				if(name != null) 
+					Store.getCurrent().registerView(new View(name,Perspective.PROJECT_CENTRIC));
+					
 			}			
 		};
 		newViewAction.setText("Create new view");
