@@ -7,14 +7,37 @@ import java.util.Collections;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.rwt.RWT;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Slider;
+import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IPropertyListener;
+import org.eclipse.ui.ISelectionListener;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 
 import exapus.gui.editors.SelectedForestElementImageBrowserViewPart;
 import exapus.gui.editors.view.IViewEditorPage;
@@ -24,11 +47,15 @@ import exapus.model.forest.ForestElement;
 import exapus.model.store.Store;
 
 public class ForestGraphEditor extends SelectedForestElementImageBrowserViewPart implements IEditorPart, IViewEditorPage {
+	public ForestGraphEditor() {
+	}
 	
 	private IEditorSite editorSite;
 	private IEditorInput editorInput;
 	private ViewEditor viewEditor;
 		
+	private int zoom = 100;
+	
 	public static final String ID = "exapus.gui.views.forest.ForestGraphView";
 	private final static String GRAPH_KEY = "graphviz";
 
@@ -51,13 +78,47 @@ public class ForestGraphEditor extends SelectedForestElementImageBrowserViewPart
 		    return MessageDialog.openConfirm(getSite().getShell(), title, msg);
 	}
 	*/
+	
+	
+
+	@Override
+	public void createPartControl(Composite parent) {
+		super.createPartControl(parent);
+		
+		/*
+		 * TODO: Cannot get the layout of the spinner right. Without one for now ...
+		 * 
+		parent.setLayout(new GridLayout(2, false));
+	    Label label = new Label(parent, SWT.NONE);
+	    label.setText("Zoom:");
+		label.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+	    
+		final Spinner spinner = new Spinner(parent, SWT.NONE);
+		spinner.setMinimum(1);
+		spinner.setMaximum(100);
+		spinner.setSelection(100);
+		spinner.setPageIncrement(20);
+		spinner.addModifyListener(new ModifyListener() {
+			@Override
+			public void modifyText(ModifyEvent event) {
+				zoom = spinner.getSelection();
+				updateBrowser();
+			}
+		});
+		spinner.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1));
+		super.createPartControl(parent);
+		browser.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, true, true, 2, 1));
+		*/
+	}
+
+	
 
 	private String textForGraph() {
 		StringBuffer html = new StringBuffer();
 		html.append("<html><body><p>");
 		html.append("<img src=\"");
 		html.append(createImageUrl(GRAPH_KEY));
-		html.append("\"/>");
+		html.append("\" width=" + zoom + "% />");
 		html.append("</p></body></html>");
 		return html.toString();
 	}
