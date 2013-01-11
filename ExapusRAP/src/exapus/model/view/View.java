@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import exapus.model.forest.FactForest;
-import exapus.model.metrics.Metrics;
+import exapus.model.metrics.MetricType;
 import exapus.model.view.evaluator.Evaluator;
 import exapus.model.view.graphbuilder.ForestGraph;
 import exapus.model.view.graphbuilder.GraphBuilder;
@@ -19,8 +19,8 @@ public abstract class View {
 		perspective = p;
 		apiselection = new ArrayList<Selection>();
 		projectselection = new ArrayList<Selection>();
-		renderable = true;
-        metrics = Metrics.defaultValue();
+		renderable = false;
+        metricType = MetricType.defaultValue(getRenderable());
 	}
 
 	
@@ -36,7 +36,7 @@ public abstract class View {
 	
 	private List<Selection> projectselection;
 
-    private Metrics metrics;
+    private MetricType metricType;
 	
 	private String name;
 
@@ -105,13 +105,13 @@ public abstract class View {
 		this.name = name;
 	}
 
-    public Metrics getMetrics() {
-        return metrics;
+    public MetricType getMetricType() {
+        return metricType;
     }
 
-    public void setMetrics(Metrics metrics) {
-    	if(this.metrics != metrics) {
-            this.metrics = metrics;
+    public void setMetricType(MetricType metricType) {
+    	if(this.metricType != metricType) {
+            this.metricType = metricType;
             makeDirty();
     	}
     }
@@ -164,7 +164,7 @@ public abstract class View {
 			duplicate.addAPISelection(Selection.fromSelection(sel));
 		for(Selection sel : original.getProjectSelections())
 			duplicate.addProjectSelection(Selection.fromSelection(sel));
-		duplicate.setMetrics(original.getMetrics());
+		duplicate.setMetricType(original.getMetricType());
 		return duplicate;
 	}
 

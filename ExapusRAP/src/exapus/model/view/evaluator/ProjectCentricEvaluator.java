@@ -2,7 +2,6 @@ package exapus.model.view.evaluator;
 
 import exapus.model.forest.FactForest;
 import exapus.model.forest.OutboundFactForest;
-import exapus.model.metrics.Metrics;
 import exapus.model.store.Store;
 import exapus.model.view.View;
 import exapus.model.visitors.SelectiveCopyingForestVisitor;

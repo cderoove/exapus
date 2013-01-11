@@ -14,5 +14,6 @@ Import-Package: com.ibm.icu.text;version="4.4.2.2",
  javax.servlet.http;version="2.4.0"
 Bundle-ClassPath: .,
  libs/guava-11.0.2.jar,
+ libs/commons-math3-3.1.jar,
  libs/java2html.jar
 Export-Package: exapus.gui.editors.view;x-internal:=true

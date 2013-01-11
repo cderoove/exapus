@@ -2,16 +2,19 @@ package exapus.model.forest;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 
 import com.google.common.collect.Iterables;
 
-import exapus.model.IDeltaListener;
 import exapus.model.Observable;
+import exapus.model.metrics.MetricType;
+import exapus.model.stats.StatsLevel;
 import exapus.model.visitors.IForestVisitor;
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
 public abstract class FactForest extends Observable {
+
+    private Map<MetricType, Map<StatsLevel, DescriptiveStatistics>> stats;
 
 	protected Map<UqName, PackageTree> trees;
 
@@ -23,6 +26,7 @@ public abstract class FactForest extends Observable {
 		model = m;
 		trees = new HashMap<UqName, PackageTree>();
 		direction = d;
+        stats = new HashMap<MetricType, Map<StatsLevel, DescriptiveStatistics>>();
 	}
 
 	public ExapusModel getModel() {
@@ -77,5 +81,7 @@ public abstract class FactForest extends Observable {
 
 	public abstract void acceptVisitor(IForestVisitor v);
 
-
+    public Map<MetricType, Map<StatsLevel, DescriptiveStatistics>> getStats() {
+        return stats;
+    }
 }

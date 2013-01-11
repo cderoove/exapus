@@ -1,7 +1,8 @@
 package exapus.model.forest;
 
 import exapus.gui.editors.forest.graph.INode;
-import exapus.model.metrics.IMetric;
+import exapus.model.metrics.IMetricValue;
+import exapus.model.metrics.MetricType;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaProject;
@@ -11,9 +12,10 @@ import org.eclipse.jdt.core.JavaModelException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Set;
 
 public abstract class ForestElement implements INode {
-    private Map<String, IMetric> metrics = new HashMap<String, IMetric>();
+    private Map<MetricType, IMetricValue> metrics = new HashMap<MetricType, IMetricValue>();
 
 	private ForestElement parent;
 
@@ -158,11 +160,15 @@ public abstract class ForestElement implements INode {
 		return 0;
 	}
 
-    public IMetric getMetric(String name) {
-        return metrics.get(name);
+    public IMetricValue getMetric(MetricType type) {
+        return metrics.get(type);
     }
 
-    public void setMetric(IMetric metric) {
-        metrics.put(metric.getName(), metric);
+    public void setMetric(IMetricValue metricValue) {
+        metrics.put(metricValue.getType(), metricValue);
+    }
+
+    public Set<MetricType> getRegisteredMetrics() {
+        return metrics.keySet();
     }
 }

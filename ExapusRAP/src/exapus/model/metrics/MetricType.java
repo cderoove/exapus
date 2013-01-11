@@ -8,7 +8,7 @@ import java.lang.reflect.Constructor;
 /**
  * Keeping together metric visitors
  */
-public enum Metrics {
+public enum MetricType {
     API_REFS(TotalNumberAPIReferencesVisitor.class.getCanonicalName(), "#APIRefs"),
     API_ELEM(NumberReferencedDistinctAPIElementsVisitor.class.getCanonicalName(), "#APIElem"),
     API_CHILDREN(APIChildrenVisitor.class.getCanonicalName(), "#APIDerived"),
@@ -17,7 +17,7 @@ public enum Metrics {
     private String qName;
     private String shortName;
 
-    private Metrics(String qName, String shortName) {
+    private MetricType(String qName, String shortName) {
         this.qName = qName;
         this.shortName = shortName;
     }
@@ -38,11 +38,13 @@ public enum Metrics {
         return shortName;
     }
 
-    public static Metrics[] supportedMetrics() {
-        return Metrics.class.getEnumConstants();
+    public static MetricType[] supportedMetrics(boolean withoutAll) {
+        if (withoutAll) return new MetricType[]{API_REFS, API_ELEM, API_CHILDREN};
+        return MetricType.class.getEnumConstants();
     }
 
-    public static Metrics defaultValue() {
+    public static MetricType defaultValue(boolean withoutAll) {
+        if (withoutAll) return API_REFS;
         return ALL;
     }
 }

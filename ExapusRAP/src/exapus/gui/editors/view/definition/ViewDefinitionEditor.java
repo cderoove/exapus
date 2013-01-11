@@ -1,6 +1,6 @@
 package exapus.gui.editors.view.definition;
 
-import exapus.model.metrics.Metrics;
+import exapus.model.metrics.MetricType;
 import exapus.model.view.*;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -93,13 +93,13 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 				}
 			}
 		});
-		
-		
+
+
 		//Renderable
 		Label lblRenderable = new Label(parent, SWT.NONE);
 		GridData gd_lblRenderable = new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1);
 		lblRenderable.setLayoutData(gd_lblRenderable);
-		
+
 		checkRenderable = new Button(parent, SWT.CHECK);
 		GridData gd_checkRenderable = new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1);
 		checkRenderable.setLayoutData(gd_checkRenderable);
@@ -109,14 +109,16 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				getView().setRenderable(checkRenderable.getSelection());
+                comboMetrics.setInput(MetricType.supportedMetrics(checkRenderable.getSelection()));
+                comboMetrics.setSelection(new StructuredSelection(MetricType.defaultValue(checkRenderable.getSelection())));
 			}
-			
+
 			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 		});
 
-		//APIs	
+		//APIs
 		Label lblAPILabel = new Label(parent, SWT.NONE);
 		lblAPILabel.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP, false, false, 1, 1));
 		lblAPILabel.setText("APIs:");
@@ -124,32 +126,32 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 		tableVWAPI = new TableViewer(parent, SWT.BORDER | SWT.V_SCROLL);
 		ToolBar toolbarAPI = new ToolBar(parent, SWT.VERTICAL);
 		configureSelectionTableAndToolBar(tableVWAPI, toolbarAPI, Perspective.API_CENTRIC);
-		
+
 		//Projects
 		Label lblProjectsLabel = new Label(parent, SWT.NONE);
 		lblProjectsLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP, false, false, 1, 1));
 		lblProjectsLabel.setText("Projects:");
-		
+
 		tableVWProjects = new TableViewer(parent, SWT.BORDER | SWT.V_SCROLL);
 		ToolBar toolbarProjects = new ToolBar(parent, SWT.VERTICAL);
 		configureSelectionTableAndToolBar(tableVWProjects, toolbarProjects, Perspective.PROJECT_CENTRIC);
 
-        // Metrics
+        // MetricType
         Label lblMetrics = new Label(parent, SWT.NONE);
         lblMetrics.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP, false, false, 1, 1));
-        lblMetrics.setText("Metrics:");
+        lblMetrics.setText("MetricType:");
 
         comboMetrics = new ComboViewer(parent, SWT.READ_ONLY);
         comboMetrics.getCombo().setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
         comboMetrics.setContentProvider(ArrayContentProvider.getInstance());
-        comboMetrics.setInput(Metrics.supportedMetrics());
+        comboMetrics.setInput(MetricType.supportedMetrics(checkRenderable.getSelection()));
         comboMetrics.addSelectionChangedListener(new ISelectionChangedListener() {
             @Override
             public void selectionChanged(SelectionChangedEvent event) {
                 IStructuredSelection selection = (IStructuredSelection) event.getSelection();
                 Object selected = selection.getFirstElement();
-                if (selected instanceof Metrics) {
-                    getView().setMetrics((Metrics) selected);
+                if (selected instanceof MetricType) {
+                    getView().setMetricType((MetricType) selected);
                 }
             }
         });
@@ -184,7 +186,7 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 				cell.setText(sel.getScopeString());
 			}
 		});
-		
+
 		if(perspective.equals(Perspective.API_CENTRIC)) {
 			TableViewerColumn APITagCol = new TableViewerColumn(tableVW, SWT.NONE);
 			APITagCol.getColumn().setText("Tag");
@@ -198,7 +200,7 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 			});
 		}
 
-		
+
 	    ToolItem toolItemAddAPI = new ToolItem(toolbar, SWT.PUSH);
 	    toolItemAddAPI.setText("Add");
 	    toolItemAddAPI.addSelectionListener(new SelectionAdapter() {
@@ -212,7 +214,7 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 	    toolItemEditAPI.setEnabled(false);
 	    toolItemEditAPI.setText("Edit");
 	    */
-	    
+
 	    final ToolItem toolItemDeleteAPI = new ToolItem(toolbar, SWT.PUSH);
 	    toolItemDeleteAPI.setEnabled(false);
 	    toolItemDeleteAPI.setText("Delete");
@@ -230,7 +232,6 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 	    	}
 	    });
 
-	    
 
 	    tableVW.addSelectionChangedListener(new ISelectionChangedListener() {
 			@Override
@@ -241,7 +242,7 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 			}
 		});
 	}
-	
+
 	protected void showSelectionDialog(Perspective perspective) {
 		SelectionDialog selectionDialog  = new SelectionDialog(getSite().getShell(), perspective);
 		int returnCode = selectionDialog.open();
@@ -273,7 +274,7 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 		checkRenderable.setSelection(view.getRenderable());
 		tableVWAPI.setInput(Iterables.toArray(view.getAPISelections(),Object.class));
 		tableVWProjects.setInput(Iterables.toArray(view.getProjectSelections(),Object.class));
-        comboMetrics.setSelection(new StructuredSelection(view.getMetrics()));
+        comboMetrics.setSelection(new StructuredSelection(view.getMetricType()));
 	}
 
 

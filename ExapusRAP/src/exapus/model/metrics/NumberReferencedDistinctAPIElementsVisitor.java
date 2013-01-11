@@ -10,7 +10,7 @@ public class NumberReferencedDistinctAPIElementsVisitor extends MetricVisitor {
     }
 
     private static void initMetric(ForestElement fe) {
-        if (fe.getMetric(Metrics.API_ELEM.getShortName()) == null) {
+        if (fe.getMetric(MetricType.API_ELEM) == null) {
             fe.setMetric(new NumberReferencedDistinctAPIElements());
         }
     }
@@ -47,7 +47,7 @@ public class NumberReferencedDistinctAPIElementsVisitor extends MetricVisitor {
     public boolean visitOutboundReference(OutboundRef outboundRef) {
         if (view.isProjectCentric()) {
             initMetric(outboundRef);
-            ((NumberReferencedDistinctAPIElements) outboundRef.getMetric(Metrics.API_ELEM.getShortName())).addName(outboundRef.getReferencedName().toString(), outboundRef, true);
+            ((NumberReferencedDistinctAPIElements) outboundRef.getMetric(MetricType.API_ELEM)).addName(outboundRef.getReferencedName().toString(), outboundRef, true);
         }
         return view.isProjectCentric();
     }
@@ -56,7 +56,7 @@ public class NumberReferencedDistinctAPIElementsVisitor extends MetricVisitor {
     public boolean visitInboundReference(InboundRef inboundRef) {
         if (view.isAPICentric()) {
             initMetric(inboundRef);
-            ((NumberReferencedDistinctAPIElements) inboundRef.getMetric(Metrics.API_ELEM.getShortName())).addName(inboundRef.getReferencedName().toString(), inboundRef, true);
+            ((NumberReferencedDistinctAPIElements) inboundRef.getMetric(MetricType.API_ELEM)).addName(inboundRef.getReferencedName().toString(), inboundRef, true);
         }
         return view.isAPICentric();
     }

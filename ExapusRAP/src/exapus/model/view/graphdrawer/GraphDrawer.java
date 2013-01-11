@@ -11,9 +11,14 @@ import exapus.model.view.View;
 import exapus.model.view.graphbuilder.ForestGraph;
 
 public abstract class GraphDrawer {
-	
-	
-	public static GraphDrawer forView(View v) {
+
+    protected View view;
+
+    protected GraphDrawer(View view) {
+        this.view = view;
+    }
+
+    public static GraphDrawer forView(View v) {
 		return new ContainmentGraphDrawer(v);
 	}
 	

@@ -8,7 +8,7 @@ import exapus.model.forest.Ref;
  * Number of times when an API interface/class is extended or implemented.
  * (Non-distinct)
  */
-public class APIChildren implements IMetric {
+public class APIChildren implements IMetricValue {
 
     private int value;
     private int groupedValue;
@@ -18,18 +18,18 @@ public class APIChildren implements IMetric {
         if (fromDirectMember) this.groupedValue++;
 
         if (current.getParent() != null) {
-            ((APIChildren) current.getParent().getMetric(getName())).pp(current.getParent(), (current instanceof Member || current instanceof Ref));
+            ((APIChildren) current.getParent().getMetric(getType())).pp(current.getParent(), (current instanceof Member || current instanceof Ref));
         }
     }
 
     @Override
-    public String getValue(boolean groupedPackages) {
-        if (groupedPackages) return Integer.toString(groupedValue);
-        return Integer.toString(value);
+    public int getValue(boolean groupedPackages) {
+        if (groupedPackages) return groupedValue;
+        return value;
     }
 
     @Override
-    public int compareTo(IMetric other, boolean groupedPackages) {
+    public int compareTo(IMetricValue other, boolean groupedPackages) {
         if (other instanceof APIChildren) {
             APIChildren another = (APIChildren) other;
             if (groupedPackages) return this.groupedValue < another.groupedValue ? -1 : (this.groupedValue > another.groupedValue ? 1 : 0);
@@ -40,7 +40,7 @@ public class APIChildren implements IMetric {
     }
 
     @Override
-    public String getName() {
-        return Metrics.API_CHILDREN.getShortName();
+    public MetricType getType() {
+        return MetricType.API_CHILDREN;
     }
 }
