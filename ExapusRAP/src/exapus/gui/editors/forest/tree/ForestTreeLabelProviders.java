@@ -115,6 +115,8 @@ public class ForestTreeLabelProviders {
                     return packageTree.getName().toString() + ":" + in.getReferencingName().toString();
                 }
 */
+                
+                return in.getReferencingName().toString();
 			}
 			return null;
 		}
