@@ -33,7 +33,7 @@ public class UniversalSelection extends Selection {
 
 	@Override
 	public boolean hasTag() {
-		return true;
+		return false;
 	}
 
 	@Override
