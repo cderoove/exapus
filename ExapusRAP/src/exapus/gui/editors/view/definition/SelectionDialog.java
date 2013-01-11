@@ -69,7 +69,7 @@ public class SelectionDialog extends Dialog {
 		lblType.setLayoutData(gd_lblType);
 		lblType.setText("Type:");
 
-		selectionTypeComboVW = new ComboViewer(composite, SWT.NONE);
+		selectionTypeComboVW = new ComboViewer(composite, SWT.READ_ONLY);
 		GridData gd_comboVWType = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
 		Combo combo = selectionTypeComboVW.getCombo();
 		combo.setLayoutData(gd_comboVWType);
@@ -107,7 +107,7 @@ public class SelectionDialog extends Dialog {
 		Label scopeTypeLabel = new Label(scopedSelectionComposite, SWT.NONE);
 		scopeTypeLabel.setText("Scope:");
 		scopeTypeLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1));	
-		scopedSelectionScopeComboVW = new ComboViewer(scopedSelectionComposite, SWT.NONE);
+		scopedSelectionScopeComboVW = new ComboViewer(scopedSelectionComposite, SWT.READ_ONLY);
 		GridData gd_scopedSelectionScopeComboVW = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
 		scopedSelectionScopeComboVW.getControl().setLayoutData(gd_scopedSelectionScopeComboVW);
 		scopedSelectionScopeComboVW.setContentProvider(ArrayContentProvider.getInstance());

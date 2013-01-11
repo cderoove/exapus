@@ -14,6 +14,7 @@ import exapus.model.view.graphbuilder.ForestGraph;
 public class ContainmentGraphDrawer extends GraphDrawer {
 	
 	public ContainmentGraphDrawer(View v) {
+        super(v);
 	}
 
 	@Override
@@ -23,7 +24,8 @@ public class ContainmentGraphDrawer extends GraphDrawer {
 
 	@Override
 	protected INodeFormatter getNodeFormatter() {
-		return new DefaultNodeFormatter();
+		//return new DefaultNodeFormatter();
+		return new QuartileBasedNodeFormatter(view.getMetricType());
 	}
 
 	@Override

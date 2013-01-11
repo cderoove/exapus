@@ -10,7 +10,7 @@ public class TotalNumberAPIReferencesVisitor extends MetricVisitor {
     }
 
     private static void initMetric(ForestElement fe) {
-        if (fe.getMetric(Metrics.API_REFS.getShortName()) == null) {
+        if (fe.getMetric(MetricType.API_REFS) == null) {
             fe.setMetric(new TotalNumberAPIReferences());
         }
     }
@@ -47,7 +47,7 @@ public class TotalNumberAPIReferencesVisitor extends MetricVisitor {
     public boolean visitInboundReference(InboundRef inboundRef) {
         if (view.isAPICentric()) {
             initMetric(inboundRef);
-            ((TotalNumberAPIReferences) inboundRef.getMetric(Metrics.API_REFS.getShortName())).pp(inboundRef, true);
+            ((TotalNumberAPIReferences) inboundRef.getMetric(MetricType.API_REFS)).pp(inboundRef, true);
         }
         return view.isAPICentric();
     }
@@ -56,7 +56,7 @@ public class TotalNumberAPIReferencesVisitor extends MetricVisitor {
     public boolean visitOutboundReference(OutboundRef outboundRef) {
         if (view.isProjectCentric()) {
             initMetric(outboundRef);
-            ((TotalNumberAPIReferences) outboundRef.getMetric(Metrics.API_REFS.getShortName())).pp(outboundRef, true);
+            ((TotalNumberAPIReferences) outboundRef.getMetric(MetricType.API_REFS)).pp(outboundRef, true);
         }
         return view.isProjectCentric();
     }

@@ -10,7 +10,7 @@ public class APIChildrenVisitor extends MetricVisitor {
     }
 
     private static void initMetric(ForestElement fe) {
-        if (fe.getMetric(Metrics.API_CHILDREN.getShortName()) == null) {
+        if (fe.getMetric(MetricType.API_CHILDREN) == null) {
             fe.setMetric(new APIChildren());
         }
     }
@@ -53,7 +53,7 @@ public class APIChildrenVisitor extends MetricVisitor {
                 case EXTENDS_CLASS:
                 case IMPLEMENTS_INTERFACE:
                 case EXTENDS_INTERFACE:
-                    ((APIChildren) inboundRef.getMetric(Metrics.API_CHILDREN.getShortName())).pp(inboundRef, true);
+                    ((APIChildren) inboundRef.getMetric(MetricType.API_CHILDREN)).pp(inboundRef, true);
                 default:
                     break;
             }
@@ -71,7 +71,7 @@ public class APIChildrenVisitor extends MetricVisitor {
                 case EXTENDS_CLASS:
                 case IMPLEMENTS_INTERFACE:
                 case EXTENDS_INTERFACE:
-                    ((APIChildren) outboundRef.getMetric(Metrics.API_CHILDREN.getShortName())).pp(outboundRef, true);
+                    ((APIChildren) outboundRef.getMetric(MetricType.API_CHILDREN)).pp(outboundRef, true);
                 default:
                     break;
             }

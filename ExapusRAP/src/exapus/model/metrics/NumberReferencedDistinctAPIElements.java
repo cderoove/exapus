@@ -11,7 +11,7 @@ import java.util.Set;
  * Sum of referenced distinct API elements below the node
  */
 
-public class NumberReferencedDistinctAPIElements implements IMetric {
+public class NumberReferencedDistinctAPIElements implements IMetricValue {
     private Set<String> names = new HashSet<String>();
     private Set<String> groupedNames = new HashSet<String>();
 
@@ -27,18 +27,18 @@ public class NumberReferencedDistinctAPIElements implements IMetric {
         if (fromDirectMember) groupedNames.add(name);
 
         if (current.getParent() != null) {
-            ((NumberReferencedDistinctAPIElements) current.getParent().getMetric(getName())).addName(name, current.getParent(), (current instanceof Member || current instanceof Ref));
+            ((NumberReferencedDistinctAPIElements) current.getParent().getMetric(getType())).addName(name, current.getParent(), (current instanceof Member || current instanceof Ref));
         }
     }
 
     @Override
-    public String getValue(boolean groupedPackages) {
-        if (groupedPackages) return Integer.toString(groupedNames.size());
-        return Integer.toString(names.size());
+    public int getValue(boolean groupedPackages) {
+        if (groupedPackages) return groupedNames.size();
+        return names.size();
     }
 
     @Override
-    public int compareTo(IMetric other, boolean groupedPackages) {
+    public int compareTo(IMetricValue other, boolean groupedPackages) {
         if (other instanceof NumberReferencedDistinctAPIElements) {
             NumberReferencedDistinctAPIElements another = (NumberReferencedDistinctAPIElements) other;
             if (groupedPackages)
@@ -50,8 +50,8 @@ public class NumberReferencedDistinctAPIElements implements IMetric {
     }
 
     @Override
-    public String getName() {
-        return Metrics.API_ELEM.getShortName();
+    public MetricType getType() {
+        return MetricType.API_ELEM;
     }
 
 }

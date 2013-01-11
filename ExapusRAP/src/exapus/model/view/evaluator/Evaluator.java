@@ -2,10 +2,8 @@ package exapus.model.view.evaluator;
 
 import exapus.model.forest.ExapusModel;
 import exapus.model.forest.FactForest;
-import exapus.model.forest.InboundFactForest;
-import exapus.model.forest.OutboundFactForest;
-import exapus.model.metrics.Metrics;
-import exapus.model.view.Perspective;
+import exapus.model.metrics.MetricType;
+import exapus.model.stats.StatsCollectionVisitor;
 import exapus.model.view.View;
 
 public abstract class Evaluator {
@@ -45,22 +43,34 @@ public abstract class Evaluator {
 	public abstract void evaluate();
 
     protected void calculateMetrics(FactForest forest) {
-        if (getView().getMetrics() != null) {
+        if (getView().getMetricType() != null) {
             long startTime = System.currentTimeMillis();
 
-            if (getView().getMetrics() == Metrics.ALL) {
-                for (Metrics metric : Metrics.supportedMetrics()) {
-                    if (metric == Metrics.ALL) continue;
+            if (getView().getMetricType() == MetricType.ALL) {
+                for (MetricType metric : MetricType.supportedMetrics(getView().getRenderable())) {
+                    if (metric == MetricType.ALL) continue;
                     forest.acceptVisitor(metric.getVisitor(getView()));
                 }
             } else {
-                forest.acceptVisitor(getView().getMetrics().getVisitor(getView()));
+                forest.acceptVisitor(getView().getMetricType().getVisitor(getView()));
             }
 
             long stopTime = System.currentTimeMillis();
             long elapsedTime = stopTime - startTime;
             System.err.printf("Metric calculation: %d ms\n", elapsedTime);
+
+            calculateStats(forest);
         }
+    }
+
+    private void calculateStats(FactForest forest) {
+        long startTime = System.currentTimeMillis();
+
+        forest.acceptVisitor(new StatsCollectionVisitor(getView()));
+
+        long stopTime = System.currentTimeMillis();
+        long elapsedTime = stopTime - startTime;
+        System.err.printf("Stats calculation: %d ms\n", elapsedTime);
     }
 
 }

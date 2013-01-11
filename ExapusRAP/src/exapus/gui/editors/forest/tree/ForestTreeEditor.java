@@ -6,7 +6,7 @@ import exapus.gui.editors.view.ViewEditor;
 import exapus.gui.views.forest.reference.ForestReferenceViewPart;
 import exapus.model.forest.FactForest;
 import exapus.model.forest.ForestElement;
-import exapus.model.metrics.Metrics;
+import exapus.model.metrics.MetricType;
 import exapus.model.store.Store;
 import exapus.model.view.View;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -38,14 +38,14 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
     public static final String ID = "exapus.gui.views.forest.ForestTreeView";
 
     private List<MetricColumn> metricCols = new ArrayList<MetricColumn>();
-    private Metrics chosen;
+    private MetricType chosen;
     private int idxFirstMetricCol;
 
     private TreeViewerColumn patternCol;
     private Combo comboGroupingPackages;
 
     private SortBy sorting = SortBy.NAME;
-    private Metrics sortingMetric;
+    private MetricType sortingMetric;
 
     private static enum SortBy {
         NAME, METRIC
@@ -123,7 +123,7 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
                         }
                         break;
                     case METRIC:
-                        result = fe1.getMetric(sortingMetric.getShortName()).compareTo(fe2.getMetric(sortingMetric.getShortName()), packageStyle == PackageStyle.GROUPED);
+                        result = fe1.getMetric(sortingMetric).compareTo(fe2.getMetric(sortingMetric), packageStyle == PackageStyle.GROUPED);
                         break;
 
                 }
@@ -235,10 +235,10 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
         lineCol.getColumn().setWidth(50);
         lineCol.setLabelProvider(new ForestTreeLabelProviders.LineColumnLabelProvider());
 
-        chosen = getView().getMetrics();
+        chosen = getView().getMetricType();
         idxFirstMetricCol = viewer.getTree().getColumnCount();
-        for (Metrics metric : Metrics.supportedMetrics()) {
-            if (metric == Metrics.ALL) continue;
+        for (MetricType metric : MetricType.supportedMetrics(getView().getRenderable())) {
+            if (metric == MetricType.ALL) continue;
             MetricColumn col = new MetricColumn(viewer.getTree().getColumnCount(), metric, viewer, SWT.RIGHT);
             metricCols.add(col);
         }
@@ -315,7 +315,7 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 
         patternCol.setLabelProvider(new ForestTreeLabelProviders.PatternColumnLabelProvider(packageStyle == PackageStyle.GROUPED));
         for (MetricColumn metricCol : metricCols) {
-            metricCol.column.setLabelProvider(new ForestTreeLabelProviders.MetricColumnLabelProvider(packageStyle == PackageStyle.GROUPED, metricCol.metric.getShortName()));
+            metricCol.column.setLabelProvider(new ForestTreeLabelProviders.MetricColumnLabelProvider(packageStyle == PackageStyle.GROUPED, metricCol.metricType));
         }
 
         viewer.refresh();
@@ -352,8 +352,8 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 
 
     public void updateControls() {
-        if (chosen != getView().getMetrics()) {
-            chosen = getView().getMetrics();
+        if (chosen != getView().getMetricType()) {
+            chosen = getView().getMetricType();
             sorting = SortBy.NAME;
             sortingMetric = chosen;
             changeGrouping(PackageStyle.NON_GROUPED.index);
@@ -363,9 +363,9 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
                 idx.add(i);
             }
 
-            if (getView().getMetrics() != Metrics.ALL) {
+            if (getView().getMetricType() != MetricType.ALL) {
                 for (MetricColumn metricCol : metricCols) {
-                    if (metricCol.metric != getView().getMetrics()) metricCol.clear();
+                    if (metricCol.metricType != getView().getMetricType()) metricCol.clear();
                     else {
                         int swapIdx = idx.get(idxFirstMetricCol);
                         idx.set(idxFirstMetricCol, metricCol.idx);
@@ -525,13 +525,13 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 
     private class MetricColumn {
         private int idx;
-        private Metrics metric;
+        private MetricType metricType;
         private TreeViewerColumn column;
         private SelectionAdapter selectionAdapter;
 
-        public MetricColumn(int idx, Metrics metric, TreeViewer viewer, int style) {
+        public MetricColumn(int idx, MetricType metricType, TreeViewer viewer, int style) {
             this.idx = idx;
-            this.metric = metric;
+            this.metricType = metricType;
             this.column = new TreeViewerColumn(viewer, style);
             init();
         }
@@ -542,7 +542,7 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
                     @Override
                     public void widgetSelected(SelectionEvent e) {
                         viewer.getTree().setSortColumn(column.getColumn());
-                        sortingMetric = metric;
+                        sortingMetric = metricType;
 
                         changeGrouping(PackageStyle.GROUPED.index);
                         if (comboGroupingPackages.getSelectionIndex() != PackageStyle.GROUPED.index) {
@@ -562,9 +562,9 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
                 };
             }
 
-            column.getColumn().setText(metric.getShortName());
+            column.getColumn().setText(metricType.getShortName());
             column.getColumn().setWidth(100);
-            column.setLabelProvider(new ForestTreeLabelProviders.MetricColumnLabelProvider(packageStyle == PackageStyle.GROUPED, metric.getShortName()));
+            column.setLabelProvider(new ForestTreeLabelProviders.MetricColumnLabelProvider(packageStyle == PackageStyle.GROUPED, metricType));
 
             column.getColumn().addSelectionListener(selectionAdapter);
         }

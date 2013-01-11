@@ -8,14 +8,14 @@ import exapus.model.forest.Ref;
  * Direct sum of all references below the node
  */
 
-public class TotalNumberAPIReferences implements IMetric {
+public class TotalNumberAPIReferences implements IMetricValue {
 
     private int value = 0;
     private int groupedValue = 0;
 
-    public String getValue(boolean groupedPackages) {
-        if (groupedPackages) return Integer.toString(groupedValue);
-        return Integer.toString(value);
+    public int getValue(boolean groupedPackages) {
+        if (groupedPackages) return groupedValue;
+        return value;
     }
 
     /**
@@ -31,12 +31,12 @@ public class TotalNumberAPIReferences implements IMetric {
         if (fromDirectMember) this.groupedValue++;
 
         if (current.getParent() != null) {
-            ((TotalNumberAPIReferences) current.getParent().getMetric(getName())).pp(current.getParent(), (current instanceof Member || current instanceof Ref));
+            ((TotalNumberAPIReferences) current.getParent().getMetric(getType())).pp(current.getParent(), (current instanceof Member || current instanceof Ref));
         }
     }
 
     @Override
-    public int compareTo(IMetric other, boolean groupedPackages) {
+    public int compareTo(IMetricValue other, boolean groupedPackages) {
         if (other instanceof TotalNumberAPIReferences) {
             TotalNumberAPIReferences another = (TotalNumberAPIReferences) other;
             if (groupedPackages) return this.groupedValue < another.groupedValue ? -1 : (this.groupedValue > another.groupedValue ? 1 : 0);
@@ -47,8 +47,8 @@ public class TotalNumberAPIReferences implements IMetric {
     }
 
     @Override
-    public String getName() {
-        return Metrics.API_REFS.getShortName();
+    public MetricType getType() {
+        return MetricType.API_REFS;
     }
 
 }
