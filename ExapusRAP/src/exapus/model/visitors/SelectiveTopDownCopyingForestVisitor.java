@@ -1,6 +1,5 @@
 package exapus.model.visitors;
 
-import exapus.model.forest.FactForest;
 import exapus.model.forest.InboundFactForest;
 import exapus.model.forest.InboundRef;
 import exapus.model.forest.Member;
@@ -9,7 +8,7 @@ import exapus.model.forest.OutboundRef;
 import exapus.model.forest.PackageLayer;
 import exapus.model.forest.PackageTree;
 
-public abstract class SelectiveCopyingForestVisitor extends CopyingForestVisitor {
+public abstract class SelectiveTopDownCopyingForestVisitor extends TopDownCopyingForestVisitor {
 
 
 	@Override

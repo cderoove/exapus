@@ -15,7 +15,8 @@ import exapus.model.forest.UqName;
 import exapus.model.store.Store;
 import exapus.model.view.Selection;
 import exapus.model.view.View;
-import exapus.model.visitors.SelectiveCopyingForestVisitor;
+import exapus.model.visitors.ICopyingForestVisitor;
+import exapus.model.visitors.SelectiveTopDownCopyingForestVisitor;
 import exapus.model.view.evaluator.APICentricTaggingSelectionVisitor;
 import exapus.model.view.evaluator.APICentricSelectionVisitor;
 
@@ -30,7 +31,7 @@ public class APICentricEvaluator extends Evaluator {
 		return modelResult.getAPICentricForest();
 	}
 
-	protected SelectiveCopyingForestVisitor newVisitor() {
+	protected ICopyingForestVisitor newVisitor() {
 		if(Iterables.any(getView().getAPISelections(), new Predicate<Selection>() {
 			@Override
 			public boolean apply(Selection selection) {
@@ -44,7 +45,7 @@ public class APICentricEvaluator extends Evaluator {
 	
 	@Override
 	public void evaluate() {
-		SelectiveCopyingForestVisitor v = newVisitor();
+		ICopyingForestVisitor v = newVisitor();
 		InboundFactForest workspaceForest = Store.getCurrent().getWorkspaceModel().getAPICentricForest();
 		FactForest forest = v.copy(workspaceForest);
         calculateMetrics(forest);

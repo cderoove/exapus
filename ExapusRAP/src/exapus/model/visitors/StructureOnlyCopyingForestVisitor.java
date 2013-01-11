@@ -5,7 +5,7 @@ import exapus.model.forest.InboundRef;
 import exapus.model.forest.Member;
 import exapus.model.forest.OutboundRef;
 
-public class StructureOnlyCopyingForestVisitor extends CopyingForestVisitor {
+public class StructureOnlyCopyingForestVisitor extends TopDownCopyingForestVisitor {
 
 	//abolished because does not work nicely with anything that traverses the tree bottom-up (e.g., table view / metrics calculation) 
 	public StructureOnlyCopyingForestVisitor() {

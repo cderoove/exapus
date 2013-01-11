@@ -13,9 +13,10 @@ import exapus.model.forest.PackageLayer;
 import exapus.model.forest.PackageTree;
 import exapus.model.forest.UqName;
 import exapus.model.view.Selection;
-import exapus.model.visitors.SelectiveCopyingForestVisitor;
+import exapus.model.visitors.SelectiveTopDownCopyingForestVisitor;
+import exapus.model.visitors.SelectiveBottomUpCopyingForestVisitor;
 
-public abstract class SelectionVisitor extends SelectiveCopyingForestVisitor {
+public abstract class SelectionVisitor extends SelectiveTopDownCopyingForestVisitor {
 	
 	protected Iterable<Selection> selections;	
 	protected Iterable<Selection> dual_selections;

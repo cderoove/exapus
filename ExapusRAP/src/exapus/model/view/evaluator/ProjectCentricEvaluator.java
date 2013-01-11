@@ -4,7 +4,8 @@ import exapus.model.forest.FactForest;
 import exapus.model.forest.OutboundFactForest;
 import exapus.model.store.Store;
 import exapus.model.view.View;
-import exapus.model.visitors.SelectiveCopyingForestVisitor;
+import exapus.model.visitors.ICopyingForestVisitor;
+import exapus.model.visitors.SelectiveTopDownCopyingForestVisitor;
 
 public class ProjectCentricEvaluator extends Evaluator {
 
@@ -17,13 +18,13 @@ public class ProjectCentricEvaluator extends Evaluator {
 		return getModelResult().getProjectCentricForest();
 	}
 
-	protected SelectiveCopyingForestVisitor newVisitor() {
+	protected ICopyingForestVisitor newVisitor() {
 		return new ProjectCentricSelectionVisitor(getView().getProjectSelections(), getView().getAPISelections());
 	}
 
 	@Override
 	public void evaluate() {
-		SelectiveCopyingForestVisitor v = newVisitor();
+		ICopyingForestVisitor v = newVisitor();
 		OutboundFactForest workspaceForest = Store.getCurrent().getWorkspaceModel().getProjectCentricForest();
 		FactForest forest = v.copy(workspaceForest);
 		calculateMetrics(forest);
