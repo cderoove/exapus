@@ -352,42 +352,44 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 
 
     public void updateControls() {
-        if (chosen != getView().getMetricType()) {
-            chosen = getView().getMetricType();
-            sorting = SortBy.NAME;
-            sortingMetric = chosen;
-            changeGrouping(PackageStyle.NON_GROUPED.index);
-
-            List<Integer> idx = new ArrayList<Integer>();
-            for (int i = 0; i < viewer.getTree().getColumnCount(); i++) {
-                idx.add(i);
-            }
-
-            if (getView().getMetricType() != MetricType.ALL) {
-                for (MetricColumn metricCol : metricCols) {
-                    if (metricCol.metricType != getView().getMetricType()) metricCol.clear();
-                    else {
-                        int swapIdx = idx.get(idxFirstMetricCol);
-                        idx.set(idxFirstMetricCol, metricCol.idx);
-                        idx.set(metricCol.idx, swapIdx);
-
-                        metricCol.init();
-                    }
-                }
-
-            } else {
-                for (MetricColumn metricCol : metricCols) {
-                    metricCol.init();
-                }
-            }
-
-            viewer.getTree().setColumnOrder(Ints.toArray(idx));
-        }
+        updateMetrics();
 
         String viewName = getEditorInput().getName();
         FactForest forest = Store.getCurrent().forestForRegisteredView(viewName);
         viewer.setInput(forest);
         viewer.expandToLevel(packageStyle.expandedDepth);
+    }
+
+    private void updateMetrics() {
+        chosen = getView().getMetricType();
+        sorting = SortBy.NAME;
+        sortingMetric = chosen;
+        changeGrouping(PackageStyle.NON_GROUPED.index);
+
+        List<Integer> idx = new ArrayList<Integer>();
+        for (int i = 0; i < viewer.getTree().getColumnCount(); i++) {
+            idx.add(i);
+        }
+
+        if (getView().getMetricType() != MetricType.ALL) {
+            for (MetricColumn metricCol : metricCols) {
+                if (metricCol.metricType != getView().getMetricType()) metricCol.clear();
+                else {
+                    int swapIdx = idx.get(idxFirstMetricCol);
+                    idx.set(idxFirstMetricCol, metricCol.idx);
+                    idx.set(metricCol.idx, swapIdx);
+
+                    metricCol.init();
+                }
+            }
+
+        } else {
+            for (MetricColumn metricCol : metricCols) {
+                metricCol.init();
+            }
+        }
+
+        viewer.getTree().setColumnOrder(Ints.toArray(idx));
     }
 
     private View getView() {
