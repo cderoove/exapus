@@ -118,7 +118,8 @@ public class ForestGraphEditor extends SelectedForestElementImageBrowserViewPart
 		html.append("<html><body><p>");
 		html.append("<img src=\"");
 		html.append(createImageUrl(GRAPH_KEY));
-		html.append("\" width=" + zoom + "% />");
+		//html.append("\" width=" + zoom + "% />");
+		html.append("\" />");
 		html.append("</p></body></html>");
 		return html.toString();
 	}
