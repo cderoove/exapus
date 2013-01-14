@@ -14,32 +14,38 @@ public class OutboundFactForest extends FactForest {
 	}
 
 	public void addProject(IJavaProject p, IProgressMonitor m) throws JavaModelException {
-		String name = p.getElementName();
-		IPackageFragment[] packageFragments = p.getPackageFragments();
-		// m.beginTask("Processing project: " + name, packageFragments.length);
-		UqName projectName = new UqName(name);
-		PackageTree tree = new PackageTree(projectName);
-		addPackageTree(tree);
-		for (IPackageFragment f : packageFragments) {
-			// m.subTask("Processing project package: " + f.getElementName());
-			tree.processSourcePackageFragment(f);
-			// m.worked(1);
-		}
-		// m.done();
+        try {
+            String name = p.getElementName();
+            IPackageFragment[] packageFragments = p.getPackageFragments();
+            // m.beginTask("Processing project: " + name, packageFragments.length);
+            System.err.printf("Processing project %s (%d packages)\n", name, packageFragments.length);
+            UqName projectName = new UqName(name);
+            PackageTree tree = new PackageTree(projectName);
+            addPackageTree(tree);
+            for (IPackageFragment f : packageFragments) {
+                // m.subTask("Processing project package: " + f.getElementName());
+                tree.processSourcePackageFragment(f);
+                // m.worked(1);
+            }
+            // m.done();
 
-		// System.out.println("Added project to project-centric forest: " +
-		// name);
+            System.out.printf("Added project %s to project-centric forest (%d)", name, trees.keySet().size());
+        } catch (Exception ex){
+            if (ex instanceof JavaModelException) throw (JavaModelException) ex;
+            System.err.printf("Project %s had a problem loading\n", p.getElementName());
+            ex.printStackTrace();
+        }
 	}
-	
+
 	public FactForest getDualFactForest() {
 		return getModel().getAPICentricForest();
 	}
-	
+
 	public void acceptVisitor(IForestVisitor v) {
-		if(v.visitOutboundFactForest(this)) 
-			for(PackageTree t : getPackageTrees()) 
+		if(v.visitOutboundFactForest(this))
+			for(PackageTree t : getPackageTrees())
 				t.acceptVisitor(v);
 	}
 
-	
+
 }
