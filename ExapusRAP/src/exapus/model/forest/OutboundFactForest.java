@@ -29,7 +29,7 @@ public class OutboundFactForest extends FactForest {
             }
             // m.done();
 
-            System.out.printf("Added project %s to project-centric forest (%d)", name, trees.keySet().size());
+            System.out.printf("Added project %s to project-centric forest (%d)\n", name, trees.keySet().size());
         } catch (Exception ex){
             if (ex instanceof JavaModelException) throw (JavaModelException) ex;
             System.err.printf("Project %s had a problem loading\n", p.getElementName());
