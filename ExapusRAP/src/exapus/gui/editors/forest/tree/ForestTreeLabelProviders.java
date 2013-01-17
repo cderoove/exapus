@@ -1,6 +1,7 @@
 package exapus.gui.editors.forest.tree;
 
 import exapus.model.forest.*;
+import exapus.model.metrics.IMetricValue;
 import exapus.model.metrics.MetricType;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.swt.graphics.Image;
@@ -66,11 +67,9 @@ public class ForestTreeLabelProviders {
 
                     PackageLayer layer = (PackageLayer) element;
                     PackageTree packageTree = layer.getParentPackageTree();
-/*
                     if (packageTree != null && !"<Packages>".equals(packageTree.getName().toString())) {
                         return packageTree.getName().toString() + ":" + layer.getQName().toString();
                     }
-*/
                     return layer.getQName().toString();
                 }
 				return ((PackageLayer) element).getName().toString();
@@ -110,12 +109,10 @@ public class ForestTreeLabelProviders {
 				InboundRef in = ((InboundRef) element);
 
                 PackageTree packageTree = in.getDual().getParentPackageTree();
-/*
                 if (packageTree != null && !"<Packages>".equals(packageTree.getName().toString())) {
                     return packageTree.getName().toString() + ":" + in.getReferencingName().toString();
                 }
-*/
-                
+
                 return in.getReferencingName().toString();
 			}
 			return null;
@@ -148,7 +145,9 @@ public class ForestTreeLabelProviders {
         public String getText(Object element) {
             if (element instanceof ForestElement) {
                 ForestElement fe = (ForestElement) element;
-                return Integer.toString(fe.getMetric(metricType).getValue(groupedPackageNames));
+                IMetricValue metricValue = fe.getMetric(metricType);
+                if (metricValue != null) return Integer.toString(metricValue.getValue(groupedPackageNames));
+                else return null;
             }
 
             return null;
