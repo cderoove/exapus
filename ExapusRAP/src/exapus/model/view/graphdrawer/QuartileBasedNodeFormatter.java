@@ -39,7 +39,7 @@ public class QuartileBasedNodeFormatter implements INodeFormatter {
     public Iterable<String> decorations(INode n) {
         List<String> decorations = new ArrayList<String>();
         if (n instanceof PackageLayer) {
-            decorations.add("shape=oval");
+            decorations.add("shape=box");
             PackageLayer l = (PackageLayer) n;
             if (!l.hasMembers())
                 decorations.add("style=\"dashed\"");
@@ -55,7 +55,7 @@ public class QuartileBasedNodeFormatter implements INodeFormatter {
             return decorations;
         }
         if (n instanceof PackageTree) {
-            decorations.add("shape=oval");
+            decorations.add("shape=box");
             decorations.add("style=\"dashed\"");
             return decorations;
         }
@@ -64,7 +64,7 @@ public class QuartileBasedNodeFormatter implements INodeFormatter {
             Member m = (Member) n;
             Element e = m.getElement();
             if (e.declaresType()) {
-                decorations.add("shape=egg");
+                decorations.add("shape=oval");
                 if (m.isTopLevel()) {
                     PENWIDTH penwidth = getPenwidth(m);
                     decorations.add("penwidth=" + Integer.toString(penwidth.value));
@@ -74,9 +74,10 @@ public class QuartileBasedNodeFormatter implements INodeFormatter {
                 }
             }
             if (e.isMethod())
-                decorations.add("shape=box");
-            if (e.isField())
-                decorations.add("shape=parallelogram");
+                throw new UnsupportedOperationException("We don't yet have style for that");
+            if (e.isField()) {
+                throw new UnsupportedOperationException("We don't yet have style for that");
+            }
 
             return decorations;
         }
