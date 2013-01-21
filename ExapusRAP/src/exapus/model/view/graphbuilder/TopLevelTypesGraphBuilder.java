@@ -12,9 +12,9 @@ import exapus.model.forest.PackageTree;
 import exapus.model.view.View;
 import exapus.model.visitors.IForestVisitor;
 
-public class ContainmentGraphBuilder extends GraphBuilder {
+public class TopLevelTypesGraphBuilder extends GraphBuilder {
 	
-	ContainmentGraphBuilder(View v) {
+	TopLevelTypesGraphBuilder(View v) {
 		super(v);
 	}
 	

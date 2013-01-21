@@ -1,5 +1,6 @@
 package exapus.gui.editors.view.definition;
 
+import exapus.model.details.GraphDetails;
 import exapus.model.metrics.MetricType;
 import exapus.model.view.*;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -41,7 +42,7 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 	private TableViewer tableVWProjects;
 	private ViewEditor viewEditor;
     private ComboViewer comboMetrics;
-
+    private ComboViewer comboGraphDetails;
 
 	@Override
 	public void doSave(IProgressMonitor monitor) {
@@ -118,7 +119,27 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 			}
 		});
 
-		//APIs
+        //Graph details
+        Label lblGraphDetails = new Label(parent, SWT.NONE);
+        lblGraphDetails.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP, false, false, 1, 1));
+        lblGraphDetails.setText("Graph details:");
+
+        comboGraphDetails = new ComboViewer(parent, SWT.READ_ONLY);
+        comboGraphDetails.getCombo().setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+        comboGraphDetails.setContentProvider(ArrayContentProvider.getInstance());
+        comboGraphDetails.setInput(GraphDetails.supportedDetails());
+        comboGraphDetails.addSelectionChangedListener(new ISelectionChangedListener() {
+            @Override
+            public void selectionChanged(SelectionChangedEvent event) {
+                IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+                Object selected = selection.getFirstElement();
+                if (selected instanceof GraphDetails) {
+                    getView().setGraphDetails((GraphDetails) selected);
+                }
+            }
+        });
+
+        //APIs
 		Label lblAPILabel = new Label(parent, SWT.NONE);
 		lblAPILabel.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP, false, false, 1, 1));
 		lblAPILabel.setText("APIs:");
@@ -139,7 +160,7 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
         // MetricType
         Label lblMetrics = new Label(parent, SWT.NONE);
         lblMetrics.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP, false, false, 1, 1));
-        lblMetrics.setText("MetricType:");
+        lblMetrics.setText("Metrics:");
 
         comboMetrics = new ComboViewer(parent, SWT.READ_ONLY);
         comboMetrics.getCombo().setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
@@ -275,6 +296,7 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 		tableVWAPI.setInput(Iterables.toArray(view.getAPISelections(),Object.class));
 		tableVWProjects.setInput(Iterables.toArray(view.getProjectSelections(),Object.class));
         comboMetrics.setSelection(new StructuredSelection(view.getMetricType()));
+        comboGraphDetails.setSelection(new StructuredSelection(view.getGraphDetails()));
 	}
 
 

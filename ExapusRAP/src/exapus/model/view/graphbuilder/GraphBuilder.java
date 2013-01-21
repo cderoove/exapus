@@ -1,6 +1,5 @@
 package exapus.model.view.graphbuilder;
 
-import exapus.gui.editors.forest.graph.Graph;
 import exapus.model.forest.FactForest;
 import exapus.model.view.View;
 import exapus.model.visitors.IForestVisitor;
@@ -18,7 +17,16 @@ public abstract class GraphBuilder {
 	}
 	
 	public static GraphBuilder forView(View v) {
-		return new ContainmentGraphBuilder(v);
+        switch (v.getGraphDetails()) {
+            case GROUPED_PACKAGES:
+                return new GroupedPackagesGraphBuilder(v);
+            case TOP_LEVEL_TYPES_WITH_USAGE:
+                return new TopLevelTypesWithUsageGraphBuilder(v);
+            case TOP_LEVEL_TYPES:
+                return new TopLevelTypesGraphBuilder(v);
+            default:
+                return new TopLevelTypesGraphBuilder(v);
+        }
 	}
 		
 	protected ForestGraph graph;	

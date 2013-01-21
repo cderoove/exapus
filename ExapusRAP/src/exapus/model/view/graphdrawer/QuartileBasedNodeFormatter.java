@@ -85,7 +85,8 @@ public class QuartileBasedNodeFormatter implements INodeFormatter {
     }
 
     private PENWIDTH getPenwidth(ForestElement fe) {
-        DescriptiveStatistics ds = fe.getParentFactForest().getStats().get(metricType).get(fe instanceof PackageLayer ? StatsLevel.GROUPED_PACKAGES : StatsLevel.TOP_LEVEL_TYPES);
+        StatsLevel statsLevel = fe instanceof PackageLayer ? StatsLevel.GROUPED_PACKAGES : StatsLevel.TOP_LEVEL_TYPES;
+        DescriptiveStatistics ds = fe.getParentFactForest().getStats().get(metricType).get(statsLevel);
         if (ds.getN() == 1) return PENWIDTH.Q1;
 
         int value = fe.getMetric(metricType).getValue(true);

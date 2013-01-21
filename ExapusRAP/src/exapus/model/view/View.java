@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import exapus.model.details.GraphDetails;
 import exapus.model.forest.FactForest;
 import exapus.model.metrics.MetricType;
 import exapus.model.view.evaluator.Evaluator;
@@ -21,6 +22,7 @@ public class View {
 		projectselection = new ArrayList<Selection>();
 		renderable = false;
         metricType = MetricType.defaultValue(getRenderable());
+        graphDetails = GraphDetails.defaultValue();
 	}
 
 	
@@ -29,6 +31,8 @@ public class View {
 		
 
 	private boolean renderable;
+
+    private GraphDetails graphDetails;
 	
 	private Perspective perspective;
 	
@@ -114,6 +118,17 @@ public class View {
             this.metricType = metricType;
             makeDirty();
     	}
+    }
+
+    public GraphDetails getGraphDetails() {
+        return graphDetails;
+    }
+
+    public void setGraphDetails(GraphDetails graphDetails) {
+        if (this.graphDetails != graphDetails) {
+            this.graphDetails = graphDetails;
+            makeDirty();
+        }
     }
 
     public String toString() {
