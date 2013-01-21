@@ -43,7 +43,7 @@ public class ViewEditor extends MultiPageEditorPart {
 		int index;
 		try {
 			index = addPage(viewDefinition, getEditorInput());
-			setPageText(index, "View");
+			setPageText(index, "Config");
 			viewDefinition.setViewEditor(this);
 			index = addPage(forestTree, getEditorInput());
 			setPageText(index, "Table");
