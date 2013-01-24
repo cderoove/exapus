@@ -90,7 +90,6 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 		comboVWPerspective = new ComboViewer(parent, SWT.READ_ONLY);
 		comboVWPerspective.getCombo().setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		comboVWPerspective.setContentProvider(ArrayContentProvider.getInstance());
-		comboVWPerspective.setInput(Perspective.supportedPerspectives());
 		comboVWPerspective.addSelectionChangedListener(new ISelectionChangedListener() {
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
@@ -127,52 +126,7 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 			}
 		});
 
-		
-		
-
-		//Renderable
-		Label lblRenderable = new Label(parent, SWT.NONE);
-		GridData gd_lblRenderable = new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1);
-		lblRenderable.setLayoutData(gd_lblRenderable);
-
-		checkRenderable = new Button(parent, SWT.CHECK);
-		GridData gd_checkRenderable = new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1);
-		checkRenderable.setLayoutData(gd_checkRenderable);
-		checkRenderable.setText("Render as graph.");
-
-		checkRenderable.addSelectionListener(new SelectionListener() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				getView().setRenderable(checkRenderable.getSelection());
-                comboMetrics.setInput(MetricType.supportedMetrics(checkRenderable.getSelection()));
-                comboMetrics.setSelection(new StructuredSelection(MetricType.defaultValue(checkRenderable.getSelection())));
-			}
-
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
-		});
-
-        //Graph details
-        Label lblGraphDetails = new Label(parent, SWT.NONE);
-        lblGraphDetails.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP, false, false, 1, 1));
-        lblGraphDetails.setText("Graph details:");
-
-        comboGraphDetails = new ComboViewer(parent, SWT.READ_ONLY);
-        comboGraphDetails.getCombo().setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
-        comboGraphDetails.setContentProvider(ArrayContentProvider.getInstance());
-        comboGraphDetails.setInput(GraphDetails.supportedDetails());
-        comboGraphDetails.addSelectionChangedListener(new ISelectionChangedListener() {
-            @Override
-            public void selectionChanged(SelectionChangedEvent event) {
-                IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-                Object selected = selection.getFirstElement();
-                if (selected instanceof GraphDetails) {
-                    getView().setGraphDetails((GraphDetails) selected);
-                }
-            }
-        });
-
+	
         //APIs
 		Label lblAPILabel = new Label(parent, SWT.NONE);
 		lblAPILabel.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP, false, false, 1, 1));
@@ -199,7 +153,6 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
         comboMetrics = new ComboViewer(parent, SWT.READ_ONLY);
         comboMetrics.getCombo().setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
         comboMetrics.setContentProvider(ArrayContentProvider.getInstance());
-        comboMetrics.setInput(MetricType.supportedMetrics(checkRenderable.getSelection()));
         comboMetrics.addSelectionChangedListener(new ISelectionChangedListener() {
             @Override
             public void selectionChanged(SelectionChangedEvent event) {
@@ -210,6 +163,54 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
                 }
             }
         });
+        
+        //Graph details
+        Label lblGraphDetails = new Label(parent, SWT.NONE);
+        lblGraphDetails.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP, false, false, 1, 1));
+        lblGraphDetails.setText("Graph details:");
+
+        comboGraphDetails = new ComboViewer(parent, SWT.READ_ONLY);
+        comboGraphDetails.getCombo().setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+        comboGraphDetails.setContentProvider(ArrayContentProvider.getInstance());
+        comboGraphDetails.addSelectionChangedListener(new ISelectionChangedListener() {
+            @Override
+            public void selectionChanged(SelectionChangedEvent event) {
+                IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+                Object selected = selection.getFirstElement();
+                if (selected instanceof GraphDetails) {
+                    getView().setGraphDetails((GraphDetails) selected);
+                }
+            }
+        });
+        
+		//Renderable
+		Label lblRenderable = new Label(parent, SWT.NONE);
+		GridData gd_lblRenderable = new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1);
+		lblRenderable.setLayoutData(gd_lblRenderable);
+
+		checkRenderable = new Button(parent, SWT.CHECK);
+		GridData gd_checkRenderable = new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1);
+		checkRenderable.setLayoutData(gd_checkRenderable);
+		checkRenderable.setText("Render as graph.");
+
+		checkRenderable.addSelectionListener(new SelectionListener() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				getView().setRenderable(checkRenderable.getSelection());
+                comboMetrics.setInput(MetricType.supportedMetrics(checkRenderable.getSelection()));
+                comboMetrics.setSelection(new StructuredSelection(MetricType.defaultValue(checkRenderable.getSelection())));
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
+
+		comboVWPerspective.setInput(Perspective.supportedPerspectives());
+        comboGraphDetails.setInput(GraphDetails.supportedDetails());
+        comboMetrics.setInput(MetricType.supportedMetrics(checkRenderable.getSelection()));
+
+
     }
 
     private void configureSelectionTableAndToolBar(final TableViewer tableVW, ToolBar toolbar, final Perspective perspective) {
