@@ -53,6 +53,14 @@ public abstract class FactForest extends Observable {
 		return references;
 	}
 
+	
+	public Iterable<PackageLayer> getAllPackageLayers() {
+		Iterable<PackageLayer> layers = new ArrayList<PackageLayer>();
+		for(PackageTree t : getPackageTrees()) {
+			layers = Iterables.concat(layers, t.getAllPackageLayers());
+		}
+		return layers;
+	}
 
 	public Direction getDirection() {
 		return direction;

@@ -44,9 +44,14 @@ public class PackageTree extends ForestElement  implements ILayerContainer  {
 		return root;
 	}
 
-	public Iterable<PackageLayer> getLayers() {
-		return root.getLayers();
+	public Iterable<PackageLayer> getPackageLayers() {
+		return root.getPackageLayers();
 	}
+	
+	public Iterable<PackageLayer> getAllPackageLayers() {
+		return root.getAllPackageLayers();
+	}
+
 
 	public void processSourcePackageFragment(IPackageFragment f) throws JavaModelException {
 		if (f.getKind() != IPackageFragmentRoot.K_SOURCE)
@@ -136,7 +141,7 @@ public class PackageTree extends ForestElement  implements ILayerContainer  {
 
 	public void acceptVisitor(IForestVisitor v) {
 		if(v.visitPackageTree(this))
-			for(PackageLayer l : getLayers())
+			for(PackageLayer l : getPackageLayers())
 				l.acceptVisitor(v);
 	}
 

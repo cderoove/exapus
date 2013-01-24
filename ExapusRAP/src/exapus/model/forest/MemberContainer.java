@@ -11,6 +11,7 @@ import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jdt.core.dom.IVariableBinding;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 
 public abstract class MemberContainer extends ForestElement {
 
@@ -25,6 +26,14 @@ public abstract class MemberContainer extends ForestElement {
 		return members;
 	}
 	
+	public Iterable<Member> getAllMembers() {
+		Iterable<Member> members = getMembers();
+		for(Member m : getMembers()) {
+			members = Iterables.concat(members, m.getAllMembers());
+		}
+		return members;
+	}
+
 	
 	public boolean hasMembers() {
 		return (!members.isEmpty());

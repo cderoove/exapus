@@ -43,9 +43,19 @@ public class PackageLayer extends MemberContainer implements ILayerContainer {
 		return "PL[" + getName().toString() + " | M(" + members.size() + ")" + ",PL(" + layers.size() + ")]";
 	}
 
-	public Iterable<PackageLayer> getLayers() {
+	public Iterable<PackageLayer> getPackageLayers() {
 		return layers;
 	}
+	
+	public Iterable<PackageLayer> getAllPackageLayers() {
+		Iterable<PackageLayer> layers = new ArrayList<PackageLayer>();
+		for(PackageLayer l : getPackageLayers()) {
+			layers = Iterables.concat(layers, l.getPackageLayers());
+		}
+		return layers;
+	}
+
+	
 
 	public PackageLayer getOrAddLayer(Iterator<UqName> i, PackageTree project) {
 		PackageLayer l = getOrAddLayer(i.next(), project);
@@ -129,13 +139,15 @@ public class PackageLayer extends MemberContainer implements ILayerContainer {
 		return null;
 	}
 		
+	@Override
 	public Iterable<Member> getAllMembers() {
-		Iterable<Member> members = getMembers();
-		for(PackageLayer l : getLayers()) {
+		Iterable<Member> members = super.getAllMembers();
+		for(PackageLayer l : getAllPackageLayers()) {
 			members = Iterables.concat(members, l.getAllMembers());
 		}
 		return members;
 	}
+
 	
 	public Iterable<Ref> getAllReferences() {
 		Iterable<Ref> references = new ArrayList<Ref>();
@@ -166,7 +178,7 @@ public class PackageLayer extends MemberContainer implements ILayerContainer {
 
 	public void acceptVisitor(IForestVisitor v) {
 		if(v.visitPackageLayer(this)) {
-			for(PackageLayer l : getLayers())
+			for(PackageLayer l : getPackageLayers())
 				l.acceptVisitor(v);
 			for(Member m : getMembers())
 				m.acceptVisitor(v);

@@ -106,7 +106,5 @@ public class QName {
 		return new QName(Joiner.on('.').join(components.subList(0, size - 1)));		
 	}
 	
-	
-
 
 }
