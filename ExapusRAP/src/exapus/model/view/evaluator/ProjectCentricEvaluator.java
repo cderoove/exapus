@@ -19,7 +19,6 @@ public class ProjectCentricEvaluator extends Evaluator {
 	protected ICopyingForestVisitor newVisitor() {
 		return new ProjectCentricSelectionVisitor(getView().getProjectSelections(), getView().getAPISelections());
 	}
-	
 
 	@Override
 	protected FactForest getCompleteForest() {

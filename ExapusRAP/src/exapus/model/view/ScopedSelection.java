@@ -9,11 +9,17 @@ import exapus.model.forest.Ref;
 
 public class ScopedSelection extends Selection {
 
-	public ScopedSelection(QName name, Scope scope) {
+	public ScopedSelection(QName name, Scope scope, String tag) {
 		super();
 		this.name = name;
 		this.scope = scope;
+		this.tag = tag;
 	}
+	
+	public ScopedSelection(QName name, Scope scope) {
+		this(name,scope,null);
+	}
+
 	
 	public ScopedSelection(QName name) {
 		this(name, Scope.PREFIX_SCOPE);
@@ -167,10 +173,6 @@ public class ScopedSelection extends Selection {
 	public String getTagString() {
 		return (hasTag() ? getTag() : "");
 	}
-
-
-
-	
 	
 	
 }

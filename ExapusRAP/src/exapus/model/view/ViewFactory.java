@@ -91,7 +91,8 @@ public class ViewFactory {
 	public View testAPITagSelectionView() {
 		View view = new View("API tag selection test", Perspective.API_CENTRIC);
 		view.addProjectSelection(UniversalSelection.getCurrent());
-		view.addAPISelection(new ScopedSelection(new QName("ant"), Scope.ROOT_SCOPE));		
+		view.addAPISelection(new ScopedSelection(new QName("ant"), Scope.ROOT_SCOPE));
+		view.addAPISelection(new ScopedSelection(new QName("annotation"), Scope.ROOT_SCOPE, "annotation"));
 		view.setSourceViewName(TAGGED_API_VIEW_NAME);
 		return view;
 	}
