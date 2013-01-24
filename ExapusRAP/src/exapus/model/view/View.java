@@ -150,7 +150,7 @@ public class View {
     }
 
     public void setMetricType(MetricType metricType) {
-    	if(this.metricType != metricType) {
+    	if(!metricType.equals(this.metricType)) {
             this.metricType = metricType;
             makeDirty();
     	}
