@@ -9,6 +9,7 @@ import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class QuartileBasedNodeFormatter implements INodeFormatter {
 
@@ -20,7 +21,7 @@ public class QuartileBasedNodeFormatter implements INodeFormatter {
 
     // TODO: this functionality should be somewhere else, probably
     private static enum PENWIDTH {
-        ZERO(1), Q1(2), Q2(4), Q3(6), Q4(9);
+        ZERO(1), Q1(2), Q2(4), Q3(6), Q4(9), ERROR(20);
 
         int value;
 
@@ -87,7 +88,12 @@ public class QuartileBasedNodeFormatter implements INodeFormatter {
 
     private PENWIDTH getPenwidth(ForestElement fe) {
         StatsLevel statsLevel = fe instanceof PackageLayer ? StatsLevel.GROUPED_PACKAGES : StatsLevel.TOP_LEVEL_TYPES;
-        DescriptiveStatistics ds = fe.getParentFactForest().getStats().get(metricType).get(statsLevel);
+        Map<StatsLevel, DescriptiveStatistics> map = fe.getParentFactForest().getStats().get(metricType);
+        if(map == null) {
+        	System.err.println("Error computing pen width for: " + fe.toString());
+        	return PENWIDTH.ERROR;
+        }
+        DescriptiveStatistics ds = map.get(statsLevel);
         if (ds.getN() == 1) return PENWIDTH.Q1;
 
         int value = fe.getMetric(metricType).getValue(true);
