@@ -26,11 +26,14 @@ public class View {
 		renderable = false;
         metricType = MetricType.defaultValue(getRenderable());
         graphDetails = GraphDetails.defaultValue();
+        sealed = false;
 	}
 	
 	
 	private FactForest forest = null;
+	
 	private File graph = null;
+	
 	private String sourceViewName = null;
 
 	private boolean renderable;
@@ -46,7 +49,20 @@ public class View {
     private MetricType metricType;
 	
 	private String name;
+	
+	private boolean sealed;
+	
+	public void seal() {
+		sealed = true;
+	}
 
+	public void unseal() {
+		sealed = false;
+	}
+	
+	public boolean sealed() {
+		return sealed;
+	}
 	
 	public String getSourceViewName() {
 		return sourceViewName;

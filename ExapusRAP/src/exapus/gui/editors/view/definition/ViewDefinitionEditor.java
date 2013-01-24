@@ -50,6 +50,8 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
     private ComboViewer comboMetrics;
     private ComboViewer comboGraphDetails;
 	private ComboViewer comboVWSource;
+	private ToolBar toolbarAPI;
+	private ToolBar toolbarProjects;
 
 	@Override
 	public void doSave(IProgressMonitor monitor) {
@@ -127,13 +129,13 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 		});
 
 	
-        //APIs
+        //Packages
 		Label lblAPILabel = new Label(parent, SWT.NONE);
 		lblAPILabel.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP, false, false, 1, 1));
-		lblAPILabel.setText("APIs:");
+		lblAPILabel.setText("Packages:");
 
 		tableVWAPI = new TableViewer(parent, SWT.BORDER | SWT.V_SCROLL);
-		ToolBar toolbarAPI = new ToolBar(parent, SWT.VERTICAL);
+		toolbarAPI = new ToolBar(parent, SWT.VERTICAL);
 		configureSelectionTableAndToolBar(tableVWAPI, toolbarAPI, Perspective.API_CENTRIC);
 
 		//Projects
@@ -142,7 +144,7 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 		lblProjectsLabel.setText("Projects:");
 
 		tableVWProjects = new TableViewer(parent, SWT.BORDER | SWT.V_SCROLL);
-		ToolBar toolbarProjects = new ToolBar(parent, SWT.VERTICAL);
+		toolbarProjects = new ToolBar(parent, SWT.VERTICAL);
 		configureSelectionTableAndToolBar(tableVWProjects, toolbarProjects, Perspective.PROJECT_CENTRIC);
 
         // MetricType
@@ -333,8 +335,20 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 		tableVWProjects.setInput(Iterables.toArray(view.getProjectSelections(),Object.class));
         comboMetrics.setSelection(new StructuredSelection(view.getMetricType()));
         comboGraphDetails.setSelection(new StructuredSelection(view.getGraphDetails()));
+        enableControls(!getView().sealed());
 	}
 
+	private void enableControls(boolean enabled) {
+		comboVWPerspective.getControl().setEnabled(enabled);
+		comboVWSource.getControl().setEnabled(enabled);
+		checkRenderable.setEnabled(enabled);
+		tableVWAPI.getControl().setEnabled(enabled);
+		tableVWProjects.getControl().setEnabled(enabled);
+		comboMetrics.getControl().setEnabled(enabled);
+		comboGraphDetails.getControl().setEnabled(enabled);
+		toolbarProjects.setEnabled(enabled);
+		toolbarAPI.setEnabled(enabled);
+	}
 
 	private String getWorkspaceSourceName() {
 		return getView().isAPICentric() ? "Workspace Packages" : "Workspace Projects";

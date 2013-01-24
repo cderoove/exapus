@@ -38,11 +38,13 @@ public class ViewFactory {
 		completePackageView.addAPISelection(universal);
 		completePackageView.addProjectSelection(universal);
 		completePackageView.setRenderable(false);
+		completePackageView.seal();
 
 		completeProjectView = new View("All Projects", Perspective.PROJECT_CENTRIC);
 		completeProjectView.addAPISelection(universal);
 		completeProjectView.addProjectSelection(universal);
 		completeProjectView.setRenderable(false);
+		completeProjectView.seal();
 
 
 	}
