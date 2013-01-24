@@ -8,8 +8,9 @@ public class ExapusWorkbenchAdvisor extends WorkbenchAdvisor {
 
 	public void initialize(IWorkbenchConfigurer configurer) {
 		
-		Store.getCurrent().populateWorkspaceModel();
-
+		Store store = Store.getCurrent();
+		store.registerViews();
+		store.populateWorkspaceModel();
 		
 		getWorkbenchConfigurer().setSaveAndRestore(false);
 		super.initialize(configurer);

@@ -112,6 +112,13 @@ public class View {
 	protected void makeDirty() {
 		forest = null;
 		graph = null;
+		makeDependentViewsDirty();
+	}
+	
+	protected void makeDependentViewsDirty() {
+		for(View v : Store.getCurrent().getRegisteredViews()) 
+			if(name.equals(v.getSourceViewName()))
+				v.makeDirty();
 	}
 
 	public String getName() {

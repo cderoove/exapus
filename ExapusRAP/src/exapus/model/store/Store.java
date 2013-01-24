@@ -35,8 +35,6 @@ public class Store extends Observable {
 	private Store() {
 		registry = new HashMap<String, View>();
 		workspaceModel = null;
-		registerDefaultViews();
-		registerCustomViews();
 	}
 	
 	
@@ -95,6 +93,11 @@ public class Store extends Observable {
 		return registry.containsKey(name);
 	}
 		
+	public void registerViews() {
+		registerDefaultViews();
+		registerCustomViews();
+	}
+
 	
 	protected void registerDefaultViews() {
 		registerView(ViewFactory.getCurrent().completePackageView());
