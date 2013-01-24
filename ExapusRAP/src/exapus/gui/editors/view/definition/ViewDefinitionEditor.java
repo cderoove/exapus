@@ -191,16 +191,17 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 		lblRenderable.setLayoutData(gd_lblRenderable);
 
 		checkRenderable = new Button(parent, SWT.CHECK);
+        checkRenderable.setSelection(getView().getRenderable());
+
 		GridData gd_checkRenderable = new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1);
 		checkRenderable.setLayoutData(gd_checkRenderable);
 		checkRenderable.setText("Render as graph.");
-
+		
 		checkRenderable.addSelectionListener(new SelectionListener() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				getView().setRenderable(checkRenderable.getSelection());
-                comboMetrics.setInput(MetricType.supportedMetrics(checkRenderable.getSelection()));
-                comboMetrics.setSelection(new StructuredSelection(MetricType.defaultValue(checkRenderable.getSelection())));
+				updateComboMetrics();
 			}
 
 			@Override
@@ -208,9 +209,11 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 			}
 		});
 
+		
 		comboVWPerspective.setInput(Perspective.supportedPerspectives());
         comboGraphDetails.setInput(GraphDetails.supportedDetails());
-        comboMetrics.setInput(MetricType.supportedMetrics(checkRenderable.getSelection()));
+        //TODO: jka
+        //comboMetrics.setInput(MetricType.supportedMetrics(checkRenderable.getSelection()));
 
 
     }
@@ -302,7 +305,7 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 	}
 
 	protected void showSelectionDialog(Perspective perspective) {
-		SelectionDialog selectionDialog  = new SelectionDialog(getSite().getShell(), perspective);
+		SelectionDialog selectionDialog  = new SelectionDialog(getSite().getShell(), perspective, getView().getSourceViewName());
 		int returnCode = selectionDialog.open();
 		if(returnCode == IDialogConstants.OK_ID) {
 			Selection newSelection = selectionDialog.getSelection();
@@ -328,13 +331,13 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 
 	public void updateControls() {
 		View view = getView();
+		checkRenderable.setSelection(view.getRenderable());
 		comboVWPerspective.setSelection(new StructuredSelection(view.getPerspective()));
 		updateComboVWSource();
-		checkRenderable.setSelection(view.getRenderable());
 		tableVWAPI.setInput(Iterables.toArray(view.getAPISelections(),Object.class));
 		tableVWProjects.setInput(Iterables.toArray(view.getProjectSelections(),Object.class));
-        comboMetrics.setSelection(new StructuredSelection(view.getMetricType()));
-        comboGraphDetails.setSelection(new StructuredSelection(view.getGraphDetails()));
+		updateComboMetrics();
+		comboGraphDetails.setSelection(new StructuredSelection(view.getGraphDetails()));
         enableControls(!getView().sealed());
 	}
 
@@ -371,6 +374,12 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 		comboVWSource.setInput(viewSourceNames());
 		String sourceViewName = getView().getSourceViewName();
 		comboVWSource.setSelection(new StructuredSelection(sourceViewName == null ? getWorkspaceSourceName() : sourceViewName));
+	}
+	
+	private void updateComboMetrics() {
+        comboMetrics.setInput(MetricType.supportedMetrics(getView().getRenderable()));
+        //TODO: Kate, is is the case that a View's (previously set) metric type is always among the combo's elements?
+        comboMetrics.setSelection(new StructuredSelection(getView().getMetricType()));
 	}
 
 	public void setViewEditor(ViewEditor viewEditor) {

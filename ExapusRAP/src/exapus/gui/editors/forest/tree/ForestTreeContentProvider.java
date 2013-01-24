@@ -62,11 +62,11 @@ public class ForestTreeContentProvider implements ITreeContentProvider, IDeltaLi
 	//TODO: getChildren() should be implemented on ForestElement, preferably in a thread-safe manner
 	public  Object[] getChildren(Object parentElement) {
 		if (parentElement instanceof PackageTree)
-			return Iterables.toArray(((PackageTree) parentElement).getLayers(), PackageLayer.class);
+			return Iterables.toArray(((PackageTree) parentElement).getPackageLayers(), PackageLayer.class);
 		if (parentElement instanceof PackageLayer) {
 			PackageLayer layer = (PackageLayer) parentElement;
 			Iterable<Member> members = layer.getMembers();
-			Iterable<PackageLayer> layers = layer.getLayers();
+			Iterable<PackageLayer> layers = layer.getPackageLayers();
 			return Iterables.toArray(Iterables.concat(members, layers), MemberContainer.class);
 		}
 		if (parentElement instanceof Member) {

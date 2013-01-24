@@ -15,7 +15,7 @@ public class ForestTreeGroupedPackagesContentProvider extends ForestTreeContentP
             List<MemberContainer> packages = new ArrayList<MemberContainer>();
 
             for (PackageTree packageTree : ((FactForest) inputElement).getPackageTrees()) {
-                for (PackageLayer packageLayer : packageTree.getLayers()) {
+                for (PackageLayer packageLayer : packageTree.getPackageLayers()) {
                     addToResult(packages, packageLayer);
                 }
             }
@@ -30,7 +30,7 @@ public class ForestTreeGroupedPackagesContentProvider extends ForestTreeContentP
             packages.add(layer);
         }
 
-        for (PackageLayer nextLayer : layer.getLayers()) {
+        for (PackageLayer nextLayer : layer.getPackageLayers()) {
             addToResult(packages, nextLayer);
         }
     }

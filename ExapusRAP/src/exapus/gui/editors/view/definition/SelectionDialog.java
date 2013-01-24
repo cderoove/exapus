@@ -1,7 +1,13 @@
 package exapus.gui.editors.view.definition;
 
+import java.util.Collections;
+
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.fieldassist.ContentProposalAdapter;
+import org.eclipse.jface.fieldassist.IContentProposalProvider;
+import org.eclipse.jface.fieldassist.SimpleContentProposalProvider;
+import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -20,7 +26,17 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
+
+import exapus.model.forest.ExapusModel;
+import exapus.model.forest.FactForest;
+import exapus.model.forest.ForestElement;
+import exapus.model.forest.Member;
 import exapus.model.forest.QName;
+import exapus.model.store.Store;
+import exapus.model.view.View;
 import exapus.model.view.Perspective;
 import exapus.model.view.Scope;
 import exapus.model.view.ScopedSelection;
@@ -37,14 +53,18 @@ public class SelectionDialog extends Dialog {
 
 	private Selection selection;
 	private Text scopedSelectionTagText;
+	
+	private String sourceViewName;
 
 	public Selection getSelection() {
 		return selection;
 	}
 
-	public SelectionDialog(Shell parentShell, Perspective perspective) {
+	public SelectionDialog(Shell parentShell, Perspective perspective, String sourceViewName) {
 		super(parentShell);
 		this.perspective = perspective;
+		this.sourceViewName = sourceViewName;
+		
 	}
 
 	//adapted from RAP controls demo
@@ -121,6 +141,18 @@ public class SelectionDialog extends Dialog {
 		scopedSelectionNameText = new Text(scopedSelectionComposite, SWT.BORDER);
 		scopedSelectionNameText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false,1,1));
 		
+		final SimpleContentProposalProvider proposalProvider = new SimpleContentProposalProvider(getProposalStrings());
+		ContentProposalAdapter adapter = new ContentProposalAdapter(scopedSelectionNameText, new TextContentAdapter(), proposalProvider, null, null);
+		adapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
+		
+		scopedSelectionScopeComboVW.addSelectionChangedListener(new ISelectionChangedListener() {
+			@Override
+			public void selectionChanged(SelectionChangedEvent event) {
+				proposalProvider.setProposals(getProposalStrings());
+				
+			}
+		});
+		
 		Label tagLabel = new Label(scopedSelectionComposite, SWT.NONE);
 		tagLabel.setText("Tag:");
 		tagLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1));
@@ -129,6 +161,52 @@ public class SelectionDialog extends Dialog {
 		return composite;
 	}
 
+	
+	private FactForest getProposalFactForest() {
+		if(sourceViewName != null && Store.getCurrent().hasRegisteredView(sourceViewName)) {
+			View sourceView = Store.getCurrent().getView(sourceViewName);
+			if(sourceView.getPerspective().equals(perspective))
+				return sourceView.evaluate();
+		}
+		ExapusModel workspaceModel = Store.getCurrent().getWorkspaceModel();
+		return perspective.equals(Perspective.API_CENTRIC) ? workspaceModel.getAPICentricForest() : workspaceModel.getProjectCentricForest();
+	}
+
+	private Iterable<? extends ForestElement> getProposalForestElements() {
+		Scope selectedScope = getSelectedScope();
+		if(selectedScope == null)
+			return Collections.emptyList();
+		FactForest forest = getProposalFactForest();
+		if(selectedScope.equals(Scope.ROOT_SCOPE)) 
+			return forest.getPackageTrees();
+		if(selectedScope.equals(Scope.PACKAGE_SCOPE))
+			return forest.getAllPackageLayers();
+		if(selectedScope.equals(Scope.TYPE_SCOPE))
+			return Iterables.filter(forest.getAllMembers(),new Predicate<Member>() {
+				@Override
+				public boolean apply(Member m) {
+					return m.getElement().declaresType();
+				}
+			});
+		if(selectedScope.equals(Scope.METHOD_SCOPE))
+			return Iterables.filter(forest.getAllMembers(),new Predicate<Member>() {
+				@Override
+				public boolean apply(Member m) {
+					return m.getElement().isMethod();
+				}
+			});
+		if(selectedScope.equals(Scope.PREFIX_SCOPE))
+			return forest.getAllPackageLayers();
+		return Collections.emptyList();
+	}
+	
+	private String[] getProposalStrings() {
+		return Iterables.toArray(Iterables.transform(getProposalForestElements(), new Function<ForestElement, String>() {
+			public String apply(ForestElement e) {
+				return e.getQName().toString();
+			}
+		}),String.class);
+	}
 
 	protected void createButtonsForButtonBar(final Composite parent) {
 		createButton(parent, IDialogConstants.CANCEL_ID, "Cancel", false);
@@ -146,31 +224,50 @@ public class SelectionDialog extends Dialog {
 		super.buttonPressed(buttonId);
 	}
 
-	private void updateSelection() {
-		selection = null;
+	@SuppressWarnings("unchecked")
+	private Class<Selection> getSelectedType() {
 		IStructuredSelection selType = (IStructuredSelection) selectionTypeComboVW.getSelection();
 		if(selType.isEmpty())
+			return null;
+		return (Class<Selection>) selType.getFirstElement();
+	}
+	
+
+	@SuppressWarnings("unused")
+	private Scope getSelectedScope() {
+		Class<Selection> selectedType = getSelectedType();
+		if(selectedType == null || UniversalSelection.class.equals(selectedType)) 
+			return null;		
+		IStructuredSelection selScope = (IStructuredSelection) scopedSelectionScopeComboVW.getSelection();
+		if(selScope.isEmpty())
+			return null;
+		return (Scope) selScope.getFirstElement();
+	}
+	
+	
+	private void updateSelection() {
+		selection = null;
+		Class<Selection> selectedType = getSelectedType();
+		if(selectedType == null)
 			return;
-		Object selectedType = selType.getFirstElement();
 		if(selectedType.equals(UniversalSelection.class)) {
 			selection = UniversalSelection.getCurrent();
 			return;
 		}
-		
 		if(selectedType.equals(ScopedSelection.class)) {
-			QName name = new QName(scopedSelectionNameText.getText());
-			IStructuredSelection selScope = (IStructuredSelection) scopedSelectionScopeComboVW.getSelection();
-			if(selScope.isEmpty())
+			Scope selectedScope = getSelectedScope();
+			if(selectedScope == null)
 				return;
-			selection = new ScopedSelection(name, (Scope) selScope.getFirstElement());
+			QName name = new QName(scopedSelectionNameText.getText());
+			selection = new ScopedSelection(name, selectedScope);
+			
 			String scopedSelectionTag = scopedSelectionTagText.getText().trim();
 			if(!scopedSelectionTag.isEmpty())
 				((ScopedSelection) selection).setTag(scopedSelectionTag);
 			return;
 		}
-
-
 	}
+	
 }
 
 
