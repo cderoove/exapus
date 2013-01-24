@@ -111,6 +111,7 @@ public class Store extends Observable {
 		registerView(ViewFactory.getCurrent().testAPICentricSelectionView()); 
 		registerView(ViewFactory.getCurrent().testAPICentricSelectionView2());
 		registerView(ViewFactory.getCurrent().testProjectCentricSelectionView());
+		registerView(ViewFactory.getCurrent().testAPITagSelectionView());
 	}
 	
 	private void registerCSVTagView() {

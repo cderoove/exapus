@@ -5,9 +5,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.jface.viewers.StructuredSelection;
+
 import exapus.model.details.GraphDetails;
 import exapus.model.forest.FactForest;
 import exapus.model.metrics.MetricType;
+import exapus.model.store.Store;
 import exapus.model.view.evaluator.Evaluator;
 import exapus.model.view.graphbuilder.ForestGraph;
 import exapus.model.view.graphbuilder.GraphBuilder;
@@ -24,11 +27,11 @@ public class View {
         metricType = MetricType.defaultValue(getRenderable());
         graphDetails = GraphDetails.defaultValue();
 	}
-
+	
 	
 	private FactForest forest = null;
 	private File graph = null;
-		
+	private String sourceViewName = null;
 
 	private boolean renderable;
 
@@ -44,6 +47,16 @@ public class View {
 	
 	private String name;
 
+	
+	public String getSourceViewName() {
+		return sourceViewName;
+	}
+	
+	public void setSourceViewName(String n) {
+		sourceViewName = n;
+		makeDirty();
+	}
+	
 	public Perspective getPerspective() {
 		return perspective;
 	}
@@ -179,6 +192,7 @@ public class View {
 		for(Selection sel : original.getProjectSelections())
 			duplicate.addProjectSelection(Selection.fromSelection(sel));
 		duplicate.setMetricType(original.getMetricType());
+		duplicate.setSourceViewName(original.getSourceViewName());
 		return duplicate;
 	}
 

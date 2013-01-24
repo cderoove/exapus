@@ -2,19 +2,25 @@ package exapus.model.view.evaluator;
 
 import exapus.model.forest.ExapusModel;
 import exapus.model.forest.FactForest;
+import exapus.model.forest.OutboundFactForest;
 import exapus.model.metrics.MetricType;
 import exapus.model.stats.StatsCollectionVisitor;
+import exapus.model.store.Store;
 import exapus.model.view.View;
+import exapus.model.visitors.ICopyingForestVisitor;
 
 public abstract class Evaluator {
 
 	private View view;
-	protected ExapusModel modelResult;
+	
+	protected FactForest result;
 
-	protected ExapusModel getModelResult() {
-		return modelResult;
+	protected abstract void cleanResult();
+	
+	public FactForest getResult() {
+		return result;
 	}
-		
+			
 	public static Evaluator forView(View v) {
 		if(v.isAPICentric())
 			return new APICentricEvaluator(v);
@@ -31,17 +37,33 @@ public abstract class Evaluator {
 	
 	protected Evaluator(View v) {
 		view = v;
-		modelResult = new ExapusModel();
+		cleanResult();
 	}
 
 	public View getView() {
 		return view;
 	}
 
-	public abstract FactForest getResult();
+	public void evaluate() {
+		ICopyingForestVisitor v = newVisitor();
+		FactForest sourceForest = getSourceForest();
+		FactForest forest = v.copy(sourceForest);
+		calculateMetrics(forest);
+		result = forest;
+	}
 	
-	public abstract void evaluate();
+	protected abstract ICopyingForestVisitor newVisitor();
 
+	protected abstract FactForest getCompleteForest();
+	
+	protected FactForest getSourceForest() {
+		String sourceViewName = getView().getSourceViewName();
+		if(sourceViewName == null)
+			return getCompleteForest();
+		else
+			return Store.getCurrent().getView(sourceViewName).evaluate();
+	}
+	
     protected void calculateMetrics(FactForest forest) {
         if (getView().getMetricType() != null) {
             long startTime = System.currentTimeMillis();

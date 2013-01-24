@@ -26,11 +26,8 @@ public class APICentricEvaluator extends Evaluator {
 		super(v);
 	}
 
-	@Override
-	public FactForest getResult() {
-		return modelResult.getAPICentricForest();
-	}
 
+	@Override
 	protected ICopyingForestVisitor newVisitor() {
 		if(Iterables.any(getView().getAPISelections(), new Predicate<Selection>() {
 			@Override
@@ -42,14 +39,16 @@ public class APICentricEvaluator extends Evaluator {
 		else
 			return new APICentricSelectionVisitor(getView().getAPISelections(), getView().getProjectSelections());
 	}
-	
+
 	@Override
-	public void evaluate() {
-		ICopyingForestVisitor v = newVisitor();
-		InboundFactForest workspaceForest = Store.getCurrent().getWorkspaceModel().getAPICentricForest();
-		FactForest forest = v.copy(workspaceForest);
-        calculateMetrics(forest);
-		modelResult.setAPICentricForest((InboundFactForest) forest);
+	protected FactForest getCompleteForest() {
+		return Store.getCurrent().getWorkspaceModel().getAPICentricForest();
+	}
+
+
+	@Override
+	protected void cleanResult() {
+		result = new InboundFactForest(null);
 	}
 
 }

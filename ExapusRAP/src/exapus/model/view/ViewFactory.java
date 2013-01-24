@@ -84,6 +84,17 @@ public class ViewFactory {
 		view.setRenderable(false);
 		return view;
 	}
+	
+	
+	private static String TAGGED_API_VIEW_NAME = "Tagged APIs";
+			
+	public View testAPITagSelectionView() {
+		View view = new View("API tag selection test", Perspective.API_CENTRIC);
+		view.addProjectSelection(UniversalSelection.getCurrent());
+		view.addAPISelection(new ScopedSelection(new QName("ant"), Scope.ROOT_SCOPE));		
+		view.setSourceViewName(TAGGED_API_VIEW_NAME);
+		return view;
+	}
 
 
 	public View viewFromCSVTags(File file) throws IOException {
@@ -120,7 +131,7 @@ public class ViewFactory {
 			}
 		});
 		
-		View view = new View("Tagged APIs", Perspective.API_CENTRIC);
+		View view = new View(TAGGED_API_VIEW_NAME, Perspective.API_CENTRIC);
 		for(Selection selection : selections) {
 			view.addAPISelection(selection);
 		}
