@@ -1,9 +1,14 @@
 package exapus.gui.util;
 
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Widget;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 public class Util {
+	
+	//should correspond to the one in plugin.xml (usally put in plugin Activator, but there is none now)
+	public static String PLUGIN_ID = "Exapus";
 
 	public static void asyncUIThreadIfWidgetNotDisposed(Widget w, Runnable r) {
 		if(w == null)
@@ -14,6 +19,12 @@ public class Util {
 		display.asyncExec(r);
 	}
 
+	public static ImageDescriptor getImageDescriptorFromPlugin(String name) {
+		return AbstractUIPlugin.imageDescriptorFromPlugin(PLUGIN_ID, "/icons/" + name);
+	}
+
+	
+	
 
 
 }

@@ -11,6 +11,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
+import exapus.gui.util.Util;
 import exapus.model.forest.Element;
 import exapus.model.forest.Member;
 import exapus.model.forest.OutboundRef;
@@ -19,14 +20,14 @@ import exapus.model.forest.PackageTree;
 
 public class ForestTreeLabelProvider implements ITableLabelProvider {
 
-	private static final Image PKTREE_IMG = AbstractUIPlugin.imageDescriptorFromPlugin("ExapusRAP", "/icons/packagefolder_obj.gif").createImage();
-	private static final Image PKLAYER_IMG = AbstractUIPlugin.imageDescriptorFromPlugin("ExapusRAP", "/icons/package_obj.gif").createImage();
-	private static final Image CLASS_IMG = AbstractUIPlugin.imageDescriptorFromPlugin("ExapusRAP", "/icons/class_obj.gif").createImage();
-	private static final Image ENUM_IMG = AbstractUIPlugin.imageDescriptorFromPlugin("ExapusRAP", "/icons/enum_obj.gif").createImage();
-	private static final Image INTERFACE_IMG = AbstractUIPlugin.imageDescriptorFromPlugin("ExapusRAP", "/icons/int_obj.gif").createImage();
-	private static final Image METHOD_IMG = AbstractUIPlugin.imageDescriptorFromPlugin("ExapusRAP", "/icons/methpub_obj.gif").createImage();
-	private static final Image FIELD_IMG = AbstractUIPlugin.imageDescriptorFromPlugin("ExapusRAP", "/icons/field_public_obj.gif").createImage();
-	private static final Image ANNOTATION_IMG = AbstractUIPlugin.imageDescriptorFromPlugin("ExapusRAP", "/icons/annotation_obj.gif").createImage();
+	private static final Image PKTREE_IMG = Util.getImageDescriptorFromPlugin("packagefolder_obj.gif").createImage();
+	private static final Image PKLAYER_IMG = Util.getImageDescriptorFromPlugin("package_obj.gif").createImage();
+	private static final Image CLASS_IMG = Util.getImageDescriptorFromPlugin("class_obj.gif").createImage();
+	private static final Image ENUM_IMG = Util.getImageDescriptorFromPlugin("enum_obj.gif").createImage();
+	private static final Image INTERFACE_IMG = Util.getImageDescriptorFromPlugin("int_obj.gif").createImage();
+	private static final Image METHOD_IMG = Util.getImageDescriptorFromPlugin("methpub_obj.gif").createImage();
+	private static final Image FIELD_IMG = Util.getImageDescriptorFromPlugin("field_public_obj.gif").createImage();
+	private static final Image ANNOTATION_IMG = Util.getImageDescriptorFromPlugin("annotation_obj.gif").createImage();
 
 	@Override
 	public void dispose() {
