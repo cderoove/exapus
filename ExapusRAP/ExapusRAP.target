@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="RAP+JDT" sequenceNumber="104">
+<?pde version="3.8"?>
+
+<target name="RAP+JDT" sequenceNumber="109">
 <locations>
 <location id="org.eclipse.jdt" path="${eclipse_home}" type="Feature"/>
 <location id="org.eclipse.platform" path="${eclipse_home}" type="Feature"/>
@@ -7,6 +9,10 @@
 <unit id="org.eclipse.rap.runtime.requirements.feature.group" version="1.5.0.20120612-1510"/>
 <unit id="org.eclipse.rap.runtime.feature.group" version="1.5.0.20120612-1510"/>
 <repository location="http://download.eclipse.org/rt/rap/1.5/runtime"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.rap.incubator.supplemental.fileupload.feature.feature.group" version="1.5.0.20120220-1720"/>
+<repository location="http://download.eclipse.org/rt/rap/1.5/incubator/"/>
 </location>
 </locations>
 <environment>
