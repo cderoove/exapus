@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.bind.JAXBException;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
@@ -240,6 +241,9 @@ public class View {
 		return duplicate;
 	}
 
-	
+	public File xml() throws Exception {
+		 ViewWriter viewWriter = new ViewWriter(this);
+		 return viewWriter.writeTemporary();
+	}
 	
 }

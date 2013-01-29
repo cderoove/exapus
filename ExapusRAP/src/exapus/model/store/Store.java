@@ -133,6 +133,15 @@ public class Store extends Observable {
 		return getView(name).draw();
 	}
 
+	public File xmlForRegisteredView(String name) {
+		try {
+			return getView(name).xml();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+		
 	// This file should be located in the same dir as eclipse.ini
 	// I.e., for Mac OS: PATH_TO_THE_ECLPSE_DIR/Eclipse.app/Contents/MacOS/
 	private static final String CONFIG_FILENAME = "config.properties";

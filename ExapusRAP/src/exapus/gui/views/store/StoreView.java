@@ -1,5 +1,10 @@
 package exapus.gui.views.store;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import javax.xml.bind.JAXBException;
+
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
@@ -11,10 +16,14 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.window.Window;
+import org.eclipse.rwt.RWT;
+import org.eclipse.rwt.widgets.ExternalBrowser;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
@@ -23,15 +32,22 @@ import org.eclipse.ui.part.ViewPart;
 
 import exapus.gui.editors.view.ViewEditor;
 import exapus.gui.editors.view.ViewEditorInput;
+import exapus.gui.util.Util;
 import exapus.model.store.Store;
 import exapus.model.view.Perspective;
 import exapus.model.view.View;
 
 public class StoreView extends ViewPart implements IDoubleClickListener {
 	
+	static {
+		RWT.getServiceManager().registerServiceHandler(ViewDownloadServiceHandler.ID, new ViewDownloadServiceHandler());
+	}
+	
 	public static final String ID = "exapus.gui.views.store.StoreView";
 
 	private ListViewer listView;
+	
+	private Browser hidden;
 	
 	private String promptForUniqueViewName(String dialogTitle) {
 		IInputValidator viewNameValidator = new IInputValidator() {
@@ -50,7 +66,7 @@ public class StoreView extends ViewPart implements IDoubleClickListener {
 		else
 			return null;
 	}
-	
+
 	@Override
 	public void createPartControl(final Composite parent) {
 		parent.setLayout(new FillLayout());
@@ -59,20 +75,25 @@ public class StoreView extends ViewPart implements IDoubleClickListener {
 		listView.addDoubleClickListener(this);
 		listView.setInput(Store.getCurrent());	
 		
+		hidden = new Browser(parent, SWT.NONE);
+		hidden.setVisible(false);
+		hidden.setSize(0, 0);
+
+		
 		Action newViewAction = new Action() {
 			@Override
 			public void run() {
 				String name = promptForUniqueViewName("Create new view");
 				if(name != null) 
 					Store.getCurrent().registerView(new View(name,Perspective.PROJECT_CENTRIC));
-					
+
 			}			
 		};
 		newViewAction.setText("Create new view");
 		newViewAction.setId("exapus.gui.views.store.actions.NewViewAction");
-		newViewAction.setImageDescriptor(getImageDescriptor(ISharedImages.IMG_TOOL_NEW_WIZARD));
+		newViewAction.setImageDescriptor(getImageDescriptor("add.gif"));
 		registerAction(newViewAction);
-		
+
 		final Action duplicateViewAction = new Action() {
 			@Override
 			public void run() {
@@ -93,7 +114,7 @@ public class StoreView extends ViewPart implements IDoubleClickListener {
 		};
 		duplicateViewAction.setText("Duplicate selected view");
 		duplicateViewAction.setId("exapus.gui.views.store.actions.DuplicateViewAction");
-		duplicateViewAction.setImageDescriptor(getImageDescriptor(ISharedImages.IMG_TOOL_COPY));
+		duplicateViewAction.setImageDescriptor(getImageDescriptor("clone_el.gif"));
 		duplicateViewAction.setEnabled(false);
 		registerAction(duplicateViewAction);
 		listView.addSelectionChangedListener(new ISelectionChangedListener() {			
@@ -102,7 +123,54 @@ public class StoreView extends ViewPart implements IDoubleClickListener {
 				duplicateViewAction.setEnabled(!event.getSelection().isEmpty());
 			}
 		});
-		
+
+
+		final Action saveViewAction = new Action() {
+			@Override
+			public void run() {
+				IStructuredSelection selection = (IStructuredSelection) listView.getSelection();
+				if(selection.isEmpty())
+					return;
+				Object selected = selection.getFirstElement();
+				if(selected instanceof View) {
+					View selectedView = (View) selected;
+					String url = ViewDownloadServiceHandler.viewDownloadUrl(selectedView.getName());
+					hidden.setUrl(url);
+				}
+			}						
+		};
+		saveViewAction.setText("Export selected view");
+		saveViewAction.setId("exapus.gui.views.store.actions.ExportViewAction");
+		saveViewAction.setImageDescriptor(getImageDescriptor("export.gif"));
+		saveViewAction.setEnabled(false);
+		registerAction(saveViewAction);
+		listView.addSelectionChangedListener(new ISelectionChangedListener() {			
+			@Override
+			public void selectionChanged(SelectionChangedEvent event) {
+				saveViewAction.setEnabled(!event.getSelection().isEmpty());
+			}
+		});
+
+		final Action loadViewAction = new Action() {
+			@Override
+			public void run() {
+				FileDialog fileDialog = new FileDialog(getSite().getShell(), SWT.TITLE | SWT.MULTI);
+				fileDialog.setText( "Upload view files (*.xml)");
+				fileDialog.setAutoUpload(true);
+				fileDialog.open();
+				String[] fileNames = fileDialog.getFileNames();
+				for(String fileName : fileNames)
+					System.out.println(fileName);
+			}						
+		};
+		loadViewAction.setText("Import view");
+		loadViewAction.setId("exapus.gui.views.store.actions.ImportViewAction");	
+		loadViewAction.setImageDescriptor(getImageDescriptor("import.gif"));
+		loadViewAction.setEnabled(true);
+		registerAction(loadViewAction);
+
+
+
 		final Action deleteViewAction = new Action() {
 			@Override
 			public void run() {
@@ -122,7 +190,7 @@ public class StoreView extends ViewPart implements IDoubleClickListener {
 		};
 		deleteViewAction.setText("Delete selected view");
 		deleteViewAction.setId("exapus.gui.views.store.actions.DeleteViewAction");
-		deleteViewAction.setImageDescriptor(getImageDescriptor(ISharedImages.IMG_TOOL_DELETE));
+		deleteViewAction.setImageDescriptor(getImageDescriptor("delete.gif"));
 		deleteViewAction.setEnabled(false);
 		registerAction(deleteViewAction);
 		listView.addSelectionChangedListener(new ISelectionChangedListener() {			
@@ -131,7 +199,7 @@ public class StoreView extends ViewPart implements IDoubleClickListener {
 				deleteViewAction.setEnabled(!event.getSelection().isEmpty());
 			}
 		});
-		
+
 
 	}
 
@@ -139,8 +207,8 @@ public class StoreView extends ViewPart implements IDoubleClickListener {
 	public void setFocus() {
 		listView.getControl().setFocus();
 	}
-	
-	
+
+
 	private void openViewEditorOn(View v) {
 		IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		ViewEditorInput input = new ViewEditorInput(v.getName());
@@ -162,7 +230,7 @@ public class StoreView extends ViewPart implements IDoubleClickListener {
 			openViewEditorOn((View) selected);
 		}
 	}
-	
+
 	private void registerAction(Action action) {
 		getViewSite().getActionBars().getToolBarManager().add(action);  
 	}
@@ -170,10 +238,10 @@ public class StoreView extends ViewPart implements IDoubleClickListener {
 	private IWorkbench getWorkBench() {
 		return getSite().getWorkbenchWindow().getWorkbench();
 	}
-	
-	private ImageDescriptor getImageDescriptor(String name) {
-		return getWorkBench().getSharedImages().getImageDescriptor(name);
-	}
 
+	private ImageDescriptor getImageDescriptor(String name) {
+		return Util.getImageDescriptorFromPlugin(name);
+	}
+	
 
 }
