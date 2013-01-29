@@ -1,10 +1,14 @@
 package exapus.model.view;
 
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
+
 import exapus.model.forest.Member;
 import exapus.model.forest.PackageLayer;
 import exapus.model.forest.PackageTree;
 import exapus.model.forest.Ref;
 
+@XmlRootElement
 public class UniversalSelection extends Selection {
 	
 	private static UniversalSelection current = new UniversalSelection();
@@ -13,7 +17,8 @@ public class UniversalSelection extends Selection {
 		return current;
 	}
 	
-	private UniversalSelection() {
+	public UniversalSelection() {
+		//only to be used by JAXB
 	}
 	
 	@Override

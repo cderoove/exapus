@@ -1,5 +1,9 @@
 package exapus.model.view;
 
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
+
 import exapus.model.forest.Direction;
 import exapus.model.forest.Member;
 import exapus.model.forest.PackageLayer;
@@ -7,8 +11,13 @@ import exapus.model.forest.PackageTree;
 import exapus.model.forest.QName;
 import exapus.model.forest.Ref;
 
+@XmlRootElement
 public class ScopedSelection extends Selection {
 
+	public ScopedSelection() {
+		//only to be used by JAXB
+	}
+	
 	public ScopedSelection(QName name, Scope scope, String tag) {
 		super();
 		this.name = name;
@@ -25,13 +34,13 @@ public class ScopedSelection extends Selection {
 		this(name, Scope.PREFIX_SCOPE);
 	}
 	
-
 	private Scope scope;
-		
+	
 	private QName name;
 	
 	private String tag;
 	
+	@XmlElement
 	public String getTag() {
 		return tag;
 	}
@@ -151,6 +160,7 @@ public class ScopedSelection extends Selection {
 		this.scope = scope;
 	}
 
+	@XmlElement
 	public QName getQName() {
 		return name;
 	}

@@ -5,6 +5,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlElements;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
+
 import org.eclipse.jface.viewers.StructuredSelection;
 
 import exapus.model.details.GraphDetails;
@@ -16,7 +23,12 @@ import exapus.model.view.graphbuilder.ForestGraph;
 import exapus.model.view.graphbuilder.GraphBuilder;
 import exapus.model.view.graphdrawer.GraphDrawer;
 
+@XmlRootElement(name = "view")
 public class View {
+	
+	public View() {
+		//only to be used by jaxb
+	}
 
 	public View(String n, Perspective p) {
 		name = n;
@@ -42,8 +54,14 @@ public class View {
 	
 	private Perspective perspective;
 	
+    @XmlElementWrapper(name="APISelection")
+    @XmlElements({ @XmlElement(name="Universal", type=UniversalSelection.class), 
+    	@XmlElement(name="ScopedSelection", type=ScopedSelection.class)})
 	private List<Selection> apiselection;
 	
+    @XmlElementWrapper(name="ProjectSelection")
+    @XmlElements({ @XmlElement(name="Universal", type=UniversalSelection.class), 
+    	@XmlElement(name="ScopedSelection", type=ScopedSelection.class)})
 	private List<Selection> projectselection;
 
     private MetricType metricType;
@@ -64,6 +82,7 @@ public class View {
 		return sealed;
 	}
 	
+	@XmlElement
 	public String getSourceViewName() {
 		return sourceViewName;
 	}
@@ -73,6 +92,7 @@ public class View {
 		makeDirty();
 	}
 	
+	@XmlElement
 	public Perspective getPerspective() {
 		return perspective;
 	}
@@ -137,6 +157,7 @@ public class View {
 				v.makeDirty();
 	}
 
+	@XmlElement
 	public String getName() {
 		return name;
 	}

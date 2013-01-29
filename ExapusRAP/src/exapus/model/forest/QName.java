@@ -6,6 +6,11 @@ import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.dom.IMethodBinding;
 import org.eclipse.jdt.core.dom.ITypeBinding;
@@ -17,7 +22,12 @@ import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 import com.google.common.hash.HashCode;
 
+@XmlRootElement
 public class QName {
+	
+	public QName() {
+		this("");
+	}
 
 	public static QName forBinding(ITypeBinding apiType) {
 		return new QName(apiType.getBinaryName());
@@ -36,6 +46,8 @@ public class QName {
 	}
 	
 	private ArrayList<UqName> components;
+	
+	@XmlAttribute
 	private String identifier;
 
 	public QName(Iterable<String> i) {
