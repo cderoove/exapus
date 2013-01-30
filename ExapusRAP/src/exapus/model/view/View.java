@@ -241,7 +241,7 @@ public class View {
 		return duplicate;
 	}
 
-	public File xml() throws Exception {
+	public File toFile() throws Exception {
 		 ViewWriter viewWriter = new ViewWriter(this);
 		 return viewWriter.writeTemporary();
 	}

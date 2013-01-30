@@ -2,10 +2,14 @@ package exapus.model.store;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+
+import javax.xml.bind.JAXBException;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -18,6 +22,8 @@ import exapus.model.forest.ExapusModel;
 import exapus.model.forest.FactForest;
 import exapus.model.view.View;
 import exapus.model.view.ViewFactory;
+import exapus.model.view.ViewReader;
+import exapus.model.view.ViewWriter;
 
 public class Store extends Observable {
 
@@ -133,13 +139,19 @@ public class Store extends Observable {
 		return getView(name).draw();
 	}
 
-	public File xmlForRegisteredView(String name) {
+	public File fileForRegisteredView(String name) {
 		try {
-			return getView(name).xml();
+			return getView(name).toFile();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	public void registerViewFromFile(File file) throws FileNotFoundException, JAXBException {
+		ViewReader reader = new ViewReader();
+		View view = reader.read(new FileInputStream(file));
+		registerView(view);
 	}
 		
 	// This file should be located in the same dir as eclipse.ini

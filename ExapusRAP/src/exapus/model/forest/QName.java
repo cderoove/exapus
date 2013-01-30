@@ -10,6 +10,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlValue;
 
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.dom.IMethodBinding;
@@ -46,9 +47,20 @@ public class QName {
 	}
 	
 	private ArrayList<UqName> components;
-	
-	@XmlAttribute
+
 	private String identifier;
+
+	@XmlValue
+	public String getIdentifier() {
+		return identifier;
+	}
+	
+	public void setIdentifier(String id) {
+		components = new ArrayList<UqName>();
+		for (String s : Splitter.on('.').split(id))
+			components.add(new UqName(s));
+		this.identifier = id;
+	}
 
 	public QName(Iterable<String> i) {
 		components = new ArrayList<UqName>();

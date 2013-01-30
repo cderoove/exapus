@@ -1,5 +1,10 @@
 package exapus.gui.views.store;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+
+import javax.xml.bind.JAXBException;
+
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
@@ -68,7 +73,7 @@ public class StoreView extends ViewPart implements IDoubleClickListener {
 	public void createPartControl(final Composite parent) {
 		parent.setLayout(new FillLayout());
 		
-		listView = new ListViewer(parent);
+		listView = new ListViewer(parent, SWT.SINGLE);
 		listView.setContentProvider(new StoreListContentProvider());
 		listView.addDoubleClickListener(this);
 		listView.setInput(Store.getCurrent());	
@@ -166,11 +171,19 @@ public class StoreView extends ViewPart implements IDoubleClickListener {
 				fileDialog.setAutoUpload(true);
 				fileDialog.open();
 				String[] fileNames = fileDialog.getFileNames();
-				for(String fileName : fileNames)
-					System.out.println(fileName);
+				for(String fileName : fileNames) {
+					File file = new File(fileName);
+					try {
+						Store.getCurrent().registerViewFromFile(file);
+					} catch (FileNotFoundException e) {
+						e.printStackTrace();
+					} catch (JAXBException e) {
+						e.printStackTrace();
+					}
+				}
 			}						
 		};
-		loadViewAction.setText("Import view");
+		loadViewAction.setText("Import views");
 		loadViewAction.setId("exapus.gui.views.store.actions.ImportViewAction");	
 		loadViewAction.setImageDescriptor(getImageDescriptor("import.gif"));
 		loadViewAction.setEnabled(true);

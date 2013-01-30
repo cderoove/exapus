@@ -26,7 +26,8 @@ public class ViewWriter {
 	}
 	
 	public File writeTemporary() throws IOException, JAXBException {
-		File xmlFile = File.createTempFile(view.getName(), ".xml");
+		File xmlFile = new File(view.getName() + ".xml");
+		//File xmlFile = File.createTempFile(view.getName(), ".xml");
 		this.write(new FileOutputStream(xmlFile));
 		return xmlFile;
 	}

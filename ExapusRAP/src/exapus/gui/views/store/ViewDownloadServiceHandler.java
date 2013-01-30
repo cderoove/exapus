@@ -46,7 +46,7 @@ public class ViewDownloadServiceHandler implements IServiceHandler {
 	
 	public void service() throws IOException, ServletException {
 		String viewName = RWT.getRequest().getParameter("viewName");
-		File xmlFile = Store.getCurrent().xmlForRegisteredView(viewName);
+		File xmlFile = Store.getCurrent().fileForRegisteredView(viewName);
 		if(xmlFile != null) {
 			HttpServletResponse response = RWT.getResponse();
 			response.setContentType( "application/octet-stream" );
