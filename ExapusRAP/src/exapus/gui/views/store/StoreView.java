@@ -1,10 +1,5 @@
 package exapus.gui.views.store;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import javax.xml.bind.JAXBException;
-
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
@@ -17,7 +12,6 @@ import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.window.Window;
 import org.eclipse.rwt.RWT;
-import org.eclipse.rwt.widgets.ExternalBrowser;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.layout.FillLayout;
@@ -32,12 +26,15 @@ import org.eclipse.ui.part.ViewPart;
 
 import exapus.gui.editors.view.ViewEditor;
 import exapus.gui.editors.view.ViewEditorInput;
+import exapus.gui.util.FileDownloadDialog;
 import exapus.gui.util.Util;
 import exapus.model.store.Store;
 import exapus.model.view.Perspective;
 import exapus.model.view.View;
 
 public class StoreView extends ViewPart implements IDoubleClickListener {
+	public StoreView() {
+	}
 	
 	static {
 		RWT.getServiceManager().registerServiceHandler(ViewDownloadServiceHandler.ID, new ViewDownloadServiceHandler());
@@ -70,15 +67,23 @@ public class StoreView extends ViewPart implements IDoubleClickListener {
 	@Override
 	public void createPartControl(final Composite parent) {
 		parent.setLayout(new FillLayout());
+		
 		listView = new ListViewer(parent);
 		listView.setContentProvider(new StoreListContentProvider());
 		listView.addDoubleClickListener(this);
 		listView.setInput(Store.getCurrent());	
 		
-		hidden = new Browser(parent, SWT.NONE);
-		hidden.setVisible(false);
-		hidden.setSize(0, 0);
+		
+		/*
+		 * 		listView.getControl().setLayoutData(new GridData(SWT.LEFT, SWT.TOP,	true, true));
 
+		hidden = new Browser(parent, SWT.NONE);
+		//hidden.setBounds(0, 0, 0, 0);
+		hidden.setVisible(false);
+		GridData hiddenGD = new GridData();
+		hiddenGD.exclude = true;
+		hidden.setLayoutData(hiddenGD);
+*/
 		
 		Action newViewAction = new Action() {
 			@Override
@@ -134,8 +139,10 @@ public class StoreView extends ViewPart implements IDoubleClickListener {
 				Object selected = selection.getFirstElement();
 				if(selected instanceof View) {
 					View selectedView = (View) selected;
-					String url = ViewDownloadServiceHandler.viewDownloadUrl(selectedView.getName());
-					hidden.setUrl(url);
+					FileDownloadDialog dlg = new FileDownloadDialog(parent.getShell());
+					dlg.setURL(ViewDownloadServiceHandler.viewDownloadUrlBrowser(selectedView.getName()));
+					dlg.open();
+					dlg.close();
 				}
 			}						
 		};
@@ -199,7 +206,6 @@ public class StoreView extends ViewPart implements IDoubleClickListener {
 				deleteViewAction.setEnabled(!event.getSelection().isEmpty());
 			}
 		});
-
 
 	}
 

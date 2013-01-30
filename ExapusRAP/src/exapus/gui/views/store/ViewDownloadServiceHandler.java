@@ -19,19 +19,31 @@ public class ViewDownloadServiceHandler implements IServiceHandler {
 
 	public static String ID = "viewDownloadServiceHandler";
 
-	public static String viewDownloadUrl(String viewName) {
+	public static String viewDownloadUrlExternalBrowser(String viewName) {
+		StringBuilder url = new StringBuilder();
+		url.append(RWT.getRequest().getRequestURL());
+		appendHandlerParameter(url, viewName);
+		return RWT.getResponse().encodeURL(url.toString());
+
+	}
+	
+	public static String viewDownloadUrlBrowser(String viewName) {
 		StringBuilder url = new StringBuilder();
 		url.append(RWT.getRequest().getContextPath());
 		url.append(RWT.getRequest().getServletPath());
+		appendHandlerParameter(url, viewName);
+		return RWT.getResponse().encodeURL(url.toString());
+	}
+
+
+	private static void appendHandlerParameter(StringBuilder url, String viewName) {
 		url.append("?");
 		url.append(IServiceHandler.REQUEST_PARAM );
 		url.append("="+ID);
 		url.append("&viewName=" );
 		url.append(viewName);
-		return RWT.getResponse().encodeURL(url.toString());
 	}
-
-
+	
 	public void service() throws IOException, ServletException {
 		String viewName = RWT.getRequest().getParameter("viewName");
 		File xmlFile = Store.getCurrent().xmlForRegisteredView(viewName);
