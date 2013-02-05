@@ -47,4 +47,12 @@ public enum MetricType {
         if (withoutAll) return API_REFS;
         return ALL;
     }
+
+    public static boolean supportsMetric(boolean renderable, MetricType metricType) {
+        MetricType[] metricTypes = supportedMetrics(renderable);
+        for (MetricType type : metricTypes) {
+            if (metricType.equals(type)) return true;
+        }
+        return false;
+    }
 }

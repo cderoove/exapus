@@ -212,10 +212,8 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 		
 		comboVWPerspective.setInput(Perspective.supportedPerspectives());
         comboGraphDetails.setInput(GraphDetails.supportedDetails());
-        //TODO: jka
-        //comboMetrics.setInput(MetricType.supportedMetrics(checkRenderable.getSelection()));
 
-
+        updateComboMetrics();
     }
 
     private void configureSelectionTableAndToolBar(final TableViewer tableVW, ToolBar toolbar, final Perspective perspective) {
@@ -378,7 +376,6 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 	
 	private void updateComboMetrics() {
         comboMetrics.setInput(MetricType.supportedMetrics(getView().getRenderable()));
-        //TODO: Kate, is is the case that a View's (previously set) metric type is always among the combo's elements?
         comboMetrics.setSelection(new StructuredSelection(getView().getMetricType()));
 	}
 

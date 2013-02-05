@@ -5,15 +5,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
-
-import org.eclipse.jface.viewers.StructuredSelection;
 
 import exapus.model.details.GraphDetails;
 import exapus.model.forest.FactForest;
@@ -89,9 +84,11 @@ public class View {
 	}
 	
 	public void setSourceViewName(String n) {
-		sourceViewName = n;
-		makeDirty();
-	}
+        if (this.sourceViewName!= null && !this.sourceViewName.equals(n)) {
+            sourceViewName = n;
+            makeDirty();
+        }
+    }
 	
 	@XmlElement
 	public Perspective getPerspective() {
@@ -106,6 +103,10 @@ public class View {
 		if(renderable != this.renderable) {
 			this.renderable = renderable;
 			makeDirty();
+
+            if (!MetricType.supportsMetric(this.renderable, getMetricType())) {
+                this.metricType = MetricType.defaultValue(this.renderable);
+            }
 		}
 	}
 	
@@ -154,8 +155,9 @@ public class View {
 	
 	protected void makeDependentViewsDirty() {
 		for(View v : Store.getCurrent().getRegisteredViews()) 
-			if(name.equals(v.getSourceViewName()))
+			if(name.equals(v.getSourceViewName())) {
 				v.makeDirty();
+            }
 	}
 
 	@XmlElement
@@ -185,6 +187,7 @@ public class View {
     public void setGraphDetails(GraphDetails graphDetails) {
         if (this.graphDetails != graphDetails) {
             this.graphDetails = graphDetails;
+            System.err.println("setGraphDetails");
             makeDirty();
         }
     }
