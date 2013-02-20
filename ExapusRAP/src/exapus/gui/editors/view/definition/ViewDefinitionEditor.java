@@ -132,7 +132,7 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
         //Packages
 		Label lblAPILabel = new Label(parent, SWT.NONE);
 		lblAPILabel.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP, false, false, 1, 1));
-		lblAPILabel.setText("Packages:");
+		lblAPILabel.setText("APIs:");
 
 		tableVWAPI = new TableViewer(parent, SWT.BORDER | SWT.V_SCROLL);
 		toolbarAPI = new ToolBar(parent, SWT.VERTICAL);
