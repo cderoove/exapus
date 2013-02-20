@@ -2,13 +2,14 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: Exapus;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Require-Bundle: org.eclipse.rap.ui,
+Require-Bundle: org.eclipse.rap.ui;bundle-version="1.5.0",
  org.eclipse.core.runtime,
  org.eclipse.jdt.core,
  org.eclipse.core.resources;bundle-version="3.8.0",
  org.eclipse.rap.ui.views;bundle-version="1.5.0",
  org.eclipse.rap.rwt.supplemental.filedialog;bundle-version="1.5.0",
- org.eclipse.rap.rwt.supplemental.fileupload;bundle-version="1.5.0"
+ org.eclipse.rap.rwt.supplemental.fileupload;bundle-version="1.5.0",
+ org.eclipse.core.databinding;bundle-version="1.4.1"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: com.ibm.icu.text;version="4.4.2.2",
