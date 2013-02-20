@@ -10,6 +10,8 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.google.common.base.Objects;
+
 import exapus.model.details.GraphDetails;
 import exapus.model.forest.FactForest;
 import exapus.model.metrics.MetricType;
@@ -84,10 +86,10 @@ public class View {
 	}
 	
 	public void setSourceViewName(String n) {
-        if (this.sourceViewName!= null && !this.sourceViewName.equals(n)) {
-            sourceViewName = n;
-            makeDirty();
-        }
+		if(Objects.equal(this.sourceViewName, n))
+			return;
+		this.sourceViewName = n;
+		makeDirty();
     }
 	
 	@XmlElement
