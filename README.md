@@ -31,6 +31,10 @@ For instance, using the pre-installed [EGit](http://www.eclipse.org/egit/) ([tut
       * opened projects should build without errors
       * no Eclipse instance should be open on the selected workspace
    
+* Configure system-specific paths 
+  * Copy the file `exapus.properties` (located alongside this README.md) to the same location as your `eclipse.ini` file (e.g., on a Mac: `PATH_TO_THE_ECLPSE_DIR/Eclipse.app/Contents/MacOS/exapus.properties`). 
+  * Edit the `dot.path` property such that it points to your [Graphviz](http://www.graphviz.org) `dot` executable
+
 ## Launching Exapus
 
 Once the project's launcher has been configured, the Exapus web application can be started by double clicking its launcher (see above) or by clicking the  green "play" toolbar button while the Exapus project is selected in workspace.
@@ -48,3 +52,4 @@ Distributed under the Eclipse Public License.
 External dependencies:
 * [Eclipse RAP](http://eclipse.org/rap/) for the widget toolkit 
 * [Eclipse JDT](http://www.eclipse.org/jdt/) for the Java project analysis
+* [Graphviz](http://www.graphviz.org) for rendering graphs
