@@ -47,18 +47,30 @@ import exapus.model.forest.ForestElement;
 import exapus.model.store.Store;
 
 public class ForestGraphEditor extends SelectedForestElementImageBrowserViewPart implements IEditorPart, IViewEditorPage {
+	
 	public ForestGraphEditor() {
+		super();
 	}
 	
 	private IEditorSite editorSite;
 	private IEditorInput editorInput;
 	private ViewEditor viewEditor;
+	
 		
 	private int zoom = 100;
 	
 	public static final String ID = "exapus.gui.views.forest.ForestGraphView";
 	private final static String GRAPH_KEY = "graphviz";
 
+	
+	private String getUniqueImageKey() {
+		return GRAPH_KEY + getEditorInput().getName();
+	}
+	
+	private String getUniqueImageURL() {
+		return createImageUrl(getUniqueImageKey());
+	}
+	
 	@Override
 	protected String textToRender(ForestElement fe) {
 		return textToRender();
@@ -117,7 +129,7 @@ public class ForestGraphEditor extends SelectedForestElementImageBrowserViewPart
 		StringBuffer html = new StringBuffer();
 		html.append("<html><body><p>");
 		html.append("<img src=\"");
-		html.append(createImageUrl(GRAPH_KEY));
+		html.append(getUniqueImageURL());
 		//html.append("\" width=" + zoom + "% />");
 		html.append("\" />");
 		html.append("</p></body></html>");
@@ -128,7 +140,7 @@ public class ForestGraphEditor extends SelectedForestElementImageBrowserViewPart
 		StringBuffer html = new StringBuffer();
 		html.append("<html><body><p>Graph might be too large to render. ");
 		html.append("Render large <a href=\"");
-		html.append(createImageUrl(GRAPH_KEY));
+		html.append(getUniqueImageURL());
 		html.append("\"/>");
 		html.append("graph");
 		html.append("</a> anyway.");
@@ -141,7 +153,7 @@ public class ForestGraphEditor extends SelectedForestElementImageBrowserViewPart
 	protected String textToRender() {
 		File imageFile = Store.getCurrent().graphForRegisteredView(editorInput.getName());
 		if(imageFile != null) {
-			registerImage(GRAPH_KEY, imageFile);
+			registerImage(getUniqueImageKey(), imageFile);
 			if(fileHasSafeSize(imageFile)) 
 				return textForGraph();
 			else

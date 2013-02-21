@@ -25,7 +25,7 @@ public class SelectedForestElementImageBrowserViewPart extends SelectedForestEle
 
 	private final static String SERVICE_HANDLER = "imageServiceHandler";
 
-	protected Object createImageUrl(String imageKey) {
+	protected String createImageUrl(String imageKey) {
 		StringBuffer url = new StringBuffer();
 		url.append(RWT.getRequest().getContextPath());
 		url.append(RWT.getRequest().getServletPath());
@@ -37,8 +37,7 @@ public class SelectedForestElementImageBrowserViewPart extends SelectedForestEle
 		url.append(imageKey);
 		url.append("&nocache=");
 		url.append(System.currentTimeMillis());
-		String encodedURL = RWT.getResponse().encodeURL(url.toString());
-		return encodedURL;
+		return RWT.getResponse().encodeURL(url.toString());
 	}
 
 	
