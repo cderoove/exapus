@@ -9,7 +9,7 @@ Exapus is a web application for exploring the usage of APIs within a single proj
 Exapus has been tested against Eclipse Juno 4.2 (for RCP and RAP Developers).  
 
 * Import the `ExapusRAP` folder from the repository into your Eclipse workspace as the pre-configured `Exapus` project.  
-For instance, using the pre-installed [EGit](http://www.eclipse.org/egit/) ([tutorial](http://www.vogella.com/articles/EGit/article.html) plugin for Eclipse:
+For instance, using the pre-installed [EGit](http://www.eclipse.org/egit/) ([tutorial](http://www.vogella.com/articles/EGit/article.html)) plugin for Eclipse:
    * Choose `Import…` from the `File` menu.
    * Select `Git` > `Projects from Git`
    * Choose `URI` and enter the details of this repository (authentication is needed for write access).
@@ -38,7 +38,11 @@ Once the project's launcher has been configured, the Exapus web application can 
 Your system's default browser should automatically open on the application's URL. In case of an `HTTP error 404`, refresh the URL. In all likelihood, the URL was accessed before the application finished launching. 
 
 ## License
-Copyright © 2012-2013 Exapus contributors.
+Copyright © 2012-2013 Exapus contributors:
+* [Coen De Roover](https://github.com/cderoove)
+* [Ekaterina Pek](https://github.com/radkat)
+* [Ralf Lämmel](https://github.com/rlaemmel)
+
 Distributed under the Eclipse Public License.
 
 External dependencies:
