@@ -11,6 +11,9 @@ import java.util.Properties;
 
 import javax.xml.bind.JAXBException;
 
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -156,7 +159,17 @@ public class Store extends Observable {
 		
 	// This file should be located in the same dir as eclipse.ini
 	// I.e., for Mac OS: PATH_TO_THE_ECLPSE_DIR/Eclipse.app/Contents/MacOS/
-	private static final String CONFIG_FILENAME = "config.properties";
+	private static final String CONFIG_FILENAME = "exapus.properties";
+	
+	/*
+	private static File getPropertiesFile() {
+		return new File(getWorkspaceLocation(), CONFIG_FILENAME);
+	}
+	
+	private static File getWorkspaceLocation() {
+		return ResourcesPlugin.getWorkspace().getRoot().getLocation().toFile();
+	}
+	*/
 	
     private static void readSettings() {
         Properties prop = new Properties();
@@ -170,7 +183,7 @@ public class Store extends Observable {
     }
 
     public static enum Settings {
-        DOT_EXC("dot.path", "/usr/local/Cellar/graphviz/2.28.0/bin/dot"),
+        DOT_EXC("dot.path", "/usr/local/bin/dot"),
         API_TAGS("tags.path", "/Users/cderoove/Documents/Docs/VUB/research/papers/authored/quaatlas/data/apis.csv");
 
         private Settings(String key, String defaultValue) {
