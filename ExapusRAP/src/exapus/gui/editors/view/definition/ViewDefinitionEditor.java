@@ -36,6 +36,7 @@ import com.google.common.collect.Lists;
 
 import exapus.gui.editors.view.IViewEditorPage;
 import exapus.gui.editors.view.ViewEditor;
+import exapus.gui.util.Util;
 import exapus.gui.views.store.StoreListContentProvider;
 import exapus.model.store.Store;
 
@@ -261,7 +262,8 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 
 
 	    ToolItem toolItemAddAPI = new ToolItem(toolbar, SWT.PUSH);
-	    toolItemAddAPI.setText("Add");
+	    toolItemAddAPI.setToolTipText("Add");
+	    toolItemAddAPI.setImage(Util.getImageFromPlugin("add.gif"));
 	    toolItemAddAPI.addSelectionListener(new SelectionAdapter() {
 	    	public void widgetSelected( final SelectionEvent event ) {
 	    		showSelectionDialog(perspective);
@@ -276,7 +278,9 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 
 	    final ToolItem toolItemDeleteAPI = new ToolItem(toolbar, SWT.PUSH);
 	    toolItemDeleteAPI.setEnabled(false);
-	    toolItemDeleteAPI.setText("Delete");
+	    toolItemDeleteAPI.setToolTipText("Delete");
+	    toolItemDeleteAPI.setImage(Util.getImageFromPlugin("delete.gif"));
+
 	    toolItemDeleteAPI.addSelectionListener(new SelectionAdapter() {
 	    	public void widgetSelected( final SelectionEvent event ) {
 	    		IStructuredSelection sel = (IStructuredSelection) tableVW.getSelection();
