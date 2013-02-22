@@ -34,7 +34,7 @@ public class ViewFactory {
 
 	private ViewFactory() {
 		Selection universal = UniversalSelection.getCurrent();
-		completePackageView = new View("All Packages", Perspective.API_CENTRIC);
+		completePackageView = new View("All APIs", Perspective.API_CENTRIC);
 		completePackageView.addAPISelection(universal);
 		completePackageView.addProjectSelection(universal);
 		completePackageView.setRenderable(true);
