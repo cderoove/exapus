@@ -67,7 +67,7 @@ public class ForestTreeLabelProviders {
 
                     PackageLayer layer = (PackageLayer) element;
                     PackageTree packageTree = layer.getParentPackageTree();
-                    if (packageTree != null && !"<Packages>".equals(packageTree.getName().toString())) {
+                    if (packageTree != null && !InboundFactForest.DEFAULT_TREE_NAME.equals(packageTree.getName())) {
                         return packageTree.getName().toString() + ":" + layer.getQName().toString();
                     }
                     return layer.getQName().toString();
