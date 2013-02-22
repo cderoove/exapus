@@ -1,11 +1,16 @@
 package exapus.gui.editors.forest.tree;
 
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Iterators;
 import com.google.common.primitives.Ints;
 import exapus.gui.editors.view.IViewEditorPage;
 import exapus.gui.editors.view.ViewEditor;
+import exapus.gui.util.Util;
 import exapus.gui.views.forest.reference.ForestReferenceViewPart;
 import exapus.model.forest.FactForest;
 import exapus.model.forest.ForestElement;
+import exapus.model.forest.PackageLayer;
+import exapus.model.forest.Ref;
 import exapus.model.metrics.MetricType;
 import exapus.model.store.Store;
 import exapus.model.view.View;
@@ -24,9 +29,15 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.*;
+import org.eclipse.ui.dialogs.FilteredTree;
+import org.eclipse.ui.dialogs.PatternFilter;
 
+import java.io.ObjectInputStream.GetField;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,27 +62,12 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
         NAME, METRIC
     }
 
-    private PackageStyle packageStyle = PackageStyle.NON_GROUPED;
+    private PackageStyle packageStyle = PackageStyle.FLAT;
 
     private static enum PackageStyle {
-        NON_GROUPED(0, 3, "Non-grouped packages"), GROUPED(1, 1, "Grouped packages");
-
-        private int index;
-        private int expandedDepth;
-        private String desc;
-
-        private PackageStyle(int index, int expandedDepth, String desc) {
-            this.index = index;
-            this.expandedDepth = expandedDepth;
-            this.desc = desc;
-        }
-
-        public static PackageStyle fromInt(int i) {
-            if (NON_GROUPED.index == i) return NON_GROUPED;
-            if (GROUPED.index == i) return GROUPED;
-            throw new UnsupportedOperationException("No grouping for this index " + i);
-        }
+        FLAT, HIERARCHICAL
     }
+    
 
     /*
    public static int viewerCount = 0;
@@ -94,6 +90,8 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
     private ViewEditor viewEditor;
 
     private MetricComparator comparator;
+	private ToolItem hierarchical;
+	private ToolItem flat;
 
     /*
      public boolean isDualFactForestViewer() {
@@ -114,16 +112,16 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
                 switch (sorting) {
                     case NAME:
                         switch (packageStyle) {
-                            case NON_GROUPED:
+                            case HIERARCHICAL:
                                 result = fe1.getName().toString().compareToIgnoreCase(fe2.getName().toString());
                                 break;
-                            case GROUPED:
+                            case FLAT:
                                 result = fe1.getQName().toString().compareToIgnoreCase(fe2.getQName().toString());
                                 break;
                         }
                         break;
                     case METRIC:
-                        result = fe1.getMetric(sortingMetric).compareTo(fe2.getMetric(sortingMetric), packageStyle == PackageStyle.GROUPED);
+                        result = fe1.getMetric(sortingMetric).compareTo(fe2.getMetric(sortingMetric), packageStyle == PackageStyle.FLAT);
                         break;
 
                 }
@@ -152,57 +150,116 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
     }
 
     public void createPartControl(Composite parent) {
-        parent.setLayout(new GridLayout());
-
+        parent.setLayout(new GridLayout(2, false));
+        
         // Toolbar
-
         ToolBarManager tbMgr = new ToolBarManager(SWT.NONE);
-        tbMgr.createControl(parent);
+        ToolBar bar = tbMgr.createControl(parent);
+        bar.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false,2,1)); 
 
-        ToolItem sep = new ToolItem(tbMgr.getControl(), SWT.SEPARATOR);
-        comboGroupingPackages = new Combo(tbMgr.getControl(), SWT.READ_ONLY);
-        comboGroupingPackages.add(PackageStyle.NON_GROUPED.desc);
-        comboGroupingPackages.add(PackageStyle.GROUPED.desc);
-        comboGroupingPackages.select(PackageStyle.NON_GROUPED.index);
+	    hierarchical = new ToolItem(bar, SWT.RADIO);
+	    hierarchical.setToolTipText("Hierarchical package presentation");
+	    hierarchical.addSelectionListener(new SelectionAdapter() {
+	    	public void widgetSelected( final SelectionEvent event ) {
+                updatePackageStyle(PackageStyle.HIERARCHICAL);
+	    	}
+		});
+	    hierarchical.setImage(Util.getImageFromPlugin("hierarchicalLayout.gif"));
+	    flat = new ToolItem(bar, SWT.RADIO);
+	    flat.setToolTipText("Flat package presentation");
+	    flat.setImage(Util.getImageFromPlugin("flatLayout.gif"));
+	    flat.addSelectionListener(new SelectionAdapter() {
+	    	public void widgetSelected( final SelectionEvent event ) {
+                updatePackageStyle(PackageStyle.FLAT);
+	    	}
+		});
+	    new ToolItem(bar, SWT.SEPARATOR);
 
-        comboGroupingPackages.addSelectionListener(new SelectionListener() {
-            @Override
-            public void widgetSelected(SelectionEvent selectionEvent) {
-                changeGrouping(((Combo) selectionEvent.getSource()).getSelectionIndex());
-            }
+        
+        
+        //buttons
+	    ToolItem expandButton = new ToolItem(bar, SWT.PUSH);
+	    expandButton.setToolTipText("Expand top levels");
+	    expandButton.setImage(Util.getImageFromPlugin("expandall.gif"));
+	    expandButton.addSelectionListener(new SelectionAdapter() {
+	    	public void widgetSelected( final SelectionEvent event ) {
+	    		viewer.expandToLevel(2);
+	    	}
+	    });
+	    
+	    /*
+	     * Expanding particular items does not seem to work
+	     
+	    ToolItem expandLayersButton = new ToolItem(bar, SWT.PUSH);
+	    expandLayersButton.setToolTipText("Expand Package Layers");
+	    //expandButton.setImage(Util.getImageFromPlugin("expandall.gif"));
+	    expandLayersButton.addSelectionListener(new SelectionAdapter() {
+	    	public void widgetSelected( final SelectionEvent event ) {
+	    		for(ForestElement e : getForest().getAllLayers())
+	    			viewer.setExpandedState(e, true);	
+	    }
+	    });
+	    */
+	    
+	    
+	    ToolItem collapseButton = new ToolItem(bar, SWT.PUSH);
+	    collapseButton.setToolTipText("Collapse All");
+	    collapseButton.setImage(Util.getImageFromPlugin("collapseall.gif"));
+	    collapseButton.addSelectionListener(new SelectionAdapter() {
+	    	public void widgetSelected( final SelectionEvent event ) {
+	    		viewer.collapseAll();
+	    	}
+	    });
+	    
+	    
+        //tbMgr.getControl().pack();
+        
 
-            @Override
-            public void widgetDefaultSelected(SelectionEvent selectionEvent) {
-                changeGrouping(((Combo) selectionEvent.getSource()).getSelectionIndex());
-            }
-        });
 
-        comboGroupingPackages.pack();
-        sep.setWidth(comboGroupingPackages.getSize().x);
-        sep.setControl(comboGroupingPackages);
+		// Tree viewer
+		
+        /*
+        PatternFilter filter = new PatternFilter() {
+        	@Override
+        	protected boolean isLeafMatch(final Viewer viewer, final Object element) {
+        		TreeViewer treeViewer = (TreeViewer) viewer;
+        		ForestElement fe = (ForestElement) element;  
+        		if(fe instanceof Ref) {
+        			Ref ref = (Ref) fe;
+        			return wordMatches(ref.getReferencedName().toString())
+        					|| wordMatches(ref.getReferencingName().toString());
+        		}
+        		return wordMatches(fe.getQName().toString());
+        	}
+        };
+        
+        FilteredTree filtered = new FilteredTree(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION, filter, true);
+        viewer = filtered.getViewer();
+        */
+        
+        viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
+        
+        viewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true,2,1)); 
 
-        tbMgr.getControl().pack();
-
-        // Tree viewer
-
-        viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
+        
         viewer.getTree().setData(RWT.MARKUP_ENABLED, Boolean.FALSE); // do not enable html  markup ... otherwise names of parameterized types cannot be added
 
-        viewer.getTree().setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true));
 
         viewer.getTree().setHeaderVisible(true);
         viewer.getTree().setLinesVisible(true);
         viewer.setUseHashlookup(true);
 
+       
+ 
         comparator = new MetricComparator();
         viewer.setComparator(comparator);
 
-        viewer.setContentProvider(packageStyle == PackageStyle.GROUPED ? new ForestTreeGroupedPackagesContentProvider() : new ForestTreeContentProvider());
+        viewer.setContentProvider(packageStyle == PackageStyle.FLAT ? new ForestTreeGroupedPackagesContentProvider() : new ForestTreeContentProvider());
 
         patternCol = new TreeViewerColumn(viewer, SWT.NONE);
         patternCol.getColumn().setText("Pattern");
         patternCol.getColumn().setWidth(350);
-        patternCol.setLabelProvider(new ForestTreeLabelProviders.PatternColumnLabelProvider(packageStyle == PackageStyle.GROUPED));
+        patternCol.setLabelProvider(new ForestTreeLabelProviders.PatternColumnLabelProvider(packageStyle == PackageStyle.FLAT));
 
         patternCol.getColumn().addSelectionListener(new SelectionAdapter() {
             @Override
@@ -281,45 +338,51 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 
         viewer.addDoubleClickListener(this);
 
+        
+        /*
+        //Filters
+        Label apiFilterLabel = new Label(parent, SWT.NONE);
+		apiFilterLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false,1,1));
+		apiFilterLabel.setText("API filter:");
+		Text apiFilterText = new Text(parent, SWT.BORDER);
+		apiFilterText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false,1,1));
+		
+        Label projectFilterLabel = new Label(parent, SWT.NONE);
+        projectFilterLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false,1,1));
+        projectFilterLabel.setText("Project filter:");
+		Text projectFilterText = new Text(parent, SWT.BORDER);
+		projectFilterText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false,1,1));		
+		*/
 
-/*
-        // We don't really need this anymore
-        Action expandAllAction = new Action() {
-            @Override
-            public void run() {
-                viewer.expandAll();
-            }
-        };
-        expandAllAction.setText("Expand all packages");
-        expandAllAction.setId("exapus.gui.editors.forest.tree.ExpandAllAction");
-        expandAllAction.setImageDescriptor(getImageDescriptor(ISharedImages.IMG_ELCL_COLLAPSEALL));
-        registerAction(expandAllAction);
-*/
 
     }
 
-    private void changeGrouping(int selectionIndex) {
-        PackageStyle selected = PackageStyle.fromInt(selectionIndex);
+    private void updatePackageStyle(PackageStyle selected) {
         if (selected == packageStyle) return;
 
         packageStyle = selected;
 
         switch (selected) {
-            case NON_GROUPED:
+            case HIERARCHICAL:
                 viewer.setContentProvider(new ForestTreeContentProvider());
                 break;
-            case GROUPED:
+            case FLAT:
                 viewer.setContentProvider(new ForestTreeGroupedPackagesContentProvider());
                 break;
         }
 
-        patternCol.setLabelProvider(new ForestTreeLabelProviders.PatternColumnLabelProvider(packageStyle == PackageStyle.GROUPED));
+        patternCol.setLabelProvider(new ForestTreeLabelProviders.PatternColumnLabelProvider(packageStyle == PackageStyle.FLAT));
         for (MetricColumn metricCol : metricCols) {
-            metricCol.column.setLabelProvider(new ForestTreeLabelProviders.MetricColumnLabelProvider(packageStyle == PackageStyle.GROUPED, metricCol.metricType));
+            metricCol.column.setLabelProvider(new ForestTreeLabelProviders.MetricColumnLabelProvider(packageStyle == PackageStyle.FLAT, metricCol.metricType));
         }
 
+        
+        //setting tree paths do not seem to have an effect?
+        TreePath[] expanded = viewer.getExpandedTreePaths();
+        ISelection selection = viewer.getSelection();
         viewer.refresh();
-        viewer.expandToLevel(packageStyle.expandedDepth);
+        viewer.setExpandedTreePaths(expanded);
+        viewer.setSelection(selection, true);
     }
 
 
@@ -350,21 +413,31 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 
       */
 
-
+    
+    
+    private FactForest getForest() {
+        String viewName = getEditorInput().getName();
+    	return Store.getCurrent().forestForRegisteredView(viewName);
+    }
+    
+    
+    
+    private void updatePackageStyleButtons() {
+        hierarchical.setSelection(packageStyle == PackageStyle.HIERARCHICAL);
+        flat.setSelection(packageStyle == PackageStyle.FLAT);
+    }
+    
     public void updateControls() {
         updateMetrics();
-
-        String viewName = getEditorInput().getName();
-        FactForest forest = Store.getCurrent().forestForRegisteredView(viewName);
-        viewer.setInput(forest);
-        viewer.expandToLevel(packageStyle.expandedDepth);
+        viewer.setInput(getForest());
+        updatePackageStyleButtons();
     }
 
     private void updateMetrics() {
         chosen = getView().getMetricType();
         sorting = SortBy.NAME;
         sortingMetric = chosen;
-        changeGrouping(PackageStyle.NON_GROUPED.index);
+        updatePackageStyle(PackageStyle.HIERARCHICAL);
 
         List<Integer> idx = new ArrayList<Integer>();
         for (int i = 0; i < viewer.getTree().getColumnCount(); i++) {
@@ -521,10 +594,6 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
         getEditorSite().getActionBars().getToolBarManager().add(action);
     }
 
-    private ImageDescriptor getImageDescriptor(String name) {
-        return getWorkBench().getSharedImages().getImageDescriptor(name);
-    }
-
     private class MetricColumn {
         private int idx;
         private MetricType metricType;
@@ -546,11 +615,9 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
                         viewer.getTree().setSortColumn(column.getColumn());
                         sortingMetric = metricType;
 
-                        changeGrouping(PackageStyle.GROUPED.index);
-                        if (comboGroupingPackages.getSelectionIndex() != PackageStyle.GROUPED.index) {
-                            comboGroupingPackages.select(PackageStyle.GROUPED.index);
-                        }
-
+                        updatePackageStyle(PackageStyle.FLAT);
+                        updatePackageStyleButtons();
+                        
                         if (sorting == SortBy.METRIC) {
                             viewer.getTree().setSortDirection(comparator.change());
                         } else {
@@ -566,7 +633,7 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 
             column.getColumn().setText(metricType.getShortName());
             column.getColumn().setWidth(100);
-            column.setLabelProvider(new ForestTreeLabelProviders.MetricColumnLabelProvider(packageStyle == PackageStyle.GROUPED, metricType));
+            column.setLabelProvider(new ForestTreeLabelProviders.MetricColumnLabelProvider(packageStyle == PackageStyle.FLAT, metricType));
 
             column.getColumn().addSelectionListener(selectionAdapter);
         }
