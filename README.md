@@ -3,6 +3,7 @@ Exapus
 
 Exapus is a web application for exploring the usage of APIs within a single project (i.e., project-centric exploration) and across a corpus of projects (i.e., api-centric exploration) along the dimensions of where, how much and in what manner. Several metrics and visualizations are provided. 
 
+For a quick demo: see the (preliminary) [screencast](http://www.youtube.com/watch?v=bjtdBRadtjU&feature=youtu.be)
 
 ## Installation
 
