@@ -14,6 +14,7 @@ import com.google.common.io.Files;
 import com.google.common.io.LineProcessor;
 
 import exapus.model.forest.QName;
+import exapus.model.store.Store;
 
 public class ViewFactory {
 
@@ -81,7 +82,7 @@ public class ViewFactory {
 
 	public View testProjectCentricSelectionView() {
 		View view = new View("Project-centric selection test", Perspective.PROJECT_CENTRIC);
-		view.addProjectSelection(new ScopedSelection(new QName("sunflow"), Scope.ROOT_SCOPE));
+		view.addProjectSelection(new ScopedSelection(new QName(Store.Settings.PROJECT_TEST.getValue()), Scope.ROOT_SCOPE));
 		view.addAPISelection(new ScopedSelection(new QName("java.lang.String"), Scope.TYPE_SCOPE));
 		view.setRenderable(false);
 		return view;

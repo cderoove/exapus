@@ -177,6 +177,7 @@ public class Store extends Observable {
             prop.load(new FileInputStream(CONFIG_FILENAME));
             Settings.DOT_EXC.setValue(prop.getProperty(Settings.DOT_EXC.key));
             Settings.API_TAGS.setValue(prop.getProperty(Settings.API_TAGS.key));
+            Settings.PROJECT_TEST.setValue(prop.getProperty(Settings.PROJECT_TEST.key));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -184,7 +185,8 @@ public class Store extends Observable {
 
     public static enum Settings {
         DOT_EXC("dot.path", "/usr/local/bin/dot"),
-        API_TAGS("tags.path", "/Users/cderoove/Documents/Docs/VUB/research/papers/authored/quaatlas/data/apis.csv");
+        API_TAGS("tags.path", "/Users/cderoove/Documents/Docs/VUB/research/papers/authored/quaatlas/data/apis.csv"),
+        PROJECT_TEST("test.project", "sunflow");
 
         private Settings(String key, String defaultValue) {
             this.key = key;

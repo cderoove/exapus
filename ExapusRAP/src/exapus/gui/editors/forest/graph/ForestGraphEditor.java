@@ -127,7 +127,46 @@ public class ForestGraphEditor extends SelectedForestElementImageBrowserViewPart
 
 	private String textForGraph() {
 		StringBuffer html = new StringBuffer();
-		html.append("<html><body><p>");
+		html.append("<html>" +
+                "    <style type=\"text/css\">\n" +
+                "table.fixed { table-layout:fixed; }\n" +
+                "table.fixed td { overflow: hidden; }\n" +
+                "    </style>" +
+                "<body>");
+        html.append("<table border=\"0\">\n" +
+                "    <col width=\"220px\" />\n" +
+                "    <col width=\"220px\" />\n" +
+                "<tr>\n" +
+                "  <th>Graph attribute</th>\n" +
+                "  <th>Meaning</th>\n" +
+                "</tr>\n" +
+                "<tr>\n" +
+                "<td>\n" +
+                "Width of the border of the node\n" +
+                "</td>\n" +
+                "<td>\n" +
+                "Value of the metric\n" +
+                "</td>\n" +
+                "</tr>\n" +
+                "<tr>\n" +
+                "<td>\n" +
+                "Grey color of the node\n" +
+                "</td>\n" +
+                "<td>\n" +
+                "Zero value of the metric\n" +
+                "</td>\n" +
+                "</tr>\n" +
+                "<tr>\n" +
+                "<td>\n" +
+                "Dotted border of the node\n" +
+                "</td>\n" +
+                "<td>\n" +
+                "Package without types\n" +
+                "</td>\n" +
+                "</tr>\n" +
+                "</table>");
+
+        html.append("<p>");
 		html.append("<img src=\"");
 		html.append(getUniqueImageURL());
 		//html.append("\" width=" + zoom + "% />");
