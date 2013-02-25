@@ -64,31 +64,36 @@ public abstract class Evaluator {
 			return Store.getCurrent().getView(sourceViewName).evaluate();
 	}
 	
-    protected void calculateMetrics(FactForest forest) {
-        if (getView().getMetricType() != null) {
+	protected void calculateMetrics(FactForest forest) {
+		calculateMetrics(getView(), forest);
+	}
+	
+    protected void calculateMetrics(View view, FactForest forest) {
+    	MetricType type = view.getMetricType();
+        if (type != null) {
             long startTime = System.currentTimeMillis();
 
-            if (getView().getMetricType() == MetricType.ALL) {
-                for (MetricType metric : MetricType.supportedMetrics(getView().getRenderable())) {
+            if (type == MetricType.ALL) {
+                for (MetricType metric : MetricType.supportedMetrics(view.getRenderable())) {
                     if (metric == MetricType.ALL) continue;
-                    forest.acceptVisitor(metric.getVisitor(getView()));
+                    forest.acceptVisitor(metric.getVisitor(view));
                 }
             } else {
-                forest.acceptVisitor(getView().getMetricType().getVisitor(getView()));
+                forest.acceptVisitor(type.getVisitor(view));
             }
 
             long stopTime = System.currentTimeMillis();
             long elapsedTime = stopTime - startTime;
             System.err.printf("Metric calculation: %d ms\n", elapsedTime);
 
-            calculateStats(forest);
+            calculateStats(view, forest);
         }
     }
 
-    private void calculateStats(FactForest forest) {
+    private void calculateStats(View view, FactForest forest) {
         long startTime = System.currentTimeMillis();
 
-        forest.acceptVisitor(new StatsCollectionVisitor(getView()));
+        forest.acceptVisitor(new StatsCollectionVisitor(view));
 
         long stopTime = System.currentTimeMillis();
         long elapsedTime = stopTime - startTime;

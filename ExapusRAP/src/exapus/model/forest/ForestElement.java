@@ -11,6 +11,7 @@ import org.eclipse.jdt.core.JavaModelException;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -22,7 +23,6 @@ public abstract class ForestElement implements INode {
 	private UqName id;
 	
 	private QName qid;
-
 		
 	public ForestElement(UqName id) {
 		this.id = id;
@@ -31,6 +31,7 @@ public abstract class ForestElement implements INode {
 	public void setName(UqName id) {
 		this.id = id;
 	}
+	
 
 	public UqName getName() {
 		return id;
@@ -56,7 +57,17 @@ public abstract class ForestElement implements INode {
 	public ForestElement getParent() {
 		return parent;
 	}
-
+	
+	public List<ForestElement> getAncestors() {
+		LinkedList<ForestElement> ancestors = new LinkedList<ForestElement>();
+		ForestElement parent = this;
+		while(parent != null) {
+			ancestors.addFirst(parent);
+			parent = parent.getParent();
+		}
+		return ancestors;
+	}
+ 
 	public void setParent(ForestElement parent) {
 		this.parent = parent;
 	}

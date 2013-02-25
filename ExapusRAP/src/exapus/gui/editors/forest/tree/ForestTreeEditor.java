@@ -21,6 +21,8 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.rwt.RWT;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -41,6 +43,8 @@ import java.io.ObjectInputStream.GetField;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.FilterConfig;
+
 public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IViewEditorPage {
 
     private IEditorSite editorSite;
@@ -57,7 +61,9 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 
     private SortBy sorting = SortBy.NAME;
     private MetricType sortingMetric;
-
+    
+    private ForestTreeFilterVisitor filter;
+    
     private static enum SortBy {
         NAME, METRIC
     }
@@ -92,6 +98,12 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
     private MetricComparator comparator;
 	private ToolItem hierarchical;
 	private ToolItem flat;
+	private Text apiFilterText;
+	private Text projectFilterText;
+	private ToolItem filterButton;
+	private Composite filterComposite;
+	
+	private Composite editorComposite;
 
     /*
      public boolean isDualFactForestViewer() {
@@ -150,12 +162,17 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
     }
 
     public void createPartControl(Composite parent) {
-        parent.setLayout(new GridLayout(2, false));
+    	
+    	
+    	editorComposite = parent;
+    	
+        parent.setLayout(new GridLayout(1,false));
         
         // Toolbar
         ToolBarManager tbMgr = new ToolBarManager(SWT.NONE);
         ToolBar bar = tbMgr.createControl(parent);
-        bar.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false,2,1)); 
+        
+        bar.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false,1,1)); 
 
 	    hierarchical = new ToolItem(bar, SWT.RADIO);
 	    hierarchical.setToolTipText("Hierarchical package presentation");
@@ -212,7 +229,20 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 	    });
 	    
 	    
-        //tbMgr.getControl().pack();
+	    new ToolItem(bar, SWT.SEPARATOR);
+	    
+	    filterButton = new ToolItem(bar, SWT.CHECK);
+	    filterButton.setToolTipText("Filter References");
+	    filterButton.setImage(Util.getImageFromPlugin("filter_Action.gif"));
+	    filterButton.addSelectionListener(new SelectionAdapter() {
+	    	public void widgetSelected(final SelectionEvent event) {
+	    		boolean tobefiltered = filterButton.getSelection();
+	    		updateFilterControls(tobefiltered);
+	    		applyFilter(tobefiltered);
+	    	}
+
+	    });
+	    filterButton.setSelection(false);
         
 
 
@@ -239,7 +269,7 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
         
         viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
         
-        viewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true,2,1)); 
+        viewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true,1,1)); 
 
         
         viewer.getTree().setData(RWT.MARKUP_ENABLED, Boolean.FALSE); // do not enable html  markup ... otherwise names of parameterized types cannot be added
@@ -339,23 +369,70 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
         viewer.addDoubleClickListener(this);
 
         
-        /*
-        //Filters
-        Label apiFilterLabel = new Label(parent, SWT.NONE);
+        
+        filterComposite = new Composite(parent, SWT.NONE);
+        filterComposite.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false,1,1));
+        filterComposite.setLayout(new GridLayout(2,false));
+        
+        Label apiFilterLabel = new Label(filterComposite, SWT.NONE);
 		apiFilterLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false,1,1));
-		apiFilterLabel.setText("API filter:");
-		Text apiFilterText = new Text(parent, SWT.BORDER);
+		apiFilterLabel.setText("Referenced Name:");
+		apiFilterText = new Text(filterComposite, SWT.BORDER);
 		apiFilterText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false,1,1));
+		apiFilterText.addModifyListener(new ModifyListener() {
+			@Override
+			public void modifyText(ModifyEvent event) {
+				filter.setApiFilter(apiFilterText.getText());
+				applyFilter(true);
+			}
+		});
 		
-        Label projectFilterLabel = new Label(parent, SWT.NONE);
+        Label projectFilterLabel = new Label(filterComposite, SWT.NONE);
         projectFilterLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false,1,1));
-        projectFilterLabel.setText("Project filter:");
-		Text projectFilterText = new Text(parent, SWT.BORDER);
+        projectFilterLabel.setText("Referencing Name:");
+		projectFilterText = new Text(filterComposite, SWT.BORDER);
 		projectFilterText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false,1,1));		
-		*/
-
-
+		projectFilterText.addModifyListener(new ModifyListener() {
+			@Override
+			public void modifyText(ModifyEvent event) {
+				filter.setProjectFilter(projectFilterText.getText());
+				applyFilter(true);
+			}
+		});
+		
+		//cannot make the viewer fill the freed space
+		//filterComposite.setVisible(filterButton.getSelection());
+		filterComposite.setEnabled(filterButton.getSelection());
+		
     }
+    
+    
+	private void updateFilterControls(boolean tobefiltered) {
+		//cannot make the viewer fill the freed space
+		//filterComposite.setVisible(tobefiltered);
+		filterComposite.setEnabled(tobefiltered);
+	}
+
+
+	private void applyFilter(boolean tobefiltered) {
+		Object[] expanded = viewer.getExpandedElements();
+		StructuredSelection selected = (StructuredSelection) viewer.getSelection();
+    	
+		FactForest newForest;
+		if(tobefiltered)
+			newForest = filter.copy(getForest());
+		else
+			newForest = getForest();
+		
+		viewer.setInput(newForest);
+    	
+    	Object[] newExpanded = newForest.getCorrespondingForestElements(expanded);
+    	StructuredSelection newSelected = new StructuredSelection(newForest.getCorrespondingForestElements(selected.toArray()));
+    	
+    	viewer.setSelection(newSelected, true);
+    	viewer.setExpandedElements(newExpanded);    	
+    }
+    
 
     private void updatePackageStyle(PackageStyle selected) {
         if (selected == packageStyle) return;
@@ -488,11 +565,16 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
         editorInput = input;
     }
 
+    
+    private void initFilter() {
+        filter = new ForestTreeFilterVisitor();
+    }
 
     @Override
     public void init(IEditorSite site, IEditorInput input) throws PartInitException {
         setInput(input);
         setEditorSite(site);
+        initFilter();
     }
 
     private void setEditorSite(IEditorSite site) {

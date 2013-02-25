@@ -9,12 +9,14 @@ import org.eclipse.jdt.core.SourceRange;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 
+import com.google.common.base.Objects;
+
 import exapus.model.visitors.IForestVisitor;
 
 public abstract class Ref extends ForestElement {
 
 	private Ref dual;
-	
+
 	protected Direction direction;
 
 	protected Pattern pattern;
@@ -73,7 +75,7 @@ public abstract class Ref extends ForestElement {
 	protected static SourceRange getSourceRange(ASTNode n) {
 		return new SourceRange(n.getStartPosition(), n.getLength());
 	}
-	
+
 	static public Ref fromRef(Ref r) {
 		if(r instanceof InboundRef)
 			return InboundRef.fromInboundRef((InboundRef) r);
@@ -132,6 +134,19 @@ public abstract class Ref extends ForestElement {
 	}
 
 	abstract public void acceptVisitor(IForestVisitor v);
+
+	boolean equals(Ref ref) {
+		if (ref == null)
+			return false;
+		if(ref == this)
+			return true;
+		return ref.direction == direction
+				&& ref.pattern == pattern
+				&& ref.element == element
+				&& ref.range.equals(range)
+				&& ref.lineNumber == lineNumber
+				&& ref.rname.equals(rname);
+	}
 
 }
 

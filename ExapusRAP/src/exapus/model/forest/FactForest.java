@@ -2,6 +2,8 @@ package exapus.model.forest;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import com.google.common.collect.Iterables;
@@ -92,4 +94,35 @@ public abstract class FactForest extends Observable {
     public Map<MetricType, Map<StatsLevel, DescriptiveStatistics>> getStats() {
         return stats;
     }
+    
+    public ForestElement getCorrespondingForestElement(ForestElement element) {
+    	Iterator<ForestElement> ancestors = element.getAncestors().iterator();
+    	if(ancestors.hasNext())
+    		return getCorrespondingForestElement(ancestors,element);
+    	return null;
+    }
+    
+    public Object[] getCorrespondingForestElements(Object[] elements) {
+    	ArrayList<Object> corresponding = new ArrayList<Object>(elements.length);
+    	for(Object element : elements) {
+    		if(element instanceof ForestElement) {
+    			ForestElement correspondingElement = getCorrespondingForestElement((ForestElement) element);
+    			if(correspondingElement != null)
+    				corresponding.add(correspondingElement);
+    		}
+    	}
+    	return corresponding.toArray();
+    }
+
+	private ForestElement getCorrespondingForestElement(Iterator<ForestElement> ancestors, ForestElement element) {
+		PackageTree originalTree = (PackageTree) ancestors.next();
+		if(originalTree == null)
+			return null;
+		PackageTree correspondingTree = getPackageTree(originalTree.getName());
+		if(ancestors.hasNext())
+			return correspondingTree.getCorrespondingForestElement(ancestors, element);
+		return correspondingTree;
+	}
+	
+	
 }

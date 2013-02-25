@@ -16,30 +16,10 @@ import exapus.model.forest.OutboundRef;
 import exapus.model.forest.PackageLayer;
 import exapus.model.forest.PackageTree;
 
-public class TopDownCopyingForestVisitor extends CopyingForestVisitor implements ICopyingForestVisitor {
+public class TopDownCopyingForestVisitor extends TracingCopyingForestVisitor implements ICopyingForestVisitor {
 
 	public TopDownCopyingForestVisitor() {
 		super();
-	}
-
-	protected void clear() {
-		super.clear();
-		copies = new HashMap<ForestElement, ForestElement>();
-	}
-
-	private Map<ForestElement,ForestElement> copies;
-
-	
-	protected void registerCopy(ForestElement original, ForestElement copy) {
-		copies.put(original, copy);
-	}
-
-	protected ForestElement getCopy(ForestElement original) {
-		return copies.get(original);
-	}
-
-	protected boolean hasCopy(ForestElement original) {
-		return copies.containsKey(original);
 	}
 
 	@Override

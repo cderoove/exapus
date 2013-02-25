@@ -170,12 +170,32 @@ public class Member extends MemberContainer {
 	}
 	
 	@Override
-	public void copyReference(Iterator<ForestElement> ancestors, Ref original) {
-		if(ancestors.hasNext()) {
-			super.copyReference(ancestors, original);
-			return;
-		}
-		addAPIReference(Ref.fromRef(original));		
+	public Ref copyReference(Iterator<ForestElement> ancestors, Ref original) {
+		if(ancestors.hasNext()) 
+			return super.copyReference(ancestors, original);
+		Ref copy = Ref.fromRef(original);
+		addAPIReference(copy);
+		return copy;
 	}
+	
+	@Override
+	public ForestElement getCorrespondingForestElement(Iterator<ForestElement> ancestors, ForestElement element) {
+		if(ancestors.hasNext()) 
+			return super.getCorrespondingForestElement(ancestors, element);
+		if(element instanceof Ref)
+			return getCorrespondingReference((Ref) element);
+		return null;
+	}
+
+	private ForestElement getCorrespondingReference(Ref element) {
+		for(Ref ref : getReferences())
+			if(ref.equals(element))
+				return ref;
+		return null;
+	}
+
+
+
+
 	
 }

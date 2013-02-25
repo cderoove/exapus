@@ -38,7 +38,7 @@ public class PackageLayer extends MemberContainer implements ILayerContainer {
 		super(n);
 		layers = new ArrayList<PackageLayer>();
 	}	
-	
+
 	public String toString() {
 		return "PL[" + getName().toString() + " | M(" + members.size() + ")" + ",PL(" + layers.size() + ")]";
 	}
@@ -46,7 +46,7 @@ public class PackageLayer extends MemberContainer implements ILayerContainer {
 	public Iterable<PackageLayer> getPackageLayers() {
 		return layers;
 	}
-	
+
 	public Iterable<PackageLayer> getAllPackageLayers() {
 		Iterable<PackageLayer> layers = new ArrayList<PackageLayer>();
 		for(PackageLayer l : getPackageLayers()) {
@@ -55,7 +55,7 @@ public class PackageLayer extends MemberContainer implements ILayerContainer {
 		return layers;
 	}
 
-	
+
 
 	public PackageLayer getOrAddLayer(Iterator<UqName> i, PackageTree project) {
 		PackageLayer l = getOrAddLayer(i.next(), project);
@@ -64,6 +64,15 @@ public class PackageLayer extends MemberContainer implements ILayerContainer {
 		else
 			return l;
 	}
+
+
+	public PackageLayer getLayer(UqName name) {
+		for (PackageLayer l : layers)
+			if (l.getName().equals(name))
+				return l;
+		return null;
+	}
+
 
 	public PackageLayer getOrAddLayer(QName qname, PackageTree project) {
 		return getOrAddLayer(qname.getComponents().iterator(), project);
@@ -138,7 +147,7 @@ public class PackageLayer extends MemberContainer implements ILayerContainer {
 	public ICompilationUnit getCorrespondingICompilationUnit() {
 		return null;
 	}
-		
+
 	@Override
 	public Iterable<Member> getAllMembers() {
 		Iterable<Member> members = super.getAllMembers();
@@ -148,7 +157,7 @@ public class PackageLayer extends MemberContainer implements ILayerContainer {
 		return members;
 	}
 
-	
+
 	public Iterable<Ref> getAllReferences() {
 		Iterable<Ref> references = new ArrayList<Ref>();
 		for(Member m : getAllMembers()) {
@@ -190,20 +199,41 @@ public class PackageLayer extends MemberContainer implements ILayerContainer {
 		l.setParent(this);
 	}
 
-	public void copyReference(Iterator<ForestElement> ancestors, Ref original) {
+	public Ref copyReference(Iterator<ForestElement> ancestors, Ref original) {
 		ForestElement ancestor = ancestors.next();
 		if(ancestor instanceof PackageLayer) {
 			PackageLayer destinationLayer = getOrAddLayer(ancestor.getName(), this.getParentPackageTree());
-			destinationLayer.copyReference(ancestors, original);
+			return destinationLayer.copyReference(ancestors, original);
 		}
 		if(ancestor instanceof Member) {
 			Member originalMember = (Member) ancestor;
 			Member destinationMember = getOrAddMember(originalMember.getName(), originalMember.getElement());
-			destinationMember.copyReference(ancestors, original);
+			return destinationMember.copyReference(ancestors, original);
 		}
-		assert(false);
+		return null;
 	}
 
+	ForestElement getCorrespondingForestElement(Iterator<ForestElement> ancestors, ForestElement element) {
+		ForestElement ancestor = ancestors.next();
+		if(ancestor instanceof PackageLayer) {
+			PackageLayer correspondingLayer = getLayer(ancestor.getName());
+			if(correspondingLayer == null) 
+				return null;
+			if(ancestors.hasNext())
+				return correspondingLayer.getCorrespondingForestElement(ancestors, element);
+			return correspondingLayer;
+		}
+		if(ancestor instanceof Member) {
+			Member originalMember = (Member) ancestor;
+			Member correspondingMember = getMember(originalMember.getName(), originalMember.getElement());
+			if(correspondingMember == null)
+				return null;
+			if(ancestors.hasNext())
+				return correspondingMember.getCorrespondingForestElement(ancestors, element);
+			return correspondingMember;
+		}
+		return null;
+	}
 
 
 }

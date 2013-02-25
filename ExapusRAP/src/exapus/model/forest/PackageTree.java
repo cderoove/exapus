@@ -108,6 +108,11 @@ public class PackageTree extends ForestElement  implements ILayerContainer  {
 		return root.getOrAddLayer(name, this);
 	}
 	
+	public PackageLayer getLayer(UqName name) {
+		return root.getLayer(name);
+	}
+
+	
 	
 	public PackageLayer getOrAddLayerForPackageFragment(IPackageFragment packageFragment) {
 		QName qname = new QName(packageFragment);
@@ -145,7 +150,7 @@ public class PackageTree extends ForestElement  implements ILayerContainer  {
 				l.acceptVisitor(v);
 	}
 
-	public void copyReference(Ref original) {
+	public Ref copyReference(Ref original) {
 		ForestElement parent = original.getParent();
 		LinkedList<ForestElement> parents = new LinkedList<ForestElement>();
 		while (parent != null && !(parent instanceof PackageTree)) {
@@ -153,17 +158,31 @@ public class PackageTree extends ForestElement  implements ILayerContainer  {
 			parent = parent.getParent();
 		}
 		Iterator<ForestElement> ancestor = parents.iterator();
-		copyReference(ancestor, original);
+		return copyReference(ancestor, original);
 	}
 
-	public void copyReference(Iterator<ForestElement> ancestors, Ref original) {
+	public Ref copyReference(Iterator<ForestElement> ancestors, Ref original) {
 		ForestElement originalAncestor = ancestors.next();
 		PackageLayer  originalLayer = (PackageLayer) originalAncestor;
 		if(originalLayer == null)
-			return;
+			return null;
 		PackageLayer destinationLayer = getOrAddLayer(originalLayer.getName());
-		destinationLayer.copyReference(ancestors, original);
+		return destinationLayer.copyReference(ancestors, original);
 	}
+
+	public ForestElement getCorrespondingForestElement(Iterator<ForestElement> ancestors, ForestElement element) {
+		ForestElement originalAncestor = ancestors.next();
+		PackageLayer originalLayer = (PackageLayer) originalAncestor;
+		if(originalLayer == null)
+			return null;
+		PackageLayer correspondingLayer = getLayer(originalLayer.getName());
+		if(correspondingLayer == null)
+			return null;
+		if(ancestors.hasNext())
+			return correspondingLayer.getCorrespondingForestElement(ancestors, element);
+		return correspondingLayer;
+	}
+	
 	
 	
 

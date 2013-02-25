@@ -43,7 +43,7 @@ public abstract class MemberContainer extends ForestElement {
 		members.add(m);
 		m.setParent(this);
 	}
-
+	
 	Member getOrAddMember(UqName id, Element e) {
 		for (Member m : members)
 			if (m.getName().equals(id) && m.getElement().equals(e))
@@ -53,6 +53,13 @@ public abstract class MemberContainer extends ForestElement {
 		m.setParent(this);
 		getParentFactForest().fireUpdate(m);
 		return m;
+	}
+	
+	public Member getMember(UqName id, Element e) {
+		for (Member m : members)
+			if (m.getName().equals(id) && m.getElement().equals(e))
+				return m;
+		return null;
 	}
 
 	Member getOrAddMember(Iterator<ASTNode> i) {
@@ -115,14 +122,32 @@ public abstract class MemberContainer extends ForestElement {
 			return getOrAddMemberWithoutRecursing(typeBinding);
 	}
 	
-	public void copyReference(Iterator<ForestElement> ancestors, Ref original) {
+	public Ref copyReference(Iterator<ForestElement> ancestors, Ref original) {
 		ForestElement ancestor = ancestors.next();
 		if(ancestor instanceof Member) {
 			Member originalMember = (Member) ancestor;
 			Member destinationMember = getOrAddMember(originalMember.getName(), originalMember.getElement());
-			destinationMember.copyReference(ancestors, original);
+			return destinationMember.copyReference(ancestors, original);
 		}
+		return null;
 	}
+	
+	ForestElement getCorrespondingForestElement(Iterator<ForestElement> ancestors, ForestElement element) {
+		ForestElement ancestor = ancestors.next();
+		if(ancestor instanceof Member) {
+			Member originalMember = (Member) ancestor;
+			Member correspondingMember = getMember(originalMember.getName(), originalMember.getElement());
+			if(correspondingMember == null)
+				return null;
+			if(ancestors.hasNext())
+				return correspondingMember.getCorrespondingForestElement(ancestors, element);
+			return correspondingMember;
+		}
+		return null;
+	}
+
+	
+
 	
 
 
