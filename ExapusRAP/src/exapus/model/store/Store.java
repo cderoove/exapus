@@ -188,13 +188,15 @@ public class Store extends Observable {
         API_TAGS("tags.path", "/Users/cderoove/Documents/Docs/VUB/research/papers/authored/quaatlas/data/apis.csv"),
         PROJECT_TEST("test.project", "sunflow");
 
+        
         private Settings(String key, String defaultValue) {
             this.key = key;
             this.value = defaultValue;
         }
 
         private void setValue(String value) {
-            this.value = value;
+        	if(value != null)
+        		this.value = value;
         }
 
         public String getValue() {
