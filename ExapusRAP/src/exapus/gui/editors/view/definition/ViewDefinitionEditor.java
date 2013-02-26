@@ -121,7 +121,7 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 				Object selected = selection.getFirstElement();
 				if(selected instanceof String) {
 					String selectedSourceName = (String) selected;
-					if(selectedSourceName.equals(getWorkspaceSourceName()))
+					if(selectedSourceName.equals(getCompleteViewName()))
 						getView().setSourceViewName(null);
 					else
 						getView().setSourceViewName(selectedSourceName);
@@ -355,8 +355,10 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 		toolbarAPI.setEnabled(enabled);
 	}
 
-	private String getWorkspaceSourceName() {
-		return getView().isAPICentric() ? "Workspace Packages" : "Workspace Projects";
+	private String getCompleteViewName() {
+		return getView().isAPICentric() ?
+				ViewFactory.getCurrent().completePackageView().getName()
+				: ViewFactory.getCurrent().completeProjectView().getName();
 	}
 	
 	private ArrayList<String> viewSourceNames() {
@@ -368,14 +370,15 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 				&& !v.equals(thisView))
 				elements.add(v.getName());
 		}
-		elements.add(getWorkspaceSourceName());
+		//Too confusing
+		//elements.add(getWorkspaceSourceName());
 		return elements;
 	}
 	
 	private void updateComboVWSource() {
 		comboVWSource.setInput(viewSourceNames());
 		String sourceViewName = getView().getSourceViewName();
-		comboVWSource.setSelection(new StructuredSelection(sourceViewName == null ? getWorkspaceSourceName() : sourceViewName));
+		comboVWSource.setSelection(new StructuredSelection(sourceViewName == null ? getCompleteViewName() : sourceViewName));
 	}
 	
 	private void updateComboMetrics() {
