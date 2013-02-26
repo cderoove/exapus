@@ -60,7 +60,7 @@ public abstract class ForestElement implements INode {
 	
 	public List<ForestElement> getAncestors() {
 		LinkedList<ForestElement> ancestors = new LinkedList<ForestElement>();
-		ForestElement parent = this;
+		ForestElement parent = this.getParent();
 		while(parent != null) {
 			ancestors.addFirst(parent);
 			parent = parent.getParent();

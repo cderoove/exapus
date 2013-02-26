@@ -170,17 +170,20 @@ public class PackageTree extends ForestElement  implements ILayerContainer  {
 		return destinationLayer.copyReference(ancestors, original);
 	}
 
-	public ForestElement getCorrespondingForestElement(Iterator<ForestElement> ancestors, ForestElement element) {
-		ForestElement originalAncestor = ancestors.next();
-		PackageLayer originalLayer = (PackageLayer) originalAncestor;
-		if(originalLayer == null)
-			return null;
+	ForestElement getCorrespondingForestElement(Iterator<ForestElement> ancestors, ForestElement element) {
+		ForestElement originalLayer = ancestors.next();
 		PackageLayer correspondingLayer = getLayer(originalLayer.getName());
 		if(correspondingLayer == null)
 			return null;
 		if(ancestors.hasNext())
 			return correspondingLayer.getCorrespondingForestElement(ancestors, element);
-		return correspondingLayer;
+		return correspondingLayer.getCorrespondingForestElement(element);
+	}
+
+	ForestElement getCorrespondingForestElement(ForestElement element) {
+		if(element instanceof PackageLayer)
+			return getLayer(element.getName());
+		return null;
 	}
 	
 	

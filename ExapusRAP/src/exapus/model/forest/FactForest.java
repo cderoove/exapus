@@ -96,6 +96,8 @@ public abstract class FactForest extends Observable {
     }
     
     public ForestElement getCorrespondingForestElement(ForestElement element) {
+    	if(element instanceof PackageTree)
+    		return getPackageTree(element.getName());
     	Iterator<ForestElement> ancestors = element.getAncestors().iterator();
     	if(ancestors.hasNext())
     		return getCorrespondingForestElement(ancestors,element);
@@ -114,14 +116,14 @@ public abstract class FactForest extends Observable {
     	return corresponding.toArray();
     }
 
-	private ForestElement getCorrespondingForestElement(Iterator<ForestElement> ancestors, ForestElement element) {
-		PackageTree originalTree = (PackageTree) ancestors.next();
-		if(originalTree == null)
-			return null;
+	ForestElement getCorrespondingForestElement(Iterator<ForestElement> ancestors, ForestElement element) {
+		ForestElement originalTree = ancestors.next();
 		PackageTree correspondingTree = getPackageTree(originalTree.getName());
+		if(correspondingTree == null)
+			return null;
 		if(ancestors.hasNext())
 			return correspondingTree.getCorrespondingForestElement(ancestors, element);
-		return correspondingTree;
+		return correspondingTree.getCorrespondingForestElement(element);
 	}
 	
 	

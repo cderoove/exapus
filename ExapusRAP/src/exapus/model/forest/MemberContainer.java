@@ -141,7 +141,15 @@ public abstract class MemberContainer extends ForestElement {
 				return null;
 			if(ancestors.hasNext())
 				return correspondingMember.getCorrespondingForestElement(ancestors, element);
-			return correspondingMember;
+			return correspondingMember.getCorrespondingForestElement(element);
+		}
+		return null;
+	}
+
+	ForestElement getCorrespondingForestElement(ForestElement element) {
+		if(element instanceof Member) {
+			Member member = (Member) element;
+			return this.getMember(member.getName(), member.getElement());
 		}
 		return null;
 	}

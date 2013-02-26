@@ -1,6 +1,8 @@
 package exapus.gui.editors.forest.tree;
 
 
+import java.util.regex.Pattern;
+
 import exapus.model.forest.InboundRef;
 import exapus.model.forest.Member;
 import exapus.model.forest.OutboundRef;
@@ -17,7 +19,7 @@ public class ForestTreeFilterVisitor extends CopyingForestVisitor {
 
 	
 	private static String toSearchString(String s) {
-		return ".*" + s.trim() + ".*";
+		return ".*" + Pattern.quote(s.trim()) + ".*";
 	}
 
 	public void setApiFilter(String apiFilter) {

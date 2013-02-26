@@ -179,19 +179,20 @@ public class Member extends MemberContainer {
 	}
 	
 	@Override
-	public ForestElement getCorrespondingForestElement(Iterator<ForestElement> ancestors, ForestElement element) {
+	ForestElement getCorrespondingForestElement(Iterator<ForestElement> ancestors, ForestElement element) {
 		if(ancestors.hasNext()) 
 			return super.getCorrespondingForestElement(ancestors, element);
-		if(element instanceof Ref)
-			return getCorrespondingReference((Ref) element);
-		return null;
+		return getCorrespondingForestElement(element);
 	}
 
-	private ForestElement getCorrespondingReference(Ref element) {
-		for(Ref ref : getReferences())
-			if(ref.equals(element))
-				return ref;
-		return null;
+	@Override
+	ForestElement getCorrespondingForestElement(ForestElement element) {
+		if(element instanceof Ref) {
+			for(Ref ref : getReferences())
+				if(ref.equals(element))
+					return ref;
+		}
+		return super.getCorrespondingForestElement(element);
 	}
 
 

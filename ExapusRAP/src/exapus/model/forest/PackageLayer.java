@@ -213,6 +213,7 @@ public class PackageLayer extends MemberContainer implements ILayerContainer {
 		return null;
 	}
 
+	@Override
 	ForestElement getCorrespondingForestElement(Iterator<ForestElement> ancestors, ForestElement element) {
 		ForestElement ancestor = ancestors.next();
 		if(ancestor instanceof PackageLayer) {
@@ -221,7 +222,7 @@ public class PackageLayer extends MemberContainer implements ILayerContainer {
 				return null;
 			if(ancestors.hasNext())
 				return correspondingLayer.getCorrespondingForestElement(ancestors, element);
-			return correspondingLayer;
+			return correspondingLayer.getCorrespondingForestElement(element);
 		}
 		if(ancestor instanceof Member) {
 			Member originalMember = (Member) ancestor;
@@ -230,9 +231,16 @@ public class PackageLayer extends MemberContainer implements ILayerContainer {
 				return null;
 			if(ancestors.hasNext())
 				return correspondingMember.getCorrespondingForestElement(ancestors, element);
-			return correspondingMember;
+			return correspondingMember.getCorrespondingForestElement(element);
 		}
 		return null;
+	}
+
+	@Override
+	ForestElement getCorrespondingForestElement(ForestElement element) {
+		if(element instanceof PackageLayer) 
+			return getLayer(element.getName());
+		return super.getCorrespondingForestElement(element);
 	}
 
 
