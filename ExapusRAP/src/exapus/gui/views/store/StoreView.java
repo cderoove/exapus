@@ -228,13 +228,14 @@ public class StoreView extends ViewPart implements IDoubleClickListener {
 	}
 
 
-	private void openViewEditorOn(View v) {
+	public static IEditorPart openViewEditorOn(View v) {
 		IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		ViewEditorInput input = new ViewEditorInput(v.getName());
 		try {
-			activePage.openEditor(input, ViewEditor.ID, true);
+			return activePage.openEditor(input, ViewEditor.ID, true);
 		} catch (PartInitException e) {
 			e.printStackTrace();
+			return null;
 		}
 
 	}

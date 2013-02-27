@@ -33,7 +33,18 @@ public class ViewEditor extends MultiPageEditorPart {
 	public void init(final IEditorSite site, final IEditorInput input) throws PartInitException {
 		super.init(site, input);
 		setPartName(input.getName());
+	
 	}
+
+	
+	public void activateForestTreeEditor() {
+		setActiveEditor(forestTree);
+	}
+	
+	public ForestTreeEditor getForestTreeEditor() {
+		return forestTree;
+	}
+	
 	
 	@Override
 	protected void createPages() {
