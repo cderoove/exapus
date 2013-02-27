@@ -66,6 +66,8 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 	private MetricType chosen;
 	private int idxFirstMetricCol;
 
+	private TreePath[] revealedPaths;
+	
 	private TreeViewerColumn patternCol;
 	private Combo comboGroupingPackages;
 
@@ -589,7 +591,8 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 
 	public void updateControls() {
 		updateMetrics();
-		viewer.setInput(getForest());
+		if(viewer.getInput() != getForest())
+			viewer.setInput(getForest());
 		updatePackageStyleButtons();
 		updateRevealButton();
 	}
