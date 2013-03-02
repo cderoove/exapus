@@ -96,19 +96,33 @@ public abstract class FactForest extends Observable {
     }
     
     public ForestElement getCorrespondingForestElement(ForestElement element) {
-    	if(element instanceof PackageTree)
-    		return getPackageTree(element.getName());
+    	return getCorrespondingForestElement(false, element);
+    }
+
+    public ForestElement getCorrespondingForestElement(boolean copyWhenMissing, ForestElement element) {
+    	if(element instanceof PackageTree) {
+    		UqName name = element.getName();
+    		if(copyWhenMissing)
+    			return getOrAddPackageTree(name);
+    		else
+    			return getPackageTree(name);
+    	}
     	Iterator<ForestElement> ancestors = element.getAncestors().iterator();
     	if(ancestors.hasNext())
-    		return getCorrespondingForestElement(ancestors,element);
+    		return getCorrespondingForestElement(copyWhenMissing, ancestors, element);
     	return null;
     }
     
     public Object[] getCorrespondingForestElements(Object[] elements) {
+    	return getCorrespondingForestElements(false,elements);
+    }
+
+    
+    public Object[] getCorrespondingForestElements(boolean copyWhenMissing, Object[] elements) {
     	ArrayList<Object> corresponding = new ArrayList<Object>(elements.length);
     	for(Object element : elements) {
     		if(element instanceof ForestElement) {
-    			ForestElement correspondingElement = getCorrespondingForestElement((ForestElement) element);
+    			ForestElement correspondingElement = getCorrespondingForestElement(copyWhenMissing, (ForestElement) element);
     			if(correspondingElement != null)
     				corresponding.add(correspondingElement);
     		}
@@ -116,14 +130,14 @@ public abstract class FactForest extends Observable {
     	return corresponding.toArray();
     }
 
-	ForestElement getCorrespondingForestElement(Iterator<ForestElement> ancestors, ForestElement element) {
+	ForestElement getCorrespondingForestElement(boolean copyWhenMissing, Iterator<ForestElement> ancestors, ForestElement element) {
 		ForestElement originalTree = ancestors.next();
 		PackageTree correspondingTree = getPackageTree(originalTree.getName());
 		if(correspondingTree == null)
 			return null;
 		if(ancestors.hasNext())
-			return correspondingTree.getCorrespondingForestElement(ancestors, element);
-		return correspondingTree.getCorrespondingForestElement(element);
+			return correspondingTree.getCorrespondingForestElement(copyWhenMissing, ancestors, element);
+		return correspondingTree.getCorrespondingForestElement(copyWhenMissing, element);
 	}
 	
 	

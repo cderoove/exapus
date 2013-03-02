@@ -9,15 +9,20 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 public abstract class ForestElement implements INode {
+	
     private Map<MetricType, IMetricValue> metrics = new HashMap<MetricType, IMetricValue>();
 
+    private Set<String> tags = new HashSet<String>();
+    
 	private ForestElement parent;
 
 	private UqName id;
@@ -182,4 +187,21 @@ public abstract class ForestElement implements INode {
     public Set<MetricType> getRegisteredMetrics() {
         return metrics.keySet();
     }
+    
+    public boolean hasTag(String tag) {
+    	return tags.contains(tag);
+    }
+    
+    public boolean addTag(String tag) {
+    	return tags.add(tag.intern());
+    }
+    
+    public void copyTagsFrom(ForestElement e) {
+    	tags.addAll(e.tags);
+    }
+    
+    public Iterable<String> getTags() {
+    	return tags;
+    }
+    
 }

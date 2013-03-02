@@ -340,6 +340,11 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 			}
 		});
 
+		TreeViewerColumn tagsCol = new TreeViewerColumn(viewer, SWT.NONE);
+		tagsCol.getColumn().setText("Tags");
+		tagsCol.getColumn().setWidth(150);
+		tagsCol.setLabelProvider(new ForestTreeLabelProviders.TagsColumnLabelProvider());
+		
 		TreeViewerColumn elementCol = new TreeViewerColumn(viewer, SWT.NONE);
 		elementCol.getColumn().setText("Element");
 		elementCol.getColumn().setWidth(150);

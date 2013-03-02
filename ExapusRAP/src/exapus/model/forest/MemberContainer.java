@@ -54,7 +54,7 @@ public abstract class MemberContainer extends ForestElement {
 		getParentFactForest().fireUpdate(m);
 		return m;
 	}
-	
+		
 	public Member getMember(UqName id, Element e) {
 		for (Member m : members)
 			if (m.getName().equals(id) && m.getElement().equals(e))
@@ -132,7 +132,7 @@ public abstract class MemberContainer extends ForestElement {
 		return null;
 	}
 	
-	ForestElement getCorrespondingForestElement(Iterator<ForestElement> ancestors, ForestElement element) {
+	ForestElement getCorrespondingForestElement(boolean copyWhenMissing, Iterator<ForestElement> ancestors, ForestElement element) {
 		ForestElement ancestor = ancestors.next();
 		if(ancestor instanceof Member) {
 			Member originalMember = (Member) ancestor;
@@ -140,16 +140,19 @@ public abstract class MemberContainer extends ForestElement {
 			if(correspondingMember == null)
 				return null;
 			if(ancestors.hasNext())
-				return correspondingMember.getCorrespondingForestElement(ancestors, element);
-			return correspondingMember.getCorrespondingForestElement(element);
+				return correspondingMember.getCorrespondingForestElement(copyWhenMissing, ancestors, element);
+			return correspondingMember.getCorrespondingForestElement(copyWhenMissing, element);
 		}
 		return null;
 	}
 
-	ForestElement getCorrespondingForestElement(ForestElement element) {
+	ForestElement getCorrespondingForestElement(boolean copyWhenMissing, ForestElement element) {
 		if(element instanceof Member) {
 			Member member = (Member) element;
-			return this.getMember(member.getName(), member.getElement());
+			if(copyWhenMissing)
+				return getOrAddMember(member.getName(), member.getElement());
+			else
+				return getMember(member.getName(), member.getElement());
 		}
 		return null;
 	}

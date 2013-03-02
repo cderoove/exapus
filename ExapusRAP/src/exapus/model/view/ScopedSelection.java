@@ -5,6 +5,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 import exapus.model.forest.Direction;
+import exapus.model.forest.ForestElement;
 import exapus.model.forest.Member;
 import exapus.model.forest.PackageLayer;
 import exapus.model.forest.PackageTree;
@@ -74,7 +75,7 @@ public class ScopedSelection extends Selection {
 	}
 	
 	@Override
-	public boolean matchPackageTree(PackageTree packageTree) {
+	public boolean match(PackageTree packageTree) {
 		if(scope.equals(Scope.ROOT_SCOPE)) { 
 			//projects correspond to package trees, this is the only place where ROOT_SCOPE makes sense
 			if(packageTree.getParentFactForest().getDirection().equals(Direction.OUTBOUND))
@@ -86,7 +87,7 @@ public class ScopedSelection extends Selection {
 	}
 
 	@Override
-	public boolean matchPackageLayer(PackageLayer packageLayer) {
+	public boolean match(PackageLayer packageLayer) {
 		//multiple scopes can be selected at the same time, cannot trust filtering to have happened above
 		if(scope.equals(Scope.ROOT_SCOPE)) 
 			return packageLayer.getParentPackageTree().getQName().equals(name);
@@ -109,7 +110,7 @@ public class ScopedSelection extends Selection {
 	}
 
 	@Override
-	public boolean matchMember(Member member) {
+	public boolean match(Member member) {
 		if(scope.equals(Scope.ROOT_SCOPE)) 
 			return member.getParentPackageTree().getQName().equals(name);
 		
@@ -133,7 +134,7 @@ public class ScopedSelection extends Selection {
 
 	//do the actual work here, other methods only attempt to filter out unwanted elements beforehand
 	@Override
-	public boolean matchRef(Ref ref) {
+	public boolean match(Ref ref) {
 		if(scope.equals(Scope.ROOT_SCOPE)) 
 			return ref.getParentPackageTree().getQName().equals(name);
 	
@@ -149,6 +150,19 @@ public class ScopedSelection extends Selection {
 		if(scope.equals(Scope.METHOD_SCOPE)) 
 			return name.isPrefixOf(ref.getQName());
 		
+		return false;
+	}
+	
+	
+	public boolean matchForestElement(ForestElement element) {
+		if(element instanceof Ref)
+			return match((Ref) element);
+		if(element instanceof Member)
+			return match((Member) element);
+		if(element instanceof PackageLayer)
+			return match((PackageLayer) element);
+		if(element instanceof PackageTree)
+			return match((PackageTree) element);
 		return false;
 	}
 	

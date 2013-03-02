@@ -214,15 +214,15 @@ public class PackageLayer extends MemberContainer implements ILayerContainer {
 	}
 
 	@Override
-	ForestElement getCorrespondingForestElement(Iterator<ForestElement> ancestors, ForestElement element) {
+	ForestElement getCorrespondingForestElement(boolean copyWhenMissing, Iterator<ForestElement> ancestors, ForestElement element) {
 		ForestElement ancestor = ancestors.next();
 		if(ancestor instanceof PackageLayer) {
 			PackageLayer correspondingLayer = getLayer(ancestor.getName());
 			if(correspondingLayer == null) 
 				return null;
 			if(ancestors.hasNext())
-				return correspondingLayer.getCorrespondingForestElement(ancestors, element);
-			return correspondingLayer.getCorrespondingForestElement(element);
+				return correspondingLayer.getCorrespondingForestElement(copyWhenMissing, ancestors, element);
+			return correspondingLayer.getCorrespondingForestElement(copyWhenMissing, element);
 		}
 		if(ancestor instanceof Member) {
 			Member originalMember = (Member) ancestor;
@@ -230,17 +230,21 @@ public class PackageLayer extends MemberContainer implements ILayerContainer {
 			if(correspondingMember == null)
 				return null;
 			if(ancestors.hasNext())
-				return correspondingMember.getCorrespondingForestElement(ancestors, element);
-			return correspondingMember.getCorrespondingForestElement(element);
+				return correspondingMember.getCorrespondingForestElement(copyWhenMissing,ancestors, element);
+			return correspondingMember.getCorrespondingForestElement(copyWhenMissing,element);
 		}
 		return null;
 	}
 
 	@Override
-	ForestElement getCorrespondingForestElement(ForestElement element) {
-		if(element instanceof PackageLayer) 
-			return getLayer(element.getName());
-		return super.getCorrespondingForestElement(element);
+	ForestElement getCorrespondingForestElement(boolean copyWhenMissing, ForestElement element) {
+		if(element instanceof PackageLayer) {
+			UqName name = element.getName();
+			if(copyWhenMissing)
+				return getOrAddLayer(name, getParentPackageTree());
+				return getLayer(name);
+		}
+		return super.getCorrespondingForestElement(copyWhenMissing,element);
 	}
 
 

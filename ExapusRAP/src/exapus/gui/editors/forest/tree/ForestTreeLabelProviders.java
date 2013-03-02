@@ -7,6 +7,8 @@ import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
+import com.google.common.base.Joiner;
+
 public class ForestTreeLabelProviders {
 
 	private static final Image PKTREE_IMG = AbstractUIPlugin.imageDescriptorFromPlugin("Exapus", "icons/packagefolder_obj.gif").createImage();
@@ -162,6 +164,19 @@ public class ForestTreeLabelProviders {
         }
 
     }
+    
+    public static class TagsColumnLabelProvider extends ColumnLabelProvider {
+
+        public String getText(Object element) {
+			if (element instanceof ForestElement) {
+				ForestElement fe = (ForestElement) element;
+				return Joiner.on(',').join(fe.getTags());
+			}
+			return null;
+        }
+
+    }
+
 
     // For debugging purposes
     public static class DebugColumnLabelProvider extends ColumnLabelProvider {

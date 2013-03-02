@@ -7,7 +7,7 @@ import exapus.model.store.Store;
 import exapus.model.view.View;
 import exapus.model.visitors.ICopyingForestVisitor;
 import exapus.model.visitors.IForestVisitor;
-import exapus.model.visitors.SelectiveTopDownCopyingForestVisitor;
+import exapus.model.visitors.SelectiveCopyingForestVisitor;
 
 public class ProjectCentricEvaluator extends Evaluator {
 
@@ -17,7 +17,7 @@ public class ProjectCentricEvaluator extends Evaluator {
 
 	@Override
 	protected ICopyingForestVisitor newVisitor() {
-		return new ProjectCentricSelectionVisitor(getView().getProjectSelections(), getView().getAPISelections());
+		return new SelectiveCopyingForestVisitor(getView().getProjectSelections(), getView().getAPISelections());
 	}
 
 	@Override
