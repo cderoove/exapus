@@ -1,5 +1,7 @@
 package exapus.gui.editors.forest.tree;
 
+import com.google.common.base.Function;
+import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 import com.google.common.primitives.Ints;
@@ -11,15 +13,20 @@ import exapus.gui.views.store.StoreListContentProvider;
 import exapus.gui.views.store.StoreView;
 import exapus.model.forest.FactForest;
 import exapus.model.forest.ForestElement;
+import exapus.model.forest.Member;
 import exapus.model.forest.PackageLayer;
 import exapus.model.forest.Ref;
 import exapus.model.metrics.MetricType;
 import exapus.model.store.Store;
 import exapus.model.view.View;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.jface.window.Window;
@@ -40,6 +47,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
@@ -67,7 +75,7 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 	private int idxFirstMetricCol;
 
 	private TreePath[] revealedPaths;
-	
+
 	private TreeViewerColumn patternCol;
 	private Combo comboGroupingPackages;
 
@@ -392,7 +400,7 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 		 */
 
 		viewer.addDoubleClickListener(this);
-		
+
 		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
@@ -439,6 +447,16 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 	}
 
 
+
+	public void setFilter(String projectFilter, String apiFilter) {
+		projectFilterText.setText(projectFilter);
+		apiFilterText.setText(apiFilter);
+		filter.setProjectFilter(projectFilter);
+		filter.setApiFilter(apiFilter);
+		updateFilterControls(true);
+		applyFilter(true);
+	}
+
 	private void revealSelectionInOtherView() {
 		StructuredSelection sel = (StructuredSelection) viewer.getSelection();
 		if(sel.isEmpty())
@@ -446,109 +464,150 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 		ForestElement selected = (ForestElement) sel.getFirstElement();
 		if(selected == null)
 			return;
-		
+
 		ElementListSelectionDialog dialog = new ElementListSelectionDialog(getSite().getShell(), new LabelProvider());
 		dialog.setElements(Iterables.toArray(Store.getCurrent().getRegisteredViews(), Object.class));
 		dialog.setTitle("Choose View");
 		dialog.setMultipleSelection(false);
 		dialog.setMessage("The selected element will be revealed in the chosen view.");
-		
+
 		//dialog.setValidator(validator);
-		
+
 		if(dialog.open() == Window.OK) {
 			Object[] selection = dialog.getResult(); 
 			View selectedView = (View) selection[0];
 			revealForestElementInView(selected, selectedView);
 		}
 
-		
+
 	}
 
 
 	private void revealForestElementInView(ForestElement selected, View selectedView) {
+		String errorTitle = "Error revealing selected element";
+		Shell shell = getSite().getShell();
 		IEditorPart openedPart = StoreView.openViewEditorOn(selectedView);
-		if(openedPart instanceof ViewEditor) {
-			ViewEditor opened = (ViewEditor) openedPart;
-			opened.activateForestTreeEditor();
-			ForestTreeEditor openedTree = opened.getForestTreeEditor();
-			//TODO: if other perspective, get dual of ref
-			ForestElement corresponding = openedTree.getForest().getCorrespondingForestElement(selected);
-			if(corresponding != null) {
-				openedTree.viewer.setSelection(new StructuredSelection(corresponding), true);
+		if(!(openedPart instanceof ViewEditor)) {
+			MessageDialog.openError(shell, errorTitle, "Could not open chosen view.");
+			return;
+		}
+		ViewEditor opened = (ViewEditor) openedPart;
+		opened.activateForestTreeEditor();
+		ForestTreeEditor openedTree = opened.getForestTreeEditor();
+		FactForest openedForest = openedTree.getForest();
+		ForestElement correspondingElement = null;
+		if(selectedView.getPerspective().equals(getView().getPerspective()))				
+			correspondingElement = openedForest.getCorrespondingForestElement(selected);
+		else {
+
+			if(selected instanceof Ref) {
+				Ref dualRef = ((Ref) selected).getDual();
+				if(dualRef != null) 
+					correspondingElement = openedForest.getCorrespondingForestElement(dualRef);
+			} else {
+				//MessageDialog.openError(shell, errorTitle, "Only references can be revealed in a view from the other perspective.");
+				if(selectedView.isAPICentric()) 
+					openedTree.setFilter(selected.getQName().toString(), "");
+				else
+					openedTree.setFilter("",selected.getQName().toString());
+				return;
+
 				/*
-				openedTree.viewer.setExpandedState(corresponding, true);
-				openedTree.viewer.setExpandedState(corresponding.getParentPackageTree(), true);
-				for(ForestElement ancestor : corresponding.getAncestors()) {
-					openedTree.viewer.setExpandedState(ancestor, true);
+				//following is rather slow for more than a couple of selections (e.g., 10)
+				//disabled because only selecting 10 probably confuses the users
+				if(selected instanceof Member) {
+					FactForest filteredOpenedForest = (FactForest) openedTree.viewer.getInput();
+					Member selectedMember = (Member) selected;
+					ArrayList<ForestElement> correspondingDualMemberRefs = new ArrayList<ForestElement>();
+					int count = 0;
+					for(Ref ref : selectedMember.getReferences()) {
+						Ref dual = ref.getDual();
+						if(dual != null) {
+							ForestElement correspondingDual = filteredOpenedForest.getCorrespondingForestElement(dual); 
+							if(correspondingDual != null) {
+								correspondingDualMemberRefs.add(correspondingDual);
+								count = count + 1;
+							}
+							if(count > 10)
+								break;
+						}
+
+						openedTree.viewer.setSelection(new StructuredSelection(correspondingDualMemberRefs), true);
+						return;
+					}
 				}
 				*/
 			}
-			else
-			System.err.println("Corresponding element not found.");
-
 		}
-	}
 
-
-	private void updateFilterControls(boolean tobefiltered) {
-		//cannot make the viewer fill the freed space
-		//filterComposite.setVisible(tobefiltered);
-		filterComposite.setEnabled(tobefiltered);
-	}
-
-
-	private void applyFilter(boolean tobefiltered) {
-		Object[] expanded = viewer.getExpandedElements();
-		StructuredSelection selected = (StructuredSelection) viewer.getSelection();
-
-		FactForest newForest;
-		if(tobefiltered)
-			newForest = filter.copy(getForest());
+		if(correspondingElement != null) 
+			openedTree.viewer.setSelection(new StructuredSelection(correspondingElement), true);
 		else
-			newForest = getForest();
+			MessageDialog.openError(shell, errorTitle, "Could not find corresponding element in chosen view.");
 
-		viewer.setInput(newForest);
-
-		Object[] newExpanded = newForest.getCorrespondingForestElements(expanded);
-		StructuredSelection newSelected = new StructuredSelection(newForest.getCorrespondingForestElements(selected.toArray()));
-
-		viewer.setSelection(newSelected, true);
-		viewer.setExpandedElements(newExpanded);    
-		
-		
 	}
 
 
-	private void updatePackageStyle(PackageStyle selected) {
-		if (selected == packageStyle) return;
-
-		packageStyle = selected;
-
-		switch (selected) {
-		case HIERARCHICAL:
-			viewer.setContentProvider(new ForestTreeContentProvider());
-			break;
-		case FLAT:
-			viewer.setContentProvider(new ForestTreeGroupedPackagesContentProvider());
-			break;
-		}
-
-		patternCol.setLabelProvider(new ForestTreeLabelProviders.PatternColumnLabelProvider(packageStyle == PackageStyle.FLAT));
-		for (MetricColumn metricCol : metricCols) {
-			metricCol.column.setLabelProvider(new ForestTreeLabelProviders.MetricColumnLabelProvider(packageStyle == PackageStyle.FLAT, metricCol.metricType));
-		}
+			private void updateFilterControls(boolean tobefiltered) {
+				//cannot make the viewer fill the freed space
+				//filterComposite.setVisible(tobefiltered);
+				filterButton.setSelection(tobefiltered);
+				filterComposite.setEnabled(tobefiltered);
+			}
 
 
-		//setting tree paths do not seem to have an effect?
+			private void applyFilter(boolean tobefiltered) {
+				Object[] expanded = viewer.getExpandedElements();
+				StructuredSelection selected = (StructuredSelection) viewer.getSelection();
+
+				FactForest newForest;
+				if(tobefiltered)
+					newForest = filter.copy(getForest());
+				else
+					newForest = getForest();
+
+				viewer.setInput(newForest);
+
+				Object[] newExpanded = newForest.getCorrespondingForestElements(expanded);
+				StructuredSelection newSelected = new StructuredSelection(newForest.getCorrespondingForestElements(selected.toArray()));
+
+				viewer.setSelection(newSelected, true);
+				viewer.setExpandedElements(newExpanded);    
+
+
+			}
+
+
+			private void updatePackageStyle(PackageStyle selected) {
+				if (selected == packageStyle) return;
+
+				packageStyle = selected;
+
+				switch (selected) {
+				case HIERARCHICAL:
+					viewer.setContentProvider(new ForestTreeContentProvider());
+					break;
+				case FLAT:
+					viewer.setContentProvider(new ForestTreeGroupedPackagesContentProvider());
+					break;
+				}
+
+				patternCol.setLabelProvider(new ForestTreeLabelProviders.PatternColumnLabelProvider(packageStyle == PackageStyle.FLAT));
+				for (MetricColumn metricCol : metricCols) {
+					metricCol.column.setLabelProvider(new ForestTreeLabelProviders.MetricColumnLabelProvider(packageStyle == PackageStyle.FLAT, metricCol.metricType));
+				}
+
+
+				//setting tree paths do not seem to have an effect?
 				TreePath[] expanded = viewer.getExpandedTreePaths();
-		ISelection selection = viewer.getSelection();
-		viewer.refresh();
-		viewer.setExpandedTreePaths(expanded);
-		viewer.setSelection(selection, true);
-	}
+				ISelection selection = viewer.getSelection();
+				viewer.refresh();
+				viewer.setExpandedTreePaths(expanded);
+				viewer.setSelection(selection, true);
+			}
 
 
-	/*
+			/*
      private void createSelectionListener() {
          IWorkbench workbench = PlatformUI.getWorkbench();
          IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
@@ -573,251 +632,251 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
          });
      }
 
-	 */
+			 */
 
 
 
-	private FactForest getForest() {
-		String viewName = getEditorInput().getName();
-		return Store.getCurrent().forestForRegisteredView(viewName);
-	}
+			private FactForest getForest() {
+				String viewName = getEditorInput().getName();
+				return Store.getCurrent().forestForRegisteredView(viewName);
+			}
 
 
 
-	private void updatePackageStyleButtons() {
-		hierarchical.setSelection(packageStyle == PackageStyle.HIERARCHICAL);
-		flat.setSelection(packageStyle == PackageStyle.FLAT);
-	}
+			private void updatePackageStyleButtons() {
+				hierarchical.setSelection(packageStyle == PackageStyle.HIERARCHICAL);
+				flat.setSelection(packageStyle == PackageStyle.FLAT);
+			}
 
-	public void updateControls() {
-		updateMetrics();
-		if(viewer.getInput() != getForest())
-			viewer.setInput(getForest());
-		updatePackageStyleButtons();
-		updateRevealButton();
-	}
+			public void updateControls() {
+				updateMetrics();
+				if(viewer.getInput() != getForest())
+					viewer.setInput(getForest());
+				updatePackageStyleButtons();
+				updateRevealButton();
+			}
 
-	private void updateRevealButton() {
-		revealButton.setEnabled(!viewer.getSelection().isEmpty());
-	}
+			private void updateRevealButton() {
+				revealButton.setEnabled(!viewer.getSelection().isEmpty());
+			}
 
 
 
-	private void updateMetrics() {
-		chosen = getView().getMetricType();
-		sorting = SortBy.NAME;
-		sortingMetric = chosen;
-		updatePackageStyle(PackageStyle.HIERARCHICAL);
+			private void updateMetrics() {
+				chosen = getView().getMetricType();
+				sorting = SortBy.NAME;
+				sortingMetric = chosen;
+				updatePackageStyle(PackageStyle.HIERARCHICAL);
 
-		List<Integer> idx = new ArrayList<Integer>();
-		for (int i = 0; i < viewer.getTree().getColumnCount(); i++) {
-			idx.add(i);
-		}
+				List<Integer> idx = new ArrayList<Integer>();
+				for (int i = 0; i < viewer.getTree().getColumnCount(); i++) {
+					idx.add(i);
+				}
 
-		if (getView().getMetricType() != MetricType.ALL) {
-			for (MetricColumn metricCol : metricCols) {
-				if (metricCol.metricType != getView().getMetricType()) metricCol.clear();
-				else {
-					int swapIdx = idx.get(idxFirstMetricCol);
-					idx.set(idxFirstMetricCol, metricCol.idx);
-					idx.set(metricCol.idx, swapIdx);
+				if (getView().getMetricType() != MetricType.ALL) {
+					for (MetricColumn metricCol : metricCols) {
+						if (metricCol.metricType != getView().getMetricType()) metricCol.clear();
+						else {
+							int swapIdx = idx.get(idxFirstMetricCol);
+							idx.set(idxFirstMetricCol, metricCol.idx);
+							idx.set(metricCol.idx, swapIdx);
 
-					metricCol.init();
+							metricCol.init();
+						}
+					}
+
+				} else {
+					for (MetricColumn metricCol : metricCols) {
+						metricCol.init();
+					}
+				}
+
+				viewer.getTree().setColumnOrder(Ints.toArray(idx));
+			}
+
+			private View getView() {
+				return Store.getCurrent().getView(getEditorInput().getName());
+
+			}
+
+			public void setFocus() {
+				updateControls();
+				viewer.getControl().setFocus();
+			}
+
+			@Override
+			public void doubleClick(DoubleClickEvent event) {
+				try {
+					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(ForestReferenceViewPart.ID);
+				} catch (PartInitException e) {
+					e.printStackTrace();
 				}
 			}
 
-		} else {
-			for (MetricColumn metricCol : metricCols) {
-				metricCol.init();
+			protected void setInput(IEditorInput input) {
+				editorInput = input;
 			}
-		}
-
-		viewer.getTree().setColumnOrder(Ints.toArray(idx));
-	}
-
-	private View getView() {
-		return Store.getCurrent().getView(getEditorInput().getName());
-
-	}
-
-	public void setFocus() {
-		updateControls();
-		viewer.getControl().setFocus();
-	}
-
-	@Override
-	public void doubleClick(DoubleClickEvent event) {
-		try {
-			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(ForestReferenceViewPart.ID);
-		} catch (PartInitException e) {
-			e.printStackTrace();
-		}
-	}
-
-	protected void setInput(IEditorInput input) {
-		editorInput = input;
-	}
 
 
-	private void initFilter() {
-		filter = new ForestTreeFilterVisitor();
-	}
+			private void initFilter() {
+				filter = new ForestTreeFilterVisitor();
+			}
 
-	@Override
-	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
-		setInput(input);
-		setEditorSite(site);
-		initFilter();
-	}
+			@Override
+			public void init(IEditorSite site, IEditorInput input) throws PartInitException {
+				setInput(input);
+				setEditorSite(site);
+				initFilter();
+			}
 
-	private void setEditorSite(IEditorSite site) {
-		editorSite = site;
-	}
-
-
-	@Override
-	public boolean isDirty() {
-		return false;
-	}
-
-	@Override
-	public boolean isSaveAsAllowed() {
-		return false;
-	}
-
-	@Override
-	public void doSave(IProgressMonitor monitor) {
-	}
-
-	@Override
-	public void doSaveAs() {
-	}
+			private void setEditorSite(IEditorSite site) {
+				editorSite = site;
+			}
 
 
-	@Override
-	public void addPropertyListener(IPropertyListener listener) {
-	}
+			@Override
+			public boolean isDirty() {
+				return false;
+			}
+
+			@Override
+			public boolean isSaveAsAllowed() {
+				return false;
+			}
+
+			@Override
+			public void doSave(IProgressMonitor monitor) {
+			}
+
+			@Override
+			public void doSaveAs() {
+			}
 
 
-	@Override
-	public void dispose() {
-	}
+			@Override
+			public void addPropertyListener(IPropertyListener listener) {
+			}
 
 
-	@Override
-	public IWorkbenchPartSite getSite() {
-		return editorSite;
-	}
+			@Override
+			public void dispose() {
+			}
 
 
-	@Override
-	public String getTitle() {
-		if (editorInput == null)
-			return "";
-		return "Table view on: " + editorInput.getName();
-	}
+			@Override
+			public IWorkbenchPartSite getSite() {
+				return editorSite;
+			}
 
 
-	@Override
-	public Image getTitleImage() {
-		return null;
-	}
+			@Override
+			public String getTitle() {
+				if (editorInput == null)
+					return "";
+				return "Table view on: " + editorInput.getName();
+			}
 
 
-	@Override
-	public String getTitleToolTip() {
-		if (editorInput == null)
-			return "";
-		return editorInput.getName();
-	}
-
-	@Override
-	public void removePropertyListener(IPropertyListener listener) {
-	}
-
-	@Override
-	public Object getAdapter(Class adapter) {
-		return null;
-	}
+			@Override
+			public Image getTitleImage() {
+				return null;
+			}
 
 
-	@Override
-	public boolean isSaveOnCloseNeeded() {
-		return false;
-	}
+			@Override
+			public String getTitleToolTip() {
+				if (editorInput == null)
+					return "";
+				return editorInput.getName();
+			}
+
+			@Override
+			public void removePropertyListener(IPropertyListener listener) {
+			}
+
+			@Override
+			public Object getAdapter(Class adapter) {
+				return null;
+			}
 
 
-	@Override
-	public IEditorInput getEditorInput() {
-		return editorInput;
-	}
+			@Override
+			public boolean isSaveOnCloseNeeded() {
+				return false;
+			}
 
-	@Override
-	public IEditorSite getEditorSite() {
-		return editorSite;
-	}
 
-	public void setViewEditor(ViewEditor viewEditor) {
-		this.viewEditor = viewEditor;
-	}
+			@Override
+			public IEditorInput getEditorInput() {
+				return editorInput;
+			}
 
-	private IWorkbench getWorkBench() {
-		return getSite().getWorkbenchWindow().getWorkbench();
-	}
+			@Override
+			public IEditorSite getEditorSite() {
+				return editorSite;
+			}
 
-	private void registerAction(Action action) {
-		getEditorSite().getActionBars().getToolBarManager().add(action);
-	}
+			public void setViewEditor(ViewEditor viewEditor) {
+				this.viewEditor = viewEditor;
+			}
 
-	private class MetricColumn {
-		private int idx;
-		private MetricType metricType;
-		private TreeViewerColumn column;
-		private SelectionAdapter selectionAdapter;
+			private IWorkbench getWorkBench() {
+				return getSite().getWorkbenchWindow().getWorkbench();
+			}
 
-		public MetricColumn(int idx, MetricType metricType, TreeViewer viewer, int style) {
-			this.idx = idx;
-			this.metricType = metricType;
-			this.column = new TreeViewerColumn(viewer, style);
-			init();
-		}
+			private void registerAction(Action action) {
+				getEditorSite().getActionBars().getToolBarManager().add(action);
+			}
 
-		private void init() {
-			if (selectionAdapter == null) {
-				selectionAdapter = new SelectionAdapter() {
-					@Override
-					public void widgetSelected(SelectionEvent e) {
-						viewer.getTree().setSortColumn(column.getColumn());
-						sortingMetric = metricType;
+			private class MetricColumn {
+				private int idx;
+				private MetricType metricType;
+				private TreeViewerColumn column;
+				private SelectionAdapter selectionAdapter;
 
-						updatePackageStyle(PackageStyle.FLAT);
-						updatePackageStyleButtons();
+				public MetricColumn(int idx, MetricType metricType, TreeViewer viewer, int style) {
+					this.idx = idx;
+					this.metricType = metricType;
+					this.column = new TreeViewerColumn(viewer, style);
+					init();
+				}
 
-						if (sorting == SortBy.METRIC) {
-							viewer.getTree().setSortDirection(comparator.change());
-						} else {
-							sorting = SortBy.METRIC;
-							comparator.setDirection(SWT.DOWN);
-						}
-						TreePath[] expanded = viewer.getExpandedTreePaths();
-						viewer.refresh();
-						viewer.setExpandedTreePaths(expanded);
+				private void init() {
+					if (selectionAdapter == null) {
+						selectionAdapter = new SelectionAdapter() {
+							@Override
+							public void widgetSelected(SelectionEvent e) {
+								viewer.getTree().setSortColumn(column.getColumn());
+								sortingMetric = metricType;
+
+								updatePackageStyle(PackageStyle.FLAT);
+								updatePackageStyleButtons();
+
+								if (sorting == SortBy.METRIC) {
+									viewer.getTree().setSortDirection(comparator.change());
+								} else {
+									sorting = SortBy.METRIC;
+									comparator.setDirection(SWT.DOWN);
+								}
+								TreePath[] expanded = viewer.getExpandedTreePaths();
+								viewer.refresh();
+								viewer.setExpandedTreePaths(expanded);
+							}
+						};
 					}
-				};
+
+					column.getColumn().setText(metricType.getShortName());
+					column.getColumn().setWidth(100);
+					column.setLabelProvider(new ForestTreeLabelProviders.MetricColumnLabelProvider(packageStyle == PackageStyle.FLAT, metricType));
+
+					column.getColumn().addSelectionListener(selectionAdapter);
+				}
+
+				private void clear() {
+					column.getColumn().setText("");
+					column.setLabelProvider(new ForestTreeLabelProviders.EmptyColumnLabelProvider());
+					column.getColumn().removeSelectionListener(selectionAdapter);
+				}
+
 			}
-
-			column.getColumn().setText(metricType.getShortName());
-			column.getColumn().setWidth(100);
-			column.setLabelProvider(new ForestTreeLabelProviders.MetricColumnLabelProvider(packageStyle == PackageStyle.FLAT, metricType));
-
-			column.getColumn().addSelectionListener(selectionAdapter);
 		}
-
-		private void clear() {
-			column.getColumn().setText("");
-			column.setLabelProvider(new ForestTreeLabelProviders.EmptyColumnLabelProvider());
-			column.getColumn().removeSelectionListener(selectionAdapter);
-		}
-
-	}
-}
