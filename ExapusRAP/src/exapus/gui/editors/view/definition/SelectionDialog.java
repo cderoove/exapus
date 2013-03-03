@@ -69,6 +69,7 @@ public class SelectionDialog extends Dialog {
 	private Text scopedSelectionTagText;
 
 	private String sourceViewName;
+	private Label scopeDescriptionLabel;
 
 	public Selection getSelection() {
 		return selection;
@@ -85,9 +86,9 @@ public class SelectionDialog extends Dialog {
 	protected void configureShell(final Shell shell) {
 		super.configureShell(shell);
 		if(perspective.equals(Perspective.API_CENTRIC))
-			shell.setText("New API Selection");
+			shell.setText("Select Referenced API Elements");
 		if(perspective.equals(Perspective.PROJECT_CENTRIC))
-			shell.setText("New Project Selection");
+			shell.setText("Select Referencing Project Elements");
 		shell.addControlListener(new ControlAdapter() {
 			public void controlResized(ControlEvent e) {
 				initializeBounds();
@@ -102,7 +103,7 @@ public class SelectionDialog extends Dialog {
 		Label lblType = new Label(composite, SWT.NONE);
 		GridData gd_lblType = new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1);
 		lblType.setLayoutData(gd_lblType);
-		lblType.setText("Type:");
+		lblType.setText("Kind:");
 
 		selectionTypeComboVW = new ComboViewer(composite, SWT.READ_ONLY);
 		GridData gd_comboVWType = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
@@ -149,7 +150,16 @@ public class SelectionDialog extends Dialog {
 		scopedSelectionScopeComboVW.setContentProvider(ArrayContentProvider.getInstance());
 		scopedSelectionScopeComboVW.setInput(Scope.supportedSelectionScopes());
 
-
+		Label spacer = new Label(scopedSelectionComposite, SWT.NONE);
+		spacer.setText("");
+		spacer.setEnabled(false);
+		spacer.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1));
+		scopeDescriptionLabel = new Label(scopedSelectionComposite, SWT.NONE | SWT.WRAP);
+		GridData d = new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1);
+		d.widthHint = 500;
+		scopeDescriptionLabel.setLayoutData(d);
+		
+		
 		Label nameLabel = new Label(scopedSelectionComposite, SWT.NONE);
 		nameLabel.setText("Name:");
 		nameLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1));
@@ -220,7 +230,7 @@ public class SelectionDialog extends Dialog {
 		});
 
 		Label tagLabel = new Label(scopedSelectionComposite, SWT.NONE);
-		tagLabel.setText("Tag:");
+		tagLabel.setText("Add Tag:");
 		tagLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1));
 		scopedSelectionTagText = new Text(scopedSelectionComposite, SWT.BORDER);
 		scopedSelectionTagText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false,2,1));
@@ -235,8 +245,7 @@ public class SelectionDialog extends Dialog {
 				scopedSelectionTagText.setEnabled(true);
 				button.setEnabled(true);
 				scopedSelectionNameComboVW.setInput(getProposalStrings());
-
-
+				scopeDescriptionLabel.setText(getSelectedScope().getDescription());
 			}
 		});
 
