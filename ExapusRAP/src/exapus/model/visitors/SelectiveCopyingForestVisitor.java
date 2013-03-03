@@ -84,7 +84,7 @@ public class SelectiveCopyingForestVisitor extends CopyingForestVisitor implemen
 		for(Selection selection : selections) {
 			if(selection.matches(element)) { 
 				ForestElement copy = forestCopy.getCorrespondingForestElement(true,element);
-				copy.copyTagsFrom(copy);
+				copy.copyTagsFrom(element);
 				applyTags(copy);
 				return;
 			}
