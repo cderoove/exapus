@@ -10,7 +10,7 @@ import exapus.model.visitors.IForestVisitor;
 
 public class InboundFactForest extends FactForest {
 
-	public static UqName DEFAULT_TREE_NAME = new UqName("<Untagged>");
+	public static UqName DEFAULT_TREE_NAME = new UqName("<Selected APIs>");
 	
 	private PackageTree root;
 	
