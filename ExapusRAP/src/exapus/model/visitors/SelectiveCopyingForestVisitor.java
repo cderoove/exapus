@@ -1,5 +1,7 @@
 package exapus.model.visitors;
 
+import java.util.Iterator;
+
 import exapus.model.forest.ForestElement;
 import exapus.model.forest.InboundRef;
 import exapus.model.forest.Member;
@@ -19,59 +21,76 @@ public class SelectiveCopyingForestVisitor extends CopyingForestVisitor implemen
 		this.selections = selections;
 		this.dual_selections = dual_selections;
 	}
-	
-	private void applySelection(ForestElement element, Selection selection) {
-		ForestElement copy = forestCopy.getCorrespondingForestElement(true, element);
-		copy.copyTagsFrom(element);
-		if(selection.hasTag())
-			copy.addTag(selection.getTagString());
-	}
-		
-	private boolean visitForestElement(final ForestElement element) {
-		boolean selected = false;
-		for(Selection selection : selections) {
-			if(selection.matchForestElement(element)) {
-				selected = true;
-				applySelection(element, selection);
-			}
-		}
-		return selected;
-	}
-	
-	@Override
-	public boolean visitPackageTree(final PackageTree packageTree) {
-		return visitForestElement(packageTree);
-	}
-	
-	@Override
-	public boolean visitPackageLayer(final PackageLayer packageLayer) {
-		return visitForestElement(packageLayer);		
-	}
-	
-	@Override
-	public boolean visitMember(final Member member) {
-		return visitForestElement(member);	
+
+	//for now, visit always continues up to the reference level
+	private boolean mayContainMatchingReferences(ForestElement e) {
+		return true;
 	}
 
-	
+	@Override
+	public boolean visitPackageTree(final PackageTree packageTree) {	
+		visitForestElement(packageTree);
+		return mayContainMatchingReferences(packageTree);
+	}
+
+
+	@Override
+	public boolean visitPackageLayer(final PackageLayer packageLayer) {
+		visitForestElement(packageLayer);
+		return mayContainMatchingReferences(packageLayer);		
+	}
+
+	@Override
+	public boolean visitMember(final Member member) {
+		visitForestElement(member);
+		return mayContainMatchingReferences(member);	
+	}
+
 	private boolean visitReference(final Ref ref) {
-		boolean selected = false;
 		for(Selection selection : selections) {
-			if(selection.match(ref)) {
+			if(selection.matches(ref)) {
 				for(Selection dual_selection : dual_selections) {
 					Ref dual = ref.getDual();
-					if(dual_selection.match(dual)) {
-						 //TODO: what about dual tags?
-						 applySelection(ref,selection);
-						 selected = true;
-						 break;
+					//ref has to match one of the selections
+					if(dual_selection.matches(dual)) {
+						Ref copy = (Ref) forestCopy.getCorrespondingForestElement(true, ref);
+						copy.copyTagsFrom(ref);
+						//then iteratively apply tags to copy of ref
+						return applyTags(copy);
 					}
 				}
 			}
 		}
-		return selected;
-	}					
+		return false;
+	}
 
+		
+	private boolean applyTags(ForestElement copy) {
+		Iterator<Selection> i = selections.iterator();
+		while(i.hasNext()) {
+			Selection selection =  i.next();
+			if(selection.hasTag()) {
+				if(selection.matches(copy)) {
+					if(copy.addTag(selection.getTagString()))
+						//re-iterate when a new tag has been added
+						i = selections.iterator(); 
+				}
+			}
+		}
+		return true;
+	}
+	
+	private void visitForestElement(final ForestElement element) {
+		for(Selection selection : selections) {
+			if(selection.matches(element)) { 
+				ForestElement copy = forestCopy.getCorrespondingForestElement(true,element);
+				copy.copyTagsFrom(copy);
+				applyTags(copy);
+				return;
+			}
+		}
+	}
+		
 
 	@Override
 	public boolean visitInboundReference(final InboundRef inboundRef) {
@@ -82,10 +101,7 @@ public class SelectiveCopyingForestVisitor extends CopyingForestVisitor implemen
 	public boolean visitOutboundReference(OutboundRef outboundRef) {
 		return visitReference(outboundRef);
 	}					
-	
-					
 
-					
 
 }
 

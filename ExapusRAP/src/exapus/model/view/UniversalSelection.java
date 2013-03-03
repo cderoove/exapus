@@ -43,29 +43,45 @@ public class UniversalSelection extends Selection {
 	}
 
 	@Override
-	public boolean match(PackageTree packageTree) {
+	public boolean mayContainMatches(PackageTree packageTree) {
 		return true;
 	}
 
 	@Override
-	public boolean match(PackageLayer packageLayer) {
+	public boolean mayContainMatches(PackageLayer packageLayer) {
 		return true;
 	}
 
 	@Override
-	public boolean match(Member member) {
+	public boolean mayContainMatches(Member member) {
 		return true;
 	}
 
 	@Override
-	public boolean match(Ref ref) {
+	public boolean matches(Ref ref) {
 		return true;
 	}
 
 	@Override
-	public boolean matchForestElement(ForestElement element) {
+	public boolean matches(PackageTree packageTree) {
 		return true;
 	}
+
+	@Override
+	public boolean matches(PackageLayer packageLayer) {
+		return true;
+	}
+
+	@Override
+	public boolean matches(Member member) {
+		return true;
+	}
+
+	@Override
+	public boolean matches(ForestElement e) {
+		return true;
+	}
+
 
 
 }

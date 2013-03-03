@@ -74,20 +74,81 @@ public class ScopedSelection extends Selection {
 		return typePackageName;
 	}
 	
+	
 	@Override
-	public boolean match(PackageTree packageTree) {
-		if(scope.equals(Scope.ROOT_SCOPE)) { 
-			//projects correspond to package trees, this is the only place where ROOT_SCOPE makes sense
-			if(packageTree.getParentFactForest().getDirection().equals(Direction.OUTBOUND))
-				return packageTree.getQName().equals(name);
-			//package layers are grouped in one dummy packagetree
-			return true;
-		}
-		return true;
+	public boolean matches(PackageTree packageTree) {
+		if(scope.equals(Scope.ROOT_SCOPE)) 
+			return packageTree.getQName().equals(name);
+		else
+			return false;
+	}
+	
+	@Override
+	public boolean matches(PackageLayer packageLayer) {
+		if(scope.equals(Scope.ROOT_SCOPE)) 
+			return matches(packageLayer.getParentPackageTree());
+		
+		if(scope.equals(Scope.PACKAGE_SCOPE)) 
+			return packageLayer.getQName().equals(name);
+		
+		if(scope.equals(Scope.PREFIX_SCOPE)) 
+			return name.isPrefixOf(packageLayer.getQName());
+		
+		if(scope.equals(Scope.TYPE_SCOPE))
+			return false;
+		
+		if(scope.equals(Scope.METHOD_SCOPE)) 
+			return false;
+
+		return false;
 	}
 
 	@Override
-	public boolean match(PackageLayer packageLayer) {
+	public boolean matches(Member member) {
+		if(scope.equals(Scope.ROOT_SCOPE)) 
+			return matches(member.getParentPackageTree());
+		
+		if(scope.equals(Scope.PACKAGE_SCOPE)) 
+			return matches(member.getParentPackageLayer());
+		
+		if(scope.equals(Scope.PREFIX_SCOPE)) 
+			return name.isPrefixOf(member.getQName());
+		
+		if(scope.equals(Scope.TYPE_SCOPE))
+			return name.isPrefixOf(member.getQName());
+		
+		if(scope.equals(Scope.METHOD_SCOPE)) 
+			return name.isPrefixOf(member.getQName());
+
+		return false;
+	}
+	
+	@Override
+	public boolean matches(Ref ref) {
+		if(scope.equals(Scope.ROOT_SCOPE)) 
+			return ref.getParentPackageTree().getQName().equals(name);
+	
+		if(scope.equals(Scope.PACKAGE_SCOPE))
+			return ref.getParentPackageLayer().getQName().equals(name);
+		
+		if(scope.equals(Scope.PREFIX_SCOPE)) 
+			return name.isPrefixOf(ref.getQName());
+		
+		if(scope.equals(Scope.TYPE_SCOPE))
+			return name.isPrefixOf(ref.getQName());
+		
+		if(scope.equals(Scope.METHOD_SCOPE)) 
+			return name.isPrefixOf(ref.getQName());
+		
+		return false;
+	}
+
+
+	
+	
+	
+	@Override
+	public boolean mayContainMatches(PackageLayer packageLayer) {
 		//multiple scopes can be selected at the same time, cannot trust filtering to have happened above
 		if(scope.equals(Scope.ROOT_SCOPE)) 
 			return packageLayer.getParentPackageTree().getQName().equals(name);
@@ -110,7 +171,7 @@ public class ScopedSelection extends Selection {
 	}
 
 	@Override
-	public boolean match(Member member) {
+	public boolean mayContainMatches(Member member) {
 		if(scope.equals(Scope.ROOT_SCOPE)) 
 			return member.getParentPackageTree().getQName().equals(name);
 		
@@ -131,41 +192,20 @@ public class ScopedSelection extends Selection {
 			
 		return false;
 	}
-
-	//do the actual work here, other methods only attempt to filter out unwanted elements beforehand
+	
 	@Override
-	public boolean match(Ref ref) {
-		if(scope.equals(Scope.ROOT_SCOPE)) 
-			return ref.getParentPackageTree().getQName().equals(name);
-	
-		if(scope.equals(Scope.PACKAGE_SCOPE))
-			return ref.getParentPackageLayer().getQName().equals(name);
-		
-		if(scope.equals(Scope.PREFIX_SCOPE)) 
-			return name.isPrefixOf(ref.getQName());
-		
-		if(scope.equals(Scope.TYPE_SCOPE))
-			return name.isPrefixOf(ref.getQName());
-		
-		if(scope.equals(Scope.METHOD_SCOPE)) 
-			return name.isPrefixOf(ref.getQName());
-		
-		return false;
+	public boolean mayContainMatches(PackageTree packageTree) {
+		if(scope.equals(Scope.ROOT_SCOPE)) { 
+			//projects correspond to package trees, this is the only place where ROOT_SCOPE makes sense
+			if(packageTree.getParentFactForest().getDirection().equals(Direction.OUTBOUND))
+				return packageTree.getQName().equals(name);
+			//package layers are grouped in one dummy packagetree
+			return true;
+		}
+		return true;
 	}
 	
-	
-	public boolean matchForestElement(ForestElement element) {
-		if(element instanceof Ref)
-			return match((Ref) element);
-		if(element instanceof Member)
-			return match((Member) element);
-		if(element instanceof PackageLayer)
-			return match((PackageLayer) element);
-		if(element instanceof PackageTree)
-			return match((PackageTree) element);
-		return false;
-	}
-	
+		
 	public Scope getScope() {
 		return scope;
 	}
@@ -197,6 +237,8 @@ public class ScopedSelection extends Selection {
 	public String getTagString() {
 		return (hasTag() ? getTag() : "");
 	}
+
+
 	
 	
 }
