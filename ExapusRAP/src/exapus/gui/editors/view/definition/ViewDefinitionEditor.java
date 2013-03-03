@@ -249,7 +249,7 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 
 		if(perspective.equals(Perspective.API_CENTRIC)) {
 			TableViewerColumn APITagCol = new TableViewerColumn(tableVW, SWT.NONE);
-			APITagCol.getColumn().setText("Tag");
+			APITagCol.getColumn().setText("Added Tag");
 			APITagCol.getColumn() .setWidth(150);
 			APITagCol.setLabelProvider(new CellLabelProvider() {
 				@Override

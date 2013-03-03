@@ -2,6 +2,7 @@ package exapus.model.view;
 
 public enum Scope {
 
+	TAG_SCOPE("Selects elements carrying a tag with the given name."),
 	ROOT_SCOPE("Selects elements within and below the given root name."),
 	PREFIX_SCOPE("Selects elements within and below the given name."),
 	PACKAGE_SCOPE("Selects elements within (but not below) the given package name."),

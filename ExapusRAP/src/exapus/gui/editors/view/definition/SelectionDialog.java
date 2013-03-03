@@ -149,6 +149,7 @@ public class SelectionDialog extends Dialog {
 		scopedSelectionScopeComboVW.getControl().setLayoutData(gd_scopedSelectionScopeComboVW);
 		scopedSelectionScopeComboVW.setContentProvider(ArrayContentProvider.getInstance());
 		scopedSelectionScopeComboVW.setInput(Scope.supportedSelectionScopes());
+		
 
 		Label spacer = new Label(scopedSelectionComposite, SWT.NONE);
 		spacer.setText("");
@@ -253,8 +254,7 @@ public class SelectionDialog extends Dialog {
 
 		return composite;
 	}
-
-
+	
 	private FactForest getProposalFactForest() {
 		if(sourceViewName != null && Store.getCurrent().hasRegisteredView(sourceViewName)) {
 			View sourceView = Store.getCurrent().getView(sourceViewName);
@@ -318,12 +318,33 @@ public class SelectionDialog extends Dialog {
 		return Collections.emptyList();
 	}
 
+
 	private String[] getProposalStrings() {
+		if(Scope.TAG_SCOPE.equals(getSelectedScope()))
+			return getProposalTagStrings();
+		
 		return Iterables.toArray(Iterables.transform(getProposalForestElements(), new Function<ForestElement, String>() {
 			public String apply(ForestElement e) {
 				return e.getQName().toString();
 			}
 		}),String.class);
+	}
+
+	private View getSourceView() {
+		if(sourceViewName == null)
+			return null;
+		return Store.getCurrent().getView(sourceViewName);
+	}
+
+	private String[] getProposalTagStrings() {
+		View view = getSourceView();
+		if(view == null)
+			return new String[0];
+		if(Perspective.API_CENTRIC.equals(perspective))
+			return Iterables.toArray(view.getAPITagsAdded(), String.class);
+		if(Perspective.PROJECT_CENTRIC.equals(perspective))
+			return Iterables.toArray(view.getAPITagsAdded(), String.class);
+		return new String[0];
 	}
 
 	protected void createButtonsForButtonBar(final Composite parent) {

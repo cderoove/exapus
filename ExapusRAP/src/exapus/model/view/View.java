@@ -3,7 +3,9 @@ package exapus.model.view;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
@@ -249,6 +251,23 @@ public class View {
 	public File toFile() throws Exception {
 		 ViewWriter viewWriter = new ViewWriter(this);
 		 return viewWriter.writeTemporary();
+	}
+	
+	public Iterable<String> getAPITagsAdded() {
+		return getTagsAdded(apiselection);
+	}
+	
+	public Iterable<String> getProjectTagsAdded() {
+		return getTagsAdded(projectselection);
+	}
+
+	private static Iterable<String> getTagsAdded(Iterable<Selection> selections) {
+		Set<String> tags = new HashSet<String>();
+		for(Selection selection : selections) {
+			if(selection.hasTag())
+				tags.add(selection.getTagString());
+		}
+		return tags;
 	}
 	
 }

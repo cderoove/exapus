@@ -193,6 +193,10 @@ public abstract class ForestElement implements INode {
     	return tags.contains(tag);
     }
     
+    public boolean hasTag(QName tag) {
+    	return hasTag(tag.toString());
+    }
+    
     public boolean addTag(String tag) {
     	return tags.add(tag.intern());
     }

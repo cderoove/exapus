@@ -77,14 +77,19 @@ public class ScopedSelection extends Selection {
 	
 	@Override
 	public boolean matches(PackageTree packageTree) {
+		if(scope.equals(Scope.TAG_SCOPE))
+			return packageTree.hasTag(name);
+
 		if(scope.equals(Scope.ROOT_SCOPE)) 
 			return packageTree.getQName().equals(name);
-		else
-			return false;
+		return false;
 	}
 	
 	@Override
 	public boolean matches(PackageLayer packageLayer) {
+		if(scope.equals(Scope.TAG_SCOPE))
+			return packageLayer.hasTag(name);
+
 		if(scope.equals(Scope.ROOT_SCOPE)) 
 			return matches(packageLayer.getParentPackageTree());
 		
@@ -105,6 +110,9 @@ public class ScopedSelection extends Selection {
 
 	@Override
 	public boolean matches(Member member) {
+		if(scope.equals(Scope.TAG_SCOPE))
+			return member.hasTag(name);
+
 		if(scope.equals(Scope.ROOT_SCOPE)) 
 			return matches(member.getParentPackageTree());
 		
@@ -125,6 +133,9 @@ public class ScopedSelection extends Selection {
 	
 	@Override
 	public boolean matches(Ref ref) {
+		if(scope.equals(Scope.TAG_SCOPE))
+			return ref.hasTag(name);
+
 		if(scope.equals(Scope.ROOT_SCOPE)) 
 			return ref.getParentPackageTree().getQName().equals(name);
 	
@@ -149,15 +160,15 @@ public class ScopedSelection extends Selection {
 	
 	@Override
 	public boolean mayContainMatches(PackageLayer packageLayer) {
-		//multiple scopes can be selected at the same time, cannot trust filtering to have happened above
+		if(scope.equals(Scope.TAG_SCOPE))
+			return true;
+		
 		if(scope.equals(Scope.ROOT_SCOPE)) 
 			return packageLayer.getParentPackageTree().getQName().equals(name);
 		
-		//scope java.lang, include parent layer java to preserve hierarchy .. filter later on 
 		if(scope.equals(Scope.PACKAGE_SCOPE)) 
 			return packageLayer.getQName().isPrefixOf(name);
 		
-		//scope java.lang, include parent layer java to preserve hierarchy .. filter later on 
 		if(scope.equals(Scope.PREFIX_SCOPE)) 
 			return packageLayer.getQName().isPrefixOf(name) || name.isPrefixOf(packageLayer.getQName());
 		
@@ -172,6 +183,9 @@ public class ScopedSelection extends Selection {
 
 	@Override
 	public boolean mayContainMatches(Member member) {
+		if(scope.equals(Scope.TAG_SCOPE))
+			return true;
+
 		if(scope.equals(Scope.ROOT_SCOPE)) 
 			return member.getParentPackageTree().getQName().equals(name);
 		
@@ -195,14 +209,13 @@ public class ScopedSelection extends Selection {
 	
 	@Override
 	public boolean mayContainMatches(PackageTree packageTree) {
-		if(scope.equals(Scope.ROOT_SCOPE)) { 
-			//projects correspond to package trees, this is the only place where ROOT_SCOPE makes sense
-			if(packageTree.getParentFactForest().getDirection().equals(Direction.OUTBOUND))
-				return packageTree.getQName().equals(name);
-			//package layers are grouped in one dummy packagetree
+		if(scope.equals(Scope.TAG_SCOPE))
 			return true;
-		}
-		return true;
+
+		if(scope.equals(Scope.ROOT_SCOPE)) 
+			return packageTree.getQName().equals(name);
+			
+		return false;
 	}
 	
 		
