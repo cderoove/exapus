@@ -132,21 +132,8 @@ public abstract class MemberContainer extends ForestElement {
 		return null;
 	}
 	
-	ForestElement getCorrespondingForestElement(boolean copyWhenMissing, Iterator<ForestElement> ancestors, ForestElement element) {
-		ForestElement ancestor = ancestors.next();
-		if(ancestor instanceof Member) {
-			Member originalMember = (Member) ancestor;
-			Member correspondingMember = getMember(originalMember.getName(), originalMember.getElement());
-			if(correspondingMember == null)
-				return null;
-			if(ancestors.hasNext())
-				return correspondingMember.getCorrespondingForestElement(copyWhenMissing, ancestors, element);
-			return correspondingMember.getCorrespondingForestElement(copyWhenMissing, element);
-		}
-		return null;
-	}
-
-	ForestElement getCorrespondingForestElement(boolean copyWhenMissing, ForestElement element) {
+	@Override
+	public ForestElement getCorrespondingForestElement(boolean copyWhenMissing, ForestElement element) {
 		if(element instanceof Member) {
 			Member member = (Member) element;
 			if(copyWhenMissing)

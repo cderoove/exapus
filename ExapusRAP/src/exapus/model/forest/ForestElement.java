@@ -12,6 +12,7 @@ import org.eclipse.jdt.core.JavaModelException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -203,5 +204,18 @@ public abstract class ForestElement implements INode {
     public Iterable<String> getTags() {
     	return tags;
     }
+    
+	public ForestElement getCorrespondingForestElement(boolean copyWhenMissing, Iterator<ForestElement> ancestors, ForestElement element) {
+		ForestElement ancestor = ancestors.next();
+		ForestElement correspondingAncestor = getCorrespondingForestElement(copyWhenMissing, ancestor);
+		if(correspondingAncestor == null)
+			return null;
+		if(ancestors.hasNext())
+			return correspondingAncestor.getCorrespondingForestElement(copyWhenMissing, ancestors, element);
+		return correspondingAncestor.getCorrespondingForestElement(copyWhenMissing, element);
+	}
+
+	abstract public ForestElement getCorrespondingForestElement(boolean copyWhenMissing, ForestElement ancestor);
+
     
 }

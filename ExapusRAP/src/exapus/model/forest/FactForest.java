@@ -130,14 +130,14 @@ public abstract class FactForest extends Observable {
     	return corresponding.toArray();
     }
 
-	ForestElement getCorrespondingForestElement(boolean copyWhenMissing, Iterator<ForestElement> ancestors, ForestElement element) {
-		ForestElement originalTree = ancestors.next();
-		PackageTree correspondingTree = getPackageTree(originalTree.getName());
-		if(correspondingTree == null)
+	public ForestElement getCorrespondingForestElement(boolean copyWhenMissing, Iterator<ForestElement> ancestors, ForestElement element) {
+		ForestElement ancestor = ancestors.next();
+		ForestElement correspondingAncestor = getCorrespondingForestElement(copyWhenMissing, ancestor);
+		if(correspondingAncestor == null)
 			return null;
 		if(ancestors.hasNext())
-			return correspondingTree.getCorrespondingForestElement(copyWhenMissing, ancestors, element);
-		return correspondingTree.getCorrespondingForestElement(copyWhenMissing, element);
+			return correspondingAncestor.getCorrespondingForestElement(copyWhenMissing, ancestors, element);
+		return correspondingAncestor.getCorrespondingForestElement(copyWhenMissing, element);
 	}
 	
 	

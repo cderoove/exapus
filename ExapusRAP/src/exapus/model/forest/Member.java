@@ -178,15 +178,17 @@ public class Member extends MemberContainer {
 		return copy;
 	}
 	
+	/*
 	@Override
 	ForestElement getCorrespondingForestElement(boolean copyWhenMissing, Iterator<ForestElement> ancestors, ForestElement element) {
 		if(ancestors.hasNext()) 
 			return super.getCorrespondingForestElement(copyWhenMissing, ancestors, element);
 		return getCorrespondingForestElement(copyWhenMissing, element);
 	}
+	*/
 
 	@Override
-	ForestElement getCorrespondingForestElement(boolean copyWhenMissing, ForestElement element) {
+	public ForestElement getCorrespondingForestElement(boolean copyWhenMissing, ForestElement element) {
 		if(element instanceof Ref) {
 			if(copyWhenMissing) {
 				Ref copy = Ref.fromRef((Ref) element);

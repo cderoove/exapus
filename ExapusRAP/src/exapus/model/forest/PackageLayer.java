@@ -213,6 +213,7 @@ public class PackageLayer extends MemberContainer implements ILayerContainer {
 		return null;
 	}
 
+	/*
 	@Override
 	ForestElement getCorrespondingForestElement(boolean copyWhenMissing, Iterator<ForestElement> ancestors, ForestElement element) {
 		ForestElement ancestor = ancestors.next();
@@ -235,9 +236,10 @@ public class PackageLayer extends MemberContainer implements ILayerContainer {
 		}
 		return null;
 	}
+	*/
 
 	@Override
-	ForestElement getCorrespondingForestElement(boolean copyWhenMissing, ForestElement element) {
+	public ForestElement getCorrespondingForestElement(boolean copyWhenMissing, ForestElement element) {
 		if(element instanceof PackageLayer) {
 			UqName name = element.getName();
 			if(copyWhenMissing)
