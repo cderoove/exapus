@@ -76,11 +76,14 @@ public abstract class Ref extends ForestElement {
 		return new SourceRange(n.getStartPosition(), n.getLength());
 	}
 
-	static public Ref fromRef(Ref r) {
+	static public Ref from(Ref r) {
+		Ref ref = null;
 		if(r instanceof InboundRef)
-			return InboundRef.fromInboundRef((InboundRef) r);
+			ref = InboundRef.fromInboundRef((InboundRef) r);
 		else
-			return OutboundRef.fromOutboundRef((OutboundRef) r);
+			ref = OutboundRef.fromOutboundRef((OutboundRef) r);
+		ref.copyTagsFrom(r);
+		return ref;
 	}
 
 	public SourceRange getSourceRange() {

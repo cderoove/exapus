@@ -3,6 +3,7 @@ package exapus.gui.editors.forest.tree;
 
 import java.util.regex.Pattern;
 
+import exapus.model.forest.ForestElement;
 import exapus.model.forest.InboundRef;
 import exapus.model.forest.Member;
 import exapus.model.forest.OutboundRef;
@@ -29,13 +30,12 @@ public class ForestTreeFilterVisitor extends CopyingForestVisitor {
 	public void setProjectFilter(String projectFilter) {
 		this.projectFilter = toSearchString(projectFilter);
 	}
-
+	
 	protected boolean selectRef(Ref ref) {
 		String apiText = ref.getReferencedName().toString();
 		String projectText = ref.getReferencingName().toString();
 		if(apiText.matches(apiFilter) && projectText.matches(projectFilter)) {
-			PackageTree destinationTree = getCopy().getOrAddPackageTree(ref.getParentPackageTree().getName());
-			destinationTree.copyReference(ref);
+			forestCopy.getCorrespondingForestElement(true, ref);
 			return true;
 		}
 		return false;

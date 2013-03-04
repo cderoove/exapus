@@ -104,6 +104,11 @@ public class PackageTree extends ForestElement  implements ILayerContainer  {
 		l.setParent(this);
 	}
 	
+	
+	public PackageLayer getOrAddLayer(PackageLayer original) {
+		return root.getOrAddLayer(original, this);
+	}
+	
 	public PackageLayer getOrAddLayer(UqName name) {
 		return root.getOrAddLayer(name, this);
 	}
@@ -176,14 +181,18 @@ public class PackageTree extends ForestElement  implements ILayerContainer  {
 		if(element instanceof PackageLayer) {
 			UqName name = element.getName();
 			if(copyWhenMissing)
-				return getOrAddLayer(name);
+				return getOrAddLayer((PackageLayer) element);
 			else
 				return getLayer(name);
 		}
 		return null;
 	}
 	
-	
+	public static PackageTree from(PackageTree original) {
+		PackageTree tree = new PackageTree(original.getName());
+		tree.copyTagsFrom(original);
+		return tree;
+	}
 	
 
 }

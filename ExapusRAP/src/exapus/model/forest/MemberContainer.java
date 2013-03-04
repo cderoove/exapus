@@ -125,21 +125,34 @@ public abstract class MemberContainer extends ForestElement {
 	public Ref copyReference(Iterator<ForestElement> ancestors, Ref original) {
 		ForestElement ancestor = ancestors.next();
 		if(ancestor instanceof Member) {
-			Member originalMember = (Member) ancestor;
-			Member destinationMember = getOrAddMember(originalMember.getName(), originalMember.getElement());
+			Member destinationMember = getOrAddMember((Member) ancestor);
 			return destinationMember.copyReference(ancestors, original);
 		}
 		return null;
 	}
+
 	
+	public Member getOrAddMember(Member original) {
+		Member member = getMember(original.getName(), original.getElement());
+		if(member != null)
+			return member;
+		member = Member.from(original);
+		this.addMember(member);
+		return member;
+	}
+	
+	public Member getMember(Member original) {
+		return getMember(original.getName(), original.getElement());
+	}
+
 	@Override
 	public ForestElement getCorrespondingForestElement(boolean copyWhenMissing, ForestElement element) {
 		if(element instanceof Member) {
 			Member member = (Member) element;
 			if(copyWhenMissing)
-				return getOrAddMember(member.getName(), member.getElement());
+				return getOrAddMember(member);
 			else
-				return getMember(member.getName(), member.getElement());
+				return getMember(member);
 		}
 		return null;
 	}

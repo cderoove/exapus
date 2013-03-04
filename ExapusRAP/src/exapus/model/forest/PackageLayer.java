@@ -57,6 +57,8 @@ public class PackageLayer extends MemberContainer implements ILayerContainer {
 
 
 
+	
+	
 	public PackageLayer getOrAddLayer(Iterator<UqName> i, PackageTree project) {
 		PackageLayer l = getOrAddLayer(i.next(), project);
 		if (i.hasNext())
@@ -73,26 +75,44 @@ public class PackageLayer extends MemberContainer implements ILayerContainer {
 		return null;
 	}
 
-
-	public PackageLayer getOrAddLayer(QName qname, PackageTree project) {
-		return getOrAddLayer(qname.getComponents().iterator(), project);
-	}
-
-	public PackageLayer getOrAddLayer(UqName name, PackageTree project) {
-		for (PackageLayer l : layers)
-			if (l.getName().equals(name))
-				return l;
-
-		PackageLayer l = new PackageLayer(name);
+	private void addLayer(PackageLayer l, PackageTree project) {
 		layers.add(l);
 		if(project.getHiddenRootLayer().equals(this))
 			l.setParent(project);
 		else
 			l.setParent(this);
 		getParentFactForest().fireUpdate(l);
-		return l;
+	}
+	
+	public PackageLayer getOrAddLayer(QName qname, PackageTree project) {
+		return getOrAddLayer(qname.getComponents().iterator(), project);
+	}
+	
+
+	public PackageLayer getOrAddLayer(UqName name, PackageTree project) {
+		PackageLayer layer = getLayer(name);
+		if(layer != null)
+			return layer;
+		layer = new PackageLayer(name);
+		addLayer(layer, project);
+		return layer;
 	}
 
+	public static PackageLayer from(PackageLayer original) {
+		PackageLayer layer = new PackageLayer(original.getName());
+		layer.copyTagsFrom(original);
+		return layer;
+	}
+	
+	public PackageLayer getOrAddLayer(PackageLayer original, PackageTree project) {
+		PackageLayer layer = getLayer(original.getName());
+		if(layer != null)
+			return layer;
+		layer = PackageLayer.from(original);
+		addLayer(layer, project);
+		return layer;
+	}
+	
 	public void addBodyDeclaration(BodyDeclaration bd, Stack<ASTNode> scope) {
 		getOrAddMember(UqName.forNode(bd), Element.forNode(bd), scope.iterator());
 	}
@@ -241,10 +261,10 @@ public class PackageLayer extends MemberContainer implements ILayerContainer {
 	@Override
 	public ForestElement getCorrespondingForestElement(boolean copyWhenMissing, ForestElement element) {
 		if(element instanceof PackageLayer) {
-			UqName name = element.getName();
 			if(copyWhenMissing)
-				return getOrAddLayer(name, getParentPackageTree());
-				return getLayer(name);
+				return getOrAddLayer((PackageLayer) element, getParentPackageTree());
+			else
+				return getLayer(element.getName());
 		}
 		return super.getCorrespondingForestElement(copyWhenMissing,element);
 	}

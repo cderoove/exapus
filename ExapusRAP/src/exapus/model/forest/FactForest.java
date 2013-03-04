@@ -78,10 +78,11 @@ public abstract class FactForest extends Observable {
 		return trees.get(name);
 	}
 	
-	public PackageTree getOrAddPackageTree(UqName name) {
+	public PackageTree getOrAddPackageTree(PackageTree original) {
+		UqName name = original.getName();
 		PackageTree tree = getPackageTree(name);
 		if(tree == null) {
-			tree = new PackageTree(name);
+			tree = PackageTree.from(original);
 			addPackageTree(tree);
 		}
 		return tree;
@@ -102,8 +103,8 @@ public abstract class FactForest extends Observable {
     public ForestElement getCorrespondingForestElement(boolean copyWhenMissing, ForestElement element) {
     	if(element instanceof PackageTree) {
     		UqName name = element.getName();
-    		if(copyWhenMissing)
-    			return getOrAddPackageTree(name);
+    		if(copyWhenMissing) 
+    			return getOrAddPackageTree((PackageTree) element);
     		else
     			return getPackageTree(name);
     	}

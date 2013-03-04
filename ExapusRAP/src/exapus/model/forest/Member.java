@@ -173,7 +173,7 @@ public class Member extends MemberContainer {
 	public Ref copyReference(Iterator<ForestElement> ancestors, Ref original) {
 		if(ancestors.hasNext()) 
 			return super.copyReference(ancestors, original);
-		Ref copy = Ref.fromRef(original);
+		Ref copy = Ref.from(original);
 		addAPIReference(copy);
 		return copy;
 	}
@@ -191,7 +191,7 @@ public class Member extends MemberContainer {
 	public ForestElement getCorrespondingForestElement(boolean copyWhenMissing, ForestElement element) {
 		if(element instanceof Ref) {
 			if(copyWhenMissing) {
-				Ref copy = Ref.fromRef((Ref) element);
+				Ref copy = Ref.from((Ref) element);
 				addAPIReference(copy);
 				return copy;
 			}
@@ -203,6 +203,12 @@ public class Member extends MemberContainer {
 			return null;
 		}
 		return super.getCorrespondingForestElement(copyWhenMissing, element);
+	}
+
+	public static Member from(Member original) {
+		Member member = new Member(original.getName(), original.getElement());
+		member.copyTagsFrom(original);
+		return member;
 	}
 	
 }

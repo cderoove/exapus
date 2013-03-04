@@ -54,7 +54,7 @@ public class SelectiveCopyingForestVisitor extends CopyingForestVisitor implemen
 					//ref has to match one of the selections
 					if(dual_selection.matches(dual)) {
 						Ref copy = (Ref) forestCopy.getCorrespondingForestElement(true, ref);
-						copy.copyTagsFrom(ref);
+						//copy.copyTagsFrom(ref);
 						//then iteratively apply tags to copy of ref
 						return applyTags(copy);
 					}
@@ -84,7 +84,7 @@ public class SelectiveCopyingForestVisitor extends CopyingForestVisitor implemen
 		for(Selection selection : selections) {
 			if(selection.matches(element)) { 
 				ForestElement copy = forestCopy.getCorrespondingForestElement(true,element);
-				copy.copyTagsFrom(element);
+				//copy.copyTagsFrom(element);
 				applyTags(copy);
 				return;
 			}
