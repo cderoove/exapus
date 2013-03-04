@@ -168,16 +168,7 @@ public class Member extends MemberContainer {
 
 		}
 	}
-	
-	@Override
-	public Ref copyReference(Iterator<ForestElement> ancestors, Ref original) {
-		if(ancestors.hasNext()) 
-			return super.copyReference(ancestors, original);
-		Ref copy = Ref.from(original);
-		addAPIReference(copy);
-		return copy;
-	}
-	
+		
 	/*
 	@Override
 	ForestElement getCorrespondingForestElement(boolean copyWhenMissing, Iterator<ForestElement> ancestors, ForestElement element) {

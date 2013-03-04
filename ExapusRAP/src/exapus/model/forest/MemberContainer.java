@@ -122,15 +122,6 @@ public abstract class MemberContainer extends ForestElement {
 			return getOrAddMemberWithoutRecursing(typeBinding);
 	}
 	
-	public Ref copyReference(Iterator<ForestElement> ancestors, Ref original) {
-		ForestElement ancestor = ancestors.next();
-		if(ancestor instanceof Member) {
-			Member destinationMember = getOrAddMember((Member) ancestor);
-			return destinationMember.copyReference(ancestors, original);
-		}
-		return null;
-	}
-
 	
 	public Member getOrAddMember(Member original) {
 		Member member = getMember(original.getName(), original.getElement());
