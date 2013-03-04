@@ -871,6 +871,7 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 					}
 
 					column.getColumn().setText(metricType.getShortName());
+					column.getColumn().setToolTipText(metricType.getToolTipText());
 					column.getColumn().setWidth(100);
 					column.setLabelProvider(new ForestTreeLabelProviders.MetricColumnLabelProvider(packageStyle == PackageStyle.FLAT, metricType));
 

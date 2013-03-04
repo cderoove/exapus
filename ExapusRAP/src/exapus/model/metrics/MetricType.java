@@ -9,17 +9,31 @@ import java.lang.reflect.Constructor;
  * Keeping together metric visitors
  */
 public enum MetricType {
-    API_REFS(TotalNumberAPIReferencesVisitor.class.getCanonicalName(), "#APIRefs"),
-    API_ELEM(NumberReferencedDistinctAPIElementsVisitor.class.getCanonicalName(), "#APIElem"),
-    API_CHILDREN(APIChildrenVisitor.class.getCanonicalName(), "#APIDerived"),
-    ALL(null, "");
+    API_REFS(TotalNumberAPIReferencesVisitor.class.getCanonicalName(),
+            "#APIRefs",
+            "Total references to APIs from projects"),
+    API_ELEM(NumberReferencedDistinctAPIElementsVisitor.class.getCanonicalName(),
+            "#APIElem",
+            "Number of distinct API elements referenced by projects"),
+    API_CHILDREN(APIChildrenVisitor.class.getCanonicalName(),
+            "#derives",
+            "Total derivations from API types"),
+    API_SUPER(NumberOfSuperAPITypesVisitor.class.getCanonicalName(),
+            "#super",
+            "Number of API types from which projects derive"),
+    API_SUB(NumberOfSubAPITypesVisitor.class.getCanonicalName(),
+            "#sub",
+            "Number of project types deriving from API types"),
+    ALL(null, "", "");
 
     private String qName;
     private String shortName;
+    private String toolTip;
 
-    private MetricType(String qName, String shortName) {
+    private MetricType(String qName, String shortName, String toolTip) {
         this.qName = qName;
         this.shortName = shortName;
+        this.toolTip = toolTip;
     }
 
     public IForestVisitor getVisitor(View view) {
@@ -38,8 +52,12 @@ public enum MetricType {
         return shortName;
     }
 
+    public String getToolTipText() {
+        return toolTip;
+    }
+
     public static MetricType[] supportedMetrics(boolean withoutAll) {
-        if (withoutAll) return new MetricType[]{API_REFS, API_ELEM, API_CHILDREN};
+        if (withoutAll) return new MetricType[]{API_REFS, API_ELEM, API_CHILDREN, API_SUPER, API_SUB};
         return MetricType.class.getEnumConstants();
     }
 
