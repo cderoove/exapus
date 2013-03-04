@@ -26,10 +26,6 @@ public class NumberOfSuperAPITypes implements IMetricValue {
 
     @Override
     public int getValue(boolean groupedPackages) {
-
-        System.out.println(groupedNames);
-        System.out.println(groupedNames.size());
-
         if (groupedPackages) return groupedNames.size();
         return names.size();
     }
