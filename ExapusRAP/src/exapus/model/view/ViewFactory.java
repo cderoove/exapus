@@ -96,7 +96,7 @@ public class ViewFactory {
 		view.addProjectSelection(UniversalSelection.getCurrent());
 		view.addAPISelection(new ScopedSelection(new QName("ant"), Scope.TAG_SCOPE));
 		view.addAPISelection(new ScopedSelection(new QName("annotation"), Scope.TAG_SCOPE, "additional"));
-		view.setSourceViewName(TAGGED_API_VIEW_NAME);
+		view.setAPISourceViewName(TAGGED_API_VIEW_NAME);
 		return view;
 	}
 

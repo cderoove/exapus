@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -13,6 +14,8 @@ import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.google.common.base.Objects;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 
 import exapus.model.details.GraphDetails;
 import exapus.model.forest.FactForest;
@@ -46,7 +49,7 @@ public class View {
 	
 	private File graph = null;
 	
-	private String sourceViewName = null;
+	private String apiSource = null;
 
 	private boolean renderable;
 
@@ -69,6 +72,8 @@ public class View {
 	private String name;
 	
 	private boolean sealed;
+
+	private String projectSource;
 	
 	public void seal() {
 		sealed = true;
@@ -82,17 +87,42 @@ public class View {
 		return sealed;
 	}
 	
-	@XmlElement
 	public String getSourceViewName() {
-		return sourceViewName;
+		return getSourceViewName(perspective);
 	}
 	
-	public void setSourceViewName(String n) {
-		if(Objects.equal(this.sourceViewName, n))
+	public String getSourceViewName(Perspective p) {
+		if(Perspective.API_CENTRIC.equals(p))
+			return getAPISourceViewName();
+		if(Perspective.PROJECT_CENTRIC.equals(p))
+			return getProjectSourceViewName();
+		return null;
+	}
+	
+	@XmlElement
+	public String getAPISourceViewName() {
+		return apiSource;
+	}
+	
+	public void setAPISourceViewName(String n) {
+		if(Objects.equal(this.apiSource, n))
 			return;
-		this.sourceViewName = n;
+		this.apiSource = n;
 		makeDirty();
     }
+	
+	@XmlElement
+	public String getProjectSourceViewName() {
+		return projectSource;
+	}
+	
+	public void setProjectSourceViewName(String n) {
+		if(Objects.equal(this.projectSource, n))
+			return;
+		this.projectSource = n;
+		makeDirty();
+    }
+
 	
 	@XmlElement
 	public Perspective getPerspective() {
@@ -154,14 +184,47 @@ public class View {
 	protected void makeDirty() {
 		forest = null;
 		graph = null;
-		makeDependentViewsDirty();
+		makeTransitiveDependantsDirty();
+	}
+
+	
+	public boolean hasImmediateDependant(View v) {
+		return name.equals(v.getAPISourceViewName())
+				|| name.equals(v.getProjectSourceViewName());
 	}
 	
-	protected void makeDependentViewsDirty() {
-		for(View v : Store.getCurrent().getRegisteredViews()) 
-			if(name.equals(v.getSourceViewName())) {
-				v.makeDirty();
-            }
+	public boolean hasTransitiveDependant(View v) {
+		return Iterables.contains(getTransitiveDependants(), v);
+	}	
+	
+	protected Iterable<View> getTransitiveDependants() {
+		Set<View> dependants = new HashSet<View>();
+		Set<View> handled = new HashSet<View>();
+		LinkedList<View> worklist = new LinkedList<View>();
+		worklist.add(this);
+		while(!worklist.isEmpty()) {
+			View current = worklist.removeFirst();
+			if(handled.add(current)) {
+				Iterable<View> immediateDependants = current.getImmediateDependants();
+				Iterables.addAll(dependants, immediateDependants);
+				Iterables.addAll(worklist, immediateDependants);
+			}
+		}
+		return dependants;
+	}
+	
+	protected Iterable<View> getImmediateDependants() {
+		Set<View> dependants = new HashSet<View>();
+		for(View view : Store.getCurrent().getRegisteredViews()) {
+			if(hasImmediateDependant(view))
+				dependants.add(view);
+		}
+		return dependants;
+	}
+			
+	protected void makeTransitiveDependantsDirty() {
+		for(View v : getTransitiveDependants())
+			v.makeDirty();
 	}
 
 	@XmlElement
@@ -244,7 +307,8 @@ public class View {
 		for(Selection sel : original.getProjectSelections())
 			duplicate.addProjectSelection(Selection.fromSelection(sel));
 		duplicate.setMetricType(original.getMetricType());
-		duplicate.setSourceViewName(original.getSourceViewName());
+		duplicate.setAPISourceViewName(original.getAPISourceViewName());
+		duplicate.setProjectSourceViewName(original.getProjectSourceViewName());
 		return duplicate;
 	}
 

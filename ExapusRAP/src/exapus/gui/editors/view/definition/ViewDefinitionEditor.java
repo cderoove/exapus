@@ -50,9 +50,10 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 	private ViewEditor viewEditor;
     private ComboViewer comboMetrics;
     private ComboViewer comboGraphDetails;
-	private ComboViewer comboVWSource;
+	private ComboViewer comboVWAPISource;
 	private ToolBar toolbarAPI;
 	private ToolBar toolbarProjects;
+	private ComboViewer comboVWProjectSource;
 
 	@Override
 	public void doSave(IProgressMonitor monitor) {
@@ -100,34 +101,38 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 				Object selected = selection.getFirstElement();
 				if(selected instanceof Perspective) {
 					getView().setPerspective((Perspective)selected);
-					updateComboVWSource();
+					updateComboVWAPISource();
+					updateComboVWProjectSource();
 				}
 			}
 		});
 
-		//Source view
+		//API Source
 		Label lblSource = new Label(parent, SWT.NONE);
 		lblSource.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblSource.setText("Source:");
+		lblSource.setText("API Source:");
 
-		comboVWSource = new ComboViewer(parent, SWT.READ_ONLY);
-		comboVWSource.getCombo().setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
-		comboVWSource.setContentProvider(ArrayContentProvider.getInstance());
+		comboVWAPISource = new ComboViewer(parent, SWT.READ_ONLY);
+		comboVWAPISource.getCombo().setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		comboVWAPISource.setContentProvider(ArrayContentProvider.getInstance());
 	
-		comboVWSource.addSelectionChangedListener(new ISelectionChangedListener() {
+		comboVWAPISource.addSelectionChangedListener(new ISelectionChangedListener() {
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 				Object selected = selection.getFirstElement();
 				if(selected instanceof String) {
 					String selectedSourceName = (String) selected;
-					if(selectedSourceName.equals(getCompleteViewName()))
-						getView().setSourceViewName(null);
+					if(selectedSourceName.equals(getCompleteAPIViewName()))
+						getView().setAPISourceViewName(null);
 					else
-						getView().setSourceViewName(selectedSourceName);
+						getView().setAPISourceViewName(selectedSourceName);
 				}
 			}
 		});
+		
+		
+		
 
 	
         //Packages
@@ -138,6 +143,31 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 		tableVWAPI = new TableViewer(parent, SWT.BORDER | SWT.V_SCROLL);
 		toolbarAPI = new ToolBar(parent, SWT.VERTICAL);
 		configureSelectionTableAndToolBar(tableVWAPI, toolbarAPI, Perspective.API_CENTRIC);
+		
+		
+		//Project Source
+		Label lblProjectSource = new Label(parent, SWT.NONE);
+		lblProjectSource.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblProjectSource.setText("Project Source:");
+
+		comboVWProjectSource = new ComboViewer(parent, SWT.READ_ONLY);
+		comboVWProjectSource.getCombo().setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		comboVWProjectSource.setContentProvider(ArrayContentProvider.getInstance());
+		comboVWProjectSource.addSelectionChangedListener(new ISelectionChangedListener() {
+			@Override
+			public void selectionChanged(SelectionChangedEvent event) {
+				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+				Object selected = selection.getFirstElement();
+				if(selected instanceof String) {
+					String selectedSourceName = (String) selected;
+					if(selectedSourceName.equals(getCompleteProjectViewName()))
+						getView().setProjectSourceViewName(null);
+					else
+						getView().setProjectSourceViewName(selectedSourceName);
+				}
+			}
+		});
+		
 
 		//Projects
 		Label lblProjectsLabel = new Label(parent, SWT.NONE);
@@ -307,7 +337,7 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 	}
 
 	protected void showSelectionDialog(Perspective perspective) {
-		SelectionDialog selectionDialog  = new SelectionDialog(getSite().getShell(), perspective, getView().getSourceViewName());
+		SelectionDialog selectionDialog  = new SelectionDialog(getSite().getShell(), perspective, getView().getSourceViewName(perspective));
 		int returnCode = selectionDialog.open();
 		if(returnCode == IDialogConstants.OK_ID) {
 			Selection newSelection = selectionDialog.getSelection();
@@ -335,7 +365,8 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 		View view = getView();
 		checkRenderable.setSelection(view.getRenderable());
 		comboVWPerspective.setSelection(new StructuredSelection(view.getPerspective()));
-		updateComboVWSource();
+		updateComboVWAPISource();
+		updateComboVWProjectSource();
 		tableVWAPI.setInput(Iterables.toArray(view.getAPISelections(),Object.class));
 		tableVWProjects.setInput(Iterables.toArray(view.getProjectSelections(),Object.class));
 		updateComboMetrics();
@@ -345,7 +376,7 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 
 	private void enableControls(boolean enabled) {
 		comboVWPerspective.getControl().setEnabled(enabled);
-		comboVWSource.getControl().setEnabled(enabled);
+		comboVWAPISource.getControl().setEnabled(enabled);
 		checkRenderable.setEnabled(enabled);
 		tableVWAPI.getControl().setEnabled(enabled);
 		tableVWProjects.getControl().setEnabled(enabled);
@@ -355,31 +386,52 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 		toolbarAPI.setEnabled(enabled);
 	}
 
+	/*
 	private String getCompleteViewName() {
 		return getView().isAPICentric() ?
 				ViewFactory.getCurrent().completePackageView().getName()
 				: ViewFactory.getCurrent().completeProjectView().getName();
 	}
+	*/
 	
-	private ArrayList<String> viewSourceNames() {
+	
+	
+	
+	private String getCompleteAPIViewName() {
+		return ViewFactory.getCurrent().completePackageView().getName();
+				
+	}
+	
+	private String getCompleteProjectViewName() {
+		return ViewFactory.getCurrent().completeProjectView().getName();
+	}
+
+	
+	private ArrayList<String> viewSourceNames(Perspective p) {
 		ArrayList<String> elements = new ArrayList<String>();
 		View thisView = getView();
-		Perspective thisPerspective = thisView.getPerspective();
 		for(View v : Store.getCurrent().getRegisteredViews()) {
-			if(v.getPerspective().equals(thisPerspective)
-				&& !v.equals(thisView))
+			if(v.getPerspective().equals(p)
+				&& !v.equals(thisView)
+				&& !thisView.hasTransitiveDependant(v))
 				elements.add(v.getName());
 		}
-		//Too confusing
-		//elements.add(getWorkspaceSourceName());
 		return elements;
 	}
+
 	
-	private void updateComboVWSource() {
-		comboVWSource.setInput(viewSourceNames());
-		String sourceViewName = getView().getSourceViewName();
-		comboVWSource.setSelection(new StructuredSelection(sourceViewName == null ? getCompleteViewName() : sourceViewName));
+	private void updateComboVWAPISource() {
+		comboVWAPISource.setInput(viewSourceNames(Perspective.API_CENTRIC));
+		String sourceViewName = getView().getAPISourceViewName();
+		comboVWAPISource.setSelection(new StructuredSelection(sourceViewName == null ? getCompleteAPIViewName() : sourceViewName));
 	}
+	
+	private void updateComboVWProjectSource() {
+		comboVWProjectSource.setInput(viewSourceNames(Perspective.PROJECT_CENTRIC));
+		String sourceViewName = getView().getProjectSourceViewName();
+		comboVWProjectSource.setSelection(new StructuredSelection(sourceViewName == null ? getCompleteProjectViewName() : sourceViewName));
+	}
+	
 	
 	private void updateComboMetrics() {
         comboMetrics.setInput(MetricType.supportedMetrics(getView().getRenderable()));
