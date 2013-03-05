@@ -406,8 +406,8 @@ public class SelectionDialog extends Dialog {
 			//QName name = new QName(scopedSelectionNameText.getText());
 			QName name = new QName(scopedSelectionNameComboVW.getCombo().getText());
 
-			selection = new ScopedSelection(name, selectedScope);
-
+			selection = ScopedSelection.forScope(selectedScope, name);
+			
 			String scopedSelectionTag = scopedSelectionTagText.getText().trim();
 			if(!scopedSelectionTag.isEmpty())
 				((ScopedSelection) selection).setTag(new Tag(scopedSelectionTag));

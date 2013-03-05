@@ -28,7 +28,7 @@ public class Member extends MemberContainer {
 	public Member(UqName id, Element e) {
 		super(id);
 		element = e;
-		references =  Collections.synchronizedList(new ArrayList<Ref>());
+		references = new ArrayList<Ref>();
 	}
 
 

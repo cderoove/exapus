@@ -62,7 +62,7 @@ public abstract class Selection {
 			return sel;
 		if(sel instanceof ScopedSelection) {
 			ScopedSelection original = (ScopedSelection) sel;
-			return new ScopedSelection(original.getQName(), original.getScope());
+			return ScopedSelection.forScope(original.getScope(),original.getQName());
 		}
 		return null;
 	}

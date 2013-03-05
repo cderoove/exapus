@@ -105,7 +105,7 @@ public class UqName {
 	}
 
 	public UqName(String id) {
-		identifier = id;
+		identifier = id.intern();
 	}
 
 	public UqName(IJavaProject p) {

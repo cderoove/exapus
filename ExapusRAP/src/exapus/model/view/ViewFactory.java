@@ -61,11 +61,11 @@ public class ViewFactory {
 
 	public View testAPICentricSelectionView() {
 		View view = new View("API-centric selection test", Perspective.API_CENTRIC);
-		view.addAPISelection(new ScopedSelection(new QName("java.lang.Integer"), Scope.TYPE_SCOPE));
-		view.addAPISelection(new ScopedSelection(new QName("java.util.Iterator.hasNext()"), Scope.METHOD_SCOPE));
-		view.addAPISelection(new ScopedSelection(new QName("javax"), Scope.PREFIX_SCOPE));
-		view.addAPISelection(new ScopedSelection(new QName("org.apache.commons"), Scope.PREFIX_SCOPE));
-		view.addAPISelection(new ScopedSelection(new QName("org.apache.tools.ant"), Scope.PACKAGE_SCOPE));
+		view.addAPISelection(ScopedSelection.forScope(Scope.TYPE_SCOPE,  new QName("java.lang.Integer")));
+		view.addAPISelection(ScopedSelection.forScope(Scope.METHOD_SCOPE, new QName("java.util.Iterator.hasNext()")));
+		view.addAPISelection(ScopedSelection.forScope(Scope.PREFIX_SCOPE, new QName("javax")));
+		view.addAPISelection(ScopedSelection.forScope(Scope.PREFIX_SCOPE, new QName("org.apache.commons")));
+		view.addAPISelection(ScopedSelection.forScope(Scope.PACKAGE_SCOPE,new QName("org.apache.tools.ant")));
 		view.addProjectSelection(UniversalSelection.getCurrent());
 		view.setRenderable(false);
 
@@ -76,15 +76,15 @@ public class ViewFactory {
 		View view = testAPICentricSelectionView();
 		view.setName("API-centric selection test 2");
 		view.removeProjectSelection(UniversalSelection.getCurrent());
-		view.addProjectSelection(new ScopedSelection(new QName("org.sunflow"), Scope.PREFIX_SCOPE));
-		view.addProjectSelection(new ScopedSelection(new QName("tomcat"), Scope.ROOT_SCOPE));		
+		view.addProjectSelection(ScopedSelection.forScope(Scope.PREFIX_SCOPE, new QName("org.sunflow")));
+		view.addProjectSelection(ScopedSelection.forScope(Scope.ROOT_SCOPE, new QName("tomcat")));		
 		return view;
 	}
 
 	public View testProjectCentricSelectionView() {
 		View view = new View("Project-centric selection test", Perspective.PROJECT_CENTRIC);
-		view.addProjectSelection(new ScopedSelection(new QName(Store.Settings.PROJECT_TEST.getValue()), Scope.ROOT_SCOPE));
-		view.addAPISelection(new ScopedSelection(new QName("java.lang.String"), Scope.TYPE_SCOPE));
+		view.addProjectSelection(ScopedSelection.forScope(Scope.ROOT_SCOPE, new QName(Store.Settings.PROJECT_TEST.getValue())));
+		view.addAPISelection(ScopedSelection.forScope(Scope.TYPE_SCOPE, new QName("java.lang.String")));
 		view.setRenderable(false);
 		return view;
 	}
@@ -95,8 +95,8 @@ public class ViewFactory {
 	public View testAPITagSelectionView() {
 		View view = new View("API tag selection test", Perspective.API_CENTRIC);
 		view.addProjectSelection(UniversalSelection.getCurrent());
-		view.addAPISelection(new ScopedSelection(new QName("ant"), Scope.TAG_SCOPE));
-		view.addAPISelection(new ScopedSelection(new QName("annotation"), Scope.TAG_SCOPE, new Tag("additional")));
+		view.addAPISelection(ScopedSelection.forScope(Scope.TAG_SCOPE, new QName("ant")));
+		view.addAPISelection(ScopedSelection.forScope(Scope.TAG_SCOPE, new QName("annotation"), new Tag("additional")));
 		view.setAPISourceViewName(TAGGED_API_VIEW_NAME);
 		return view;
 	}
@@ -117,12 +117,13 @@ public class ViewFactory {
 				if(prefix.isEmpty()) 
 					throw new IOException("Third column should contain a package prefix: " + line);
 				int subsincluded = Integer.parseInt(columns[3]);
-				ScopedSelection selection = new ScopedSelection(new QName(prefix));
+				ScopedSelection selection = null;
+				QName name = new QName(prefix);
 				//from apis.csv README: prune bit: 0 do not include (i.e., select?) subs, 1 do include subs
 				if(subsincluded == 0) 
-					selection.setScope(Scope.PACKAGE_SCOPE);
+					selection = ScopedSelection.forScope(Scope.PACKAGE_SCOPE, name);
 				else if(subsincluded == 1)
-					selection.setScope(Scope.PREFIX_SCOPE);
+					selection = ScopedSelection.forScope(Scope.PREFIX_SCOPE, name);
 				else throw new IOException("Fourth column should be either 0 or 1: " + line);
 				if(!tag.isEmpty())
 					selection.setTag(new Tag(tag));
