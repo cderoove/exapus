@@ -118,6 +118,10 @@ public class PackageLayer extends MemberContainer implements ILayerContainer {
 	}
 
 	public void addMethodDeclaration(MethodDeclaration md, Stack<ASTNode> scope, IMethodBinding mb) {
+		if(mb == null) {
+			getOrAddMember(new UqName(md.getName()), Element.forNode(md), scope.iterator());
+			return;
+		}
 		getOrAddMember(UqName.forBinding(mb), Element.forNode(md), scope.iterator());
 	}
 
