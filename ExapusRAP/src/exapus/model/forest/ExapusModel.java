@@ -64,7 +64,7 @@ public class ExapusModel {
 
         long stopTime = System.currentTimeMillis();
         long elapsedTime = stopTime - startTime;
-        System.err.printf("Loading projects: %d ms\n", elapsedTime);
+        System.err.printf("Loading projects: %d s\n", elapsedTime / 1000);
 
         return Status.OK_STATUS;
 	}

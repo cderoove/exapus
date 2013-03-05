@@ -15,7 +15,6 @@ public class OutboundFactForest extends FactForest {
 
 	public void addProject(IJavaProject p, IProgressMonitor m) throws JavaModelException {
         try {
-
             long startTime = System.currentTimeMillis();
 
             String name = p.getElementName();
@@ -34,7 +33,7 @@ public class OutboundFactForest extends FactForest {
 
             long stopTime = System.currentTimeMillis();
             long elapsedTime = stopTime - startTime;
-            System.out.printf("Added project %s to project-centric forest (%d) (%d ms)\n", name, trees.keySet().size(), elapsedTime);
+            System.out.printf("Added project %s to project-centric forest (%d) (%d s)\n", name, trees.keySet().size(), elapsedTime / 1000);
         } catch (Exception ex){
             if (ex instanceof JavaModelException) throw (JavaModelException) ex;
             System.err.printf("Project %s had a problem loading\n", p.getElementName());
