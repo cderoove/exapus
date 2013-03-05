@@ -31,28 +31,6 @@ public class UqName {
 
 	public static UqName EMPTY = new UqName("");
 
-	/*
-	public static UqName forMethod(IMethod m) {
-		StringBuilder name = new StringBuilder();
-		name.append(m.getElementName());
-		name.append("(");
-
-		String[] parameterTypes = m.getParameterTypes();
-		String[] parameterTypeNames = new String[parameterTypes.length];
-		for (int i=0; i<parameterTypes.length; ++i) 
-			parameterTypeNames[i] = Signature.toString(parameterTypes[i]);
-
-		Joiner joiner = Joiner.on(", ");
-		String parameters = joiner.join(parameterTypeNames);
-
-		assert(parameters.indexOf('.') < 0); //otherwise, QName cannot use . to separate component names!!
-
-		name.append(parameters);
-		name.append(")");
-		return new UqName(name.toString());
-	}
-	*/
-
 	public static UqName forBinding(IMethodBinding mb) {
 		StringBuilder name = new StringBuilder();
 		name.append(mb.getName());
@@ -79,7 +57,8 @@ public class UqName {
 	}
 
 	public static UqName forBinding(ITypeBinding t) {
-		QName name = QName.forBinding(t);
+		
+			QName name = QName.forBinding(t);
 		List<UqName> components = name.getComponents();
 		return components.get(components.size() - 1); //this should give us an (unqualified) name for anonymous classes
 	}
@@ -87,8 +66,9 @@ public class UqName {
 
 	public static UqName forMethod(MethodDeclaration m) {
 		IMethodBinding binding = m.resolveBinding();
-		assert(binding != null);
-		return forBinding(binding);
+		if(binding != null)
+			return forBinding(binding);
+		return new UqName(m.getName());
 	}
 
 	public static UqName forNode(ASTNode bd) {
@@ -111,20 +91,10 @@ public class UqName {
 		if (bd instanceof AnonymousClassDeclaration) {
 			AnonymousClassDeclaration a = (AnonymousClassDeclaration) bd;
 			ITypeBinding b = a.resolveBinding();
-			if (b != null)
+			if (b != null && b.getBinaryName() != null)
 				return forBinding(b); 
 			else
-				return new UqName("<UNRESOLVEABLE_ANONYMOUSCLASS>"); // TODO: figure
-			// out a way
-			// to
-			// disambiguate,
-			// for
-			// instance
-			// using the
-			// #anons
-			// encountered
-			// in a
-			// scope
+				return new UqName("<UNRESOLVEABLE_ANONYMOUSCLASS>");
 		}
 		if (bd instanceof AnnotationTypeDeclaration) {
 			AnnotationTypeDeclaration e = (AnnotationTypeDeclaration) bd;

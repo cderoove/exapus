@@ -55,13 +55,6 @@ public class QName {
 		return identifier;
 	}
 	
-	public void setIdentifier(String id) {
-		components = new ArrayList<UqName>();
-		for (String s : Splitter.on('.').split(id))
-			components.add(new UqName(s));
-		this.identifier = id;
-	}
-
 	public QName(Iterable<String> i) {
 		components = new ArrayList<UqName>();
 		if (!(i.iterator().hasNext()))

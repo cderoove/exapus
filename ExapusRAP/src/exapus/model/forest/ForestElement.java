@@ -3,6 +3,10 @@ package exapus.model.forest;
 import exapus.gui.editors.forest.graph.INode;
 import exapus.model.metrics.IMetricValue;
 import exapus.model.metrics.MetricType;
+import exapus.model.store.Store;
+import exapus.model.tags.Cloud;
+import exapus.model.tags.Tag;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaProject;
@@ -22,7 +26,7 @@ public abstract class ForestElement implements INode {
 	
     private Map<MetricType, IMetricValue> metrics = new HashMap<MetricType, IMetricValue>();
 
-    private Set<String> tags = new HashSet<String>();
+    private Cloud tags = Cloud.EMPTY_CLOUD;
     
 	private ForestElement parent;
 
@@ -189,26 +193,24 @@ public abstract class ForestElement implements INode {
         return metrics.keySet();
     }
     
-    public boolean hasTag(String tag) {
-    	return tags.contains(tag);
-    }
-    
-    public boolean hasTag(QName tag) {
-    	return hasTag(tag.toString());
-    }
-    
-    public boolean addTag(String tag) {
-    	return tags.add(tag.intern());
-    }
-    
-    public void copyTagsFrom(ForestElement e) {
-    	tags.addAll(e.tags);
-    }
-    
-    public Iterable<String> getTags() {
+    public Cloud getTags() {
     	return tags;
     }
     
+    public boolean hasTag(Tag tag) {
+    	return tags.hasTag(tag);
+    }
+        
+    public boolean addTag(Tag tag) {
+    	Cloud before = tags;
+    	tags = Store.getCurrent().getOrRegisterExtendedCloud(tags, tag);
+    	return tags != before;
+    }
+    
+    public void copyTagsFrom(ForestElement e) {
+    	tags = e.tags;
+    }
+        
 	public ForestElement getCorrespondingForestElement(boolean copyWhenMissing, Iterator<ForestElement> ancestors, ForestElement element) {
 		ForestElement ancestor = ancestors.next();
 		ForestElement correspondingAncestor = getCorrespondingForestElement(copyWhenMissing, ancestor);
@@ -220,6 +222,10 @@ public abstract class ForestElement implements INode {
 	}
 
 	abstract public ForestElement getCorrespondingForestElement(boolean copyWhenMissing, ForestElement ancestor);
+
+	public Cloud getDualTags() {
+		return Cloud.EMPTY_CLOUD;
+	}
 
     
 }

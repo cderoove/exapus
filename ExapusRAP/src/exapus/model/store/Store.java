@@ -4,16 +4,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
 import javax.xml.bind.JAXBException;
 
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -23,14 +19,16 @@ import org.eclipse.core.runtime.jobs.Job;
 import exapus.model.Observable;
 import exapus.model.forest.ExapusModel;
 import exapus.model.forest.FactForest;
+import exapus.model.tags.Cloud;
+import exapus.model.tags.Tag;
 import exapus.model.view.View;
 import exapus.model.view.ViewFactory;
 import exapus.model.view.ViewReader;
-import exapus.model.view.ViewWriter;
 
 public class Store extends Observable {
 
 	private static Store current;
+	
 
 	static {
         readSettings();
@@ -40,12 +38,15 @@ public class Store extends Observable {
 	public static Store getCurrent() {
 		return current;
 	}
+
+
 	
 	private Store() {
 		registry = new HashMap<String, View>();
 		workspaceModel = null;
+		registeredClouds = 	new HashMap<String,Cloud>();
+		getOrRegisterCloud(Cloud.EMPTY_CLOUD);
 	}
-	
 	
 	private void initializeModelFromWorkspace(IProgressMonitor m) throws CoreException {
 		workspaceModel = new ExapusModel();
@@ -70,9 +71,8 @@ public class Store extends Observable {
 	
 	private ExapusModel workspaceModel;
 
-	//data
 	private Map<String, View> registry;
-	
+		
 	public ExapusModel getWorkspaceModel() {
 		return workspaceModel;
 	}
@@ -206,5 +206,33 @@ public class Store extends Observable {
         private String key;
         private String value;
     }
+    
+    
+	private Map<String, Cloud> registeredClouds;
+
+	public Cloud getRegisteredCloud(String canonical) {
+		return registeredClouds.get(canonical);
+	}
+	
+	public boolean hasRegisteredCloud(String canonical) {
+		return getRegisteredCloud(canonical) != null;
+	}
+	
+	public Cloud getOrRegisterCloud(Cloud cloud) {
+		String id = cloud.getCanonicalString();
+		Cloud registered = getRegisteredCloud(id);
+		if(registered != null)
+			return registered;
+		registeredClouds.put(id, cloud);
+		return cloud;
+	}
+	
+	public Cloud getOrRegisterExtendedCloud(Cloud cloud, Tag t) {
+		return getOrRegisterCloud(Cloud.from(cloud, t));
+	}
+	
+	
+	
+
 
 }

@@ -11,6 +11,7 @@ import exapus.model.forest.PackageLayer;
 import exapus.model.forest.PackageTree;
 import exapus.model.forest.QName;
 import exapus.model.forest.Ref;
+import exapus.model.tags.Tag;
 
 @XmlRootElement
 public class ScopedSelection extends Selection {
@@ -19,11 +20,13 @@ public class ScopedSelection extends Selection {
 		//only to be used by JAXB
 	}
 	
-	public ScopedSelection(QName name, Scope scope, String tag) {
+	public ScopedSelection(QName name, Scope scope, Tag tag) {
 		super();
 		this.name = name;
 		this.scope = scope;
 		this.tag = tag;
+		if(scope == Scope.TAG_SCOPE)
+			this.nameAsTag = new Tag(name.getIdentifier());
 	}
 	
 	public ScopedSelection(QName name, Scope scope) {
@@ -39,14 +42,15 @@ public class ScopedSelection extends Selection {
 	
 	private QName name;
 	
-	private String tag;
+	private Tag tag;
+	
 	
 	@XmlElement
-	public String getTag() {
+	public Tag getTag() {
 		return tag;
 	}
 	
-	public void setTag(String tag) {
+	public void setTag(Tag tag) {
 		this.tag = tag;
 	}
 	
@@ -54,6 +58,8 @@ public class ScopedSelection extends Selection {
 		return tag != null;
 	}
 	
+	private Tag nameAsTag;
+
 	
 	//to avoid recomputation for type/method scopes, could go into QName but there it would consume bytes
 	//should move to type/method scopes when refactored into a scope hierarchy 
@@ -78,7 +84,7 @@ public class ScopedSelection extends Selection {
 	@Override
 	public boolean matches(PackageTree packageTree) {
 		if(scope.equals(Scope.TAG_SCOPE))
-			return packageTree.hasTag(name);
+			return packageTree.hasTag(nameAsTag);
 
 		if(scope.equals(Scope.ROOT_SCOPE)) 
 			return packageTree.getQName().equals(name);
@@ -88,7 +94,7 @@ public class ScopedSelection extends Selection {
 	@Override
 	public boolean matches(PackageLayer packageLayer) {
 		if(scope.equals(Scope.TAG_SCOPE))
-			return packageLayer.hasTag(name);
+			return packageLayer.hasTag(nameAsTag);
 
 		if(scope.equals(Scope.ROOT_SCOPE)) 
 			return matches(packageLayer.getParentPackageTree());
@@ -111,7 +117,7 @@ public class ScopedSelection extends Selection {
 	@Override
 	public boolean matches(Member member) {
 		if(scope.equals(Scope.TAG_SCOPE))
-			return member.hasTag(name);
+			return member.hasTag(nameAsTag);
 
 		if(scope.equals(Scope.ROOT_SCOPE)) 
 			return matches(member.getParentPackageTree());
@@ -134,7 +140,7 @@ public class ScopedSelection extends Selection {
 	@Override
 	public boolean matches(Ref ref) {
 		if(scope.equals(Scope.TAG_SCOPE))
-			return ref.hasTag(name);
+			return ref.hasTag(nameAsTag);
 
 		if(scope.equals(Scope.ROOT_SCOPE)) 
 			return ref.getParentPackageTree().getQName().equals(name);
@@ -246,10 +252,6 @@ public class ScopedSelection extends Selection {
 		return getScope().toString();
 	}
 
-	@Override
-	public String getTagString() {
-		return (hasTag() ? getTag() : "");
-	}
 
 
 	

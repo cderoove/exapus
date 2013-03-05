@@ -71,7 +71,7 @@ public class SelectiveCopyingForestVisitor extends CopyingForestVisitor implemen
 			Selection selection =  i.next();
 			if(selection.hasTag()) {
 				if(selection.matches(copy)) {
-					if(copy.addTag(selection.getTagString()))
+					if(copy.addTag(selection.getTag()))
 						//re-iterate when a new tag has been added
 						i = selections.iterator(); 
 				}

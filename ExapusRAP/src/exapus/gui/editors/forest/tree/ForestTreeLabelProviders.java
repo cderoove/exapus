@@ -170,12 +170,26 @@ public class ForestTreeLabelProviders {
         public String getText(Object element) {
 			if (element instanceof ForestElement) {
 				ForestElement fe = (ForestElement) element;
-				return Joiner.on(',').join(fe.getTags());
+				return fe.getTags().getCanonicalString();
 			}
 			return null;
         }
 
     }
+    
+    public static class DualTagsColumnLabelProvider extends ColumnLabelProvider {
+
+        public String getText(Object element) {
+			if (element instanceof ForestElement) {
+				ForestElement fe = (ForestElement) element;
+				return fe.getDualTags().getCanonicalString();
+			}
+			return null;
+        }
+
+    }
+
+    
 
 
     // For debugging purposes

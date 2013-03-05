@@ -8,6 +8,7 @@ import exapus.model.forest.Member;
 import exapus.model.forest.PackageLayer;
 import exapus.model.forest.PackageTree;
 import exapus.model.forest.Ref;
+import exapus.model.tags.Tag;
 
 @XmlRootElement
 public abstract class Selection {
@@ -42,9 +43,13 @@ public abstract class Selection {
 	
 	public abstract String getScopeString();
 	
-	public abstract String getTagString();
+	public String getTagString() {
+		return (hasTag() ? getTag().toString() : "");
+	}
 	
 	public abstract boolean hasTag();
+	
+	public abstract Tag getTag();
 	
 	
 	private static Class<?>[] supportedSelections = {UniversalSelection.class, ScopedSelection.class};

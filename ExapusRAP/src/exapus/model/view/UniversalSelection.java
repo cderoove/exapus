@@ -8,6 +8,7 @@ import exapus.model.forest.Member;
 import exapus.model.forest.PackageLayer;
 import exapus.model.forest.PackageTree;
 import exapus.model.forest.Ref;
+import exapus.model.tags.Tag;
 
 @XmlRootElement
 public class UniversalSelection extends Selection {
@@ -32,11 +33,6 @@ public class UniversalSelection extends Selection {
 		return "";
 	}
 	
-	@Override
-	public String getTagString() {
-		return "";
-	}
-
 	@Override
 	public boolean hasTag() {
 		return false;
@@ -80,6 +76,11 @@ public class UniversalSelection extends Selection {
 	@Override
 	public boolean matches(ForestElement e) {
 		return true;
+	}
+
+	@Override
+	public Tag getTag() {
+		return null;
 	}
 
 

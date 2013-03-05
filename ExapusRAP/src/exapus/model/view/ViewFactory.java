@@ -15,6 +15,7 @@ import com.google.common.io.LineProcessor;
 
 import exapus.model.forest.QName;
 import exapus.model.store.Store;
+import exapus.model.tags.Tag;
 
 public class ViewFactory {
 
@@ -95,7 +96,7 @@ public class ViewFactory {
 		View view = new View("API tag selection test", Perspective.API_CENTRIC);
 		view.addProjectSelection(UniversalSelection.getCurrent());
 		view.addAPISelection(new ScopedSelection(new QName("ant"), Scope.TAG_SCOPE));
-		view.addAPISelection(new ScopedSelection(new QName("annotation"), Scope.TAG_SCOPE, "additional"));
+		view.addAPISelection(new ScopedSelection(new QName("annotation"), Scope.TAG_SCOPE, new Tag("additional")));
 		view.setAPISourceViewName(TAGGED_API_VIEW_NAME);
 		return view;
 	}
@@ -124,7 +125,7 @@ public class ViewFactory {
 					selection.setScope(Scope.PREFIX_SCOPE);
 				else throw new IOException("Fourth column should be either 0 or 1: " + line);
 				if(!tag.isEmpty())
-					selection.setTag(tag);
+					selection.setTag(new Tag(tag));
 				builder.add(selection);
 				return true;
 			}

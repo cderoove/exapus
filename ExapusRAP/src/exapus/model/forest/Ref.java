@@ -1,5 +1,8 @@
 package exapus.model.forest;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 import org.eclipse.jdt.core.ICompilationUnit;
@@ -11,11 +14,14 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 
 import com.google.common.base.Objects;
 
+import exapus.model.tags.Cloud;
 import exapus.model.visitors.IForestVisitor;
 
 public abstract class Ref extends ForestElement {
 
 	private Ref dual;
+	
+    private Set<String> additionalDualTags = null;
 
 	protected Direction direction;
 
@@ -38,6 +44,8 @@ public abstract class Ref extends ForestElement {
 		rname = n;
 		range = r;
 		lineNumber = l;
+		additionalDualTags = new HashSet<String>();
+
 	}
 
 	@Override
@@ -136,6 +144,14 @@ public abstract class Ref extends ForestElement {
 		this.dual = dual;
 	}
 
+	@Override
+	public Cloud getDualTags() {
+		if(dual != null)
+			return dual.getTags();
+		return Cloud.EMPTY_CLOUD;
+	};
+	
+	
 	abstract public void acceptVisitor(IForestVisitor v);
 
 	public boolean equals(Object other) {

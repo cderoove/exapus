@@ -48,6 +48,7 @@ import exapus.model.forest.PackageLayer;
 import exapus.model.forest.PackageTree;
 import exapus.model.forest.QName;
 import exapus.model.store.Store;
+import exapus.model.tags.Tag;
 import exapus.model.view.Perspective;
 import exapus.model.view.Scope;
 import exapus.model.view.ScopedSelection;
@@ -409,7 +410,7 @@ public class SelectionDialog extends Dialog {
 
 			String scopedSelectionTag = scopedSelectionTagText.getText().trim();
 			if(!scopedSelectionTag.isEmpty())
-				((ScopedSelection) selection).setTag(scopedSelectionTag);
+				((ScopedSelection) selection).setTag(new Tag(scopedSelectionTag));
 			return;
 		}
 	}
