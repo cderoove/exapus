@@ -47,6 +47,8 @@ public class ExapusModel {
 	}
 
 	public IStatus processProjects(IProject[] ps, IProgressMonitor m) throws CoreException {
+        long startTime = System.currentTimeMillis();
+
 		m.beginTask("Processing projects", ps.length);
 		for (IProject p : ps) {
 			m.subTask("Processing project " + p.getName());
@@ -59,7 +61,12 @@ public class ExapusModel {
 			m.worked(1);
 		}
 		m.done();
-		return Status.OK_STATUS;
+
+        long stopTime = System.currentTimeMillis();
+        long elapsedTime = stopTime - startTime;
+        System.err.printf("Loading projects: %d ms\n", elapsedTime);
+
+        return Status.OK_STATUS;
 	}
 	
 	
