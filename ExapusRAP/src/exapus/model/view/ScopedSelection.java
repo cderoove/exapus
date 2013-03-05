@@ -170,7 +170,7 @@ public class ScopedSelection extends Selection {
 			return true;
 		
 		if(scope.equals(Scope.ROOT_SCOPE)) 
-			return packageLayer.getParentPackageTree().getQName().equals(name);
+			return mayContainMatches(packageLayer.getParentPackageTree());
 		
 		if(scope.equals(Scope.PACKAGE_SCOPE)) 
 			return packageLayer.getQName().isPrefixOf(name);
@@ -193,7 +193,7 @@ public class ScopedSelection extends Selection {
 			return true;
 
 		if(scope.equals(Scope.ROOT_SCOPE)) 
-			return member.getParentPackageTree().getQName().equals(name);
+			return mayContainMatches(member.getParentPackageTree());
 		
 		if(scope.equals(Scope.PACKAGE_SCOPE))
 			return member.getParentPackageLayer().getQName().equals(name);
@@ -221,7 +221,7 @@ public class ScopedSelection extends Selection {
 		if(scope.equals(Scope.ROOT_SCOPE)) 
 			return packageTree.getQName().equals(name);
 			
-		return false;
+		return true;
 	}
 	
 		
