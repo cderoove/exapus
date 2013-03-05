@@ -299,6 +299,10 @@ public class SelectionDialog extends Dialog {
 			return forest.getPackageTrees();
 		if(selectedScope.equals(Scope.PACKAGE_SCOPE))
 			return forest.getAllPackageLayers();
+		
+		/*
+		 * Disabled because filling the combo with all of these proposals is too slow on Qualitas.
+		 * 
 		if(selectedScope.equals(Scope.TYPE_SCOPE))
 			return Iterables.filter(forest.getAllMembers(),new Predicate<Member>() {
 				@Override
@@ -313,6 +317,7 @@ public class SelectionDialog extends Dialog {
 					return m.getElement().isMethod();
 				}
 			});
+		*/
 		if(selectedScope.equals(Scope.PREFIX_SCOPE))
 			return forest.getAllPackageLayers();
 		return Collections.emptyList();
