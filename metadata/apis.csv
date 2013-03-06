@@ -35,8 +35,8 @@ management; ; java.lang.management; 0
 ref; ; java.lang.ref; 0
 Jaxen; Jaxen; org.jaxen; 1
 JDOM; JDOM; org.jdom; 1
-ANTLR 3; ANTLR ; org.antlr.runtime; 1
-ANTLR 2; ANTLR ; antlr.collections; 1
+ANTLR 3; ANTLR ; org.antlr; 1
+ANTLR 2; ANTLR ; antlr; 1
 Jython; Jython; org.python; 1
 Rhino; Rhino; org.mozilla.javascript; 0
 Spring; Spring; org.springframework; 1
