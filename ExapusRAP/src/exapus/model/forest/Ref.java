@@ -21,7 +21,7 @@ public abstract class Ref extends ForestElement {
 
 	private Ref dual;
 	
-    private Set<String> additionalDualTags = null;
+    private Cloud updatedDualTags;
 
 	protected Direction direction;
 
@@ -44,8 +44,7 @@ public abstract class Ref extends ForestElement {
 		rname = n;
 		range = r;
 		lineNumber = l;
-		additionalDualTags = new HashSet<String>();
-
+		updatedDualTags = Cloud.EMPTY_CLOUD;
 	}
 
 	@Override
@@ -146,12 +145,13 @@ public abstract class Ref extends ForestElement {
 
 	@Override
 	public Cloud getDualTags() {
-		if(dual != null)
-			return dual.getTags();
-		return Cloud.EMPTY_CLOUD;
+		return updatedDualTags;
 	};
 	
-	
+    public void copyDualTagsFrom(Ref dual) {
+    	updatedDualTags = dual.getTags();
+    }
+
 	abstract public void acceptVisitor(IForestVisitor v);
 
 	public boolean equals(Object other) {
@@ -170,5 +170,8 @@ public abstract class Ref extends ForestElement {
 		}
 		return false;
 	}
+	
+	
+	
 }
 

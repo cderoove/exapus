@@ -99,6 +99,11 @@ public class View {
 		return null;
 	}
 	
+	public String getDualSourceViewName() {
+		return getSourceViewName(perspective.getDual());
+	}
+
+	
 	@XmlElement
 	public String getAPISourceViewName() {
 		return apiSource;

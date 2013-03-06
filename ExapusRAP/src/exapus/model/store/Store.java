@@ -115,7 +115,7 @@ public class Store extends Observable {
 	
 	protected void registerCustomViews() {
 		registerDebugViews();
-		registerCSVTagView();
+		registerTaggedViews();
 	}
 
 	
@@ -124,6 +124,13 @@ public class Store extends Observable {
 		registerView(ViewFactory.getCurrent().testAPICentricSelectionView2());
 		registerView(ViewFactory.getCurrent().testProjectCentricSelectionView());
 		registerView(ViewFactory.getCurrent().testAPITagSelectionView());
+	}
+	
+	private void registerTaggedViews() {
+		registerView(ViewFactory.getCurrent().taggedProjectsView());
+		registerView(ViewFactory.getCurrent().apisWithBothTagsView());
+		registerView(ViewFactory.getCurrent().projectsWithBothTagsView());
+		registerCSVTagView();
 	}
 	
 	private void registerCSVTagView() {

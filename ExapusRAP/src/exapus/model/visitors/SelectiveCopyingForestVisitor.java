@@ -2,6 +2,7 @@ package exapus.model.visitors;
 
 import java.util.Iterator;
 
+import exapus.model.forest.FactForest;
 import exapus.model.forest.ForestElement;
 import exapus.model.forest.InboundRef;
 import exapus.model.forest.Member;
@@ -100,6 +101,11 @@ public class SelectiveCopyingForestVisitor extends CopyingForestVisitor implemen
 	@Override
 	public boolean visitOutboundReference(OutboundRef outboundRef) {
 		return visitReference(outboundRef);
+	}
+
+	@Override
+	public void setDualForest(FactForest dualForest) {
+		// TODO Auto-generated method stub
 	}					
 
 

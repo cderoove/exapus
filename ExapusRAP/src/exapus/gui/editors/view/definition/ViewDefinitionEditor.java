@@ -48,8 +48,8 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 	private TableViewer tableVWAPI;
 	private TableViewer tableVWProjects;
 	private ViewEditor viewEditor;
-    private ComboViewer comboMetrics;
-    private ComboViewer comboGraphDetails;
+	private ComboViewer comboMetrics;
+	private ComboViewer comboGraphDetails;
 	private ComboViewer comboVWAPISource;
 	private ToolBar toolbarAPI;
 	private ToolBar toolbarProjects;
@@ -115,7 +115,7 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 		comboVWAPISource = new ComboViewer(parent, SWT.READ_ONLY);
 		comboVWAPISource.getCombo().setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		comboVWAPISource.setContentProvider(ArrayContentProvider.getInstance());
-	
+
 		comboVWAPISource.addSelectionChangedListener(new ISelectionChangedListener() {
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
@@ -130,12 +130,12 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 				}
 			}
 		});
-		
-		
-		
 
-	
-        //Packages
+
+
+
+
+		//Packages
 		Label lblAPILabel = new Label(parent, SWT.NONE);
 		lblAPILabel.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP, false, false, 1, 1));
 		lblAPILabel.setText("APIs:");
@@ -143,8 +143,8 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 		tableVWAPI = new TableViewer(parent, SWT.BORDER | SWT.V_SCROLL);
 		toolbarAPI = new ToolBar(parent, SWT.VERTICAL);
 		configureSelectionTableAndToolBar(tableVWAPI, toolbarAPI, Perspective.API_CENTRIC);
-		
-		
+
+
 		//Project Source
 		Label lblProjectSource = new Label(parent, SWT.NONE);
 		lblProjectSource.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -167,7 +167,7 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 				}
 			}
 		});
-		
+
 
 		//Projects
 		Label lblProjectsLabel = new Label(parent, SWT.NONE);
@@ -178,56 +178,56 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 		toolbarProjects = new ToolBar(parent, SWT.VERTICAL);
 		configureSelectionTableAndToolBar(tableVWProjects, toolbarProjects, Perspective.PROJECT_CENTRIC);
 
-        // MetricType
-        Label lblMetrics = new Label(parent, SWT.NONE);
-        lblMetrics.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP, false, false, 1, 1));
-        lblMetrics.setText("Metrics:");
+		// MetricType
+		Label lblMetrics = new Label(parent, SWT.NONE);
+		lblMetrics.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP, false, false, 1, 1));
+		lblMetrics.setText("Metrics:");
 
-        comboMetrics = new ComboViewer(parent, SWT.READ_ONLY);
-        comboMetrics.getCombo().setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
-        comboMetrics.setContentProvider(ArrayContentProvider.getInstance());
-        comboMetrics.addSelectionChangedListener(new ISelectionChangedListener() {
-            @Override
-            public void selectionChanged(SelectionChangedEvent event) {
-                IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-                Object selected = selection.getFirstElement();
-                if (selected instanceof MetricType) {
-                    getView().setMetricType((MetricType) selected);
-                }
-            }
-        });
-        
-        //Graph details
-        Label lblGraphDetails = new Label(parent, SWT.NONE);
-        lblGraphDetails.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP, false, false, 1, 1));
-        lblGraphDetails.setText("Graph details:");
+		comboMetrics = new ComboViewer(parent, SWT.READ_ONLY);
+		comboMetrics.getCombo().setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		comboMetrics.setContentProvider(ArrayContentProvider.getInstance());
+		comboMetrics.addSelectionChangedListener(new ISelectionChangedListener() {
+			@Override
+			public void selectionChanged(SelectionChangedEvent event) {
+				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+				Object selected = selection.getFirstElement();
+				if (selected instanceof MetricType) {
+					getView().setMetricType((MetricType) selected);
+				}
+			}
+		});
 
-        comboGraphDetails = new ComboViewer(parent, SWT.READ_ONLY);
-        comboGraphDetails.getCombo().setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
-        comboGraphDetails.setContentProvider(ArrayContentProvider.getInstance());
-        comboGraphDetails.addSelectionChangedListener(new ISelectionChangedListener() {
-            @Override
-            public void selectionChanged(SelectionChangedEvent event) {
-                IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-                Object selected = selection.getFirstElement();
-                if (selected instanceof GraphDetails) {
-                    getView().setGraphDetails((GraphDetails) selected);
-                }
-            }
-        });
-        
+		//Graph details
+		Label lblGraphDetails = new Label(parent, SWT.NONE);
+		lblGraphDetails.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP, false, false, 1, 1));
+		lblGraphDetails.setText("Graph details:");
+
+		comboGraphDetails = new ComboViewer(parent, SWT.READ_ONLY);
+		comboGraphDetails.getCombo().setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		comboGraphDetails.setContentProvider(ArrayContentProvider.getInstance());
+		comboGraphDetails.addSelectionChangedListener(new ISelectionChangedListener() {
+			@Override
+			public void selectionChanged(SelectionChangedEvent event) {
+				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+				Object selected = selection.getFirstElement();
+				if (selected instanceof GraphDetails) {
+					getView().setGraphDetails((GraphDetails) selected);
+				}
+			}
+		});
+
 		//Renderable
 		Label lblRenderable = new Label(parent, SWT.NONE);
 		GridData gd_lblRenderable = new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1);
 		lblRenderable.setLayoutData(gd_lblRenderable);
 
 		checkRenderable = new Button(parent, SWT.CHECK);
-        checkRenderable.setSelection(getView().getRenderable());
+		checkRenderable.setSelection(getView().getRenderable());
 
 		GridData gd_checkRenderable = new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1);
 		checkRenderable.setLayoutData(gd_checkRenderable);
 		checkRenderable.setText("Render as graph.");
-		
+
 		checkRenderable.addSelectionListener(new SelectionListener() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -240,14 +240,14 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 			}
 		});
 
-		
+
 		comboVWPerspective.setInput(Perspective.supportedPerspectives());
-        comboGraphDetails.setInput(GraphDetails.supportedDetails());
+		comboGraphDetails.setInput(GraphDetails.supportedDetails());
 
-        updateComboMetrics();
-    }
+		updateComboMetrics();
+	}
 
-    private void configureSelectionTableAndToolBar(final TableViewer tableVW, ToolBar toolbar, final Perspective perspective) {
+	private void configureSelectionTableAndToolBar(final TableViewer tableVW, ToolBar toolbar, final Perspective perspective) {
 		Table tableAPI = tableVW.getTable();
 		GridData gd_tableAPI = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
 		gd_tableAPI.heightHint = tableAPI.getItemHeight() * 4;
@@ -277,56 +277,54 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 			}
 		});
 
-		if(perspective.equals(Perspective.API_CENTRIC)) {
-			TableViewerColumn APITagCol = new TableViewerColumn(tableVW, SWT.NONE);
-			APITagCol.getColumn().setText("Added Tag");
-			APITagCol.getColumn() .setWidth(150);
-			APITagCol.setLabelProvider(new CellLabelProvider() {
-				@Override
-				public void update(ViewerCell cell) {
-					Selection sel = (Selection) cell.getElement();
-					cell.setText(sel.getTagString());
-				}
-			});
-		}
+		TableViewerColumn APITagCol = new TableViewerColumn(tableVW, SWT.NONE);
+		APITagCol.getColumn().setText("Added Tag");
+		APITagCol.getColumn() .setWidth(150);
+		APITagCol.setLabelProvider(new CellLabelProvider() {
+			@Override
+			public void update(ViewerCell cell) {
+				Selection sel = (Selection) cell.getElement();
+				cell.setText(sel.getTagString());
+			}
+		});
 
 
-	    ToolItem toolItemAddAPI = new ToolItem(toolbar, SWT.PUSH);
-	    toolItemAddAPI.setToolTipText("Add");
-	    toolItemAddAPI.setImage(Util.getImageFromPlugin("add.gif"));
-	    toolItemAddAPI.addSelectionListener(new SelectionAdapter() {
-	    	public void widgetSelected( final SelectionEvent event ) {
-	    		showSelectionDialog(perspective);
-	    	}
-	    });
+		ToolItem toolItemAddAPI = new ToolItem(toolbar, SWT.PUSH);
+		toolItemAddAPI.setToolTipText("Add");
+		toolItemAddAPI.setImage(Util.getImageFromPlugin("add.gif"));
+		toolItemAddAPI.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected( final SelectionEvent event ) {
+				showSelectionDialog(perspective);
+			}
+		});
 
-	    /*
+		/*
 	    final ToolItem toolItemEditAPI = new ToolItem(toolbar, SWT.PUSH);
 	    toolItemEditAPI.setEnabled(false);
 	    toolItemEditAPI.setText("Edit");
-	    */
+		 */
 
-	    final ToolItem toolItemDeleteAPI = new ToolItem(toolbar, SWT.PUSH);
-	    toolItemDeleteAPI.setEnabled(false);
-	    toolItemDeleteAPI.setToolTipText("Delete");
-	    toolItemDeleteAPI.setImage(Util.getImageFromPlugin("delete.gif"));
+		final ToolItem toolItemDeleteAPI = new ToolItem(toolbar, SWT.PUSH);
+		toolItemDeleteAPI.setEnabled(false);
+		toolItemDeleteAPI.setToolTipText("Delete");
+		toolItemDeleteAPI.setImage(Util.getImageFromPlugin("delete.gif"));
 
-	    toolItemDeleteAPI.addSelectionListener(new SelectionAdapter() {
-	    	public void widgetSelected( final SelectionEvent event ) {
-	    		IStructuredSelection sel = (IStructuredSelection) tableVW.getSelection();
-	    		if(sel.isEmpty())
-	    			return;
-	    		Selection selectedSelection = (Selection) sel.getFirstElement();
-		    	if(perspective.equals(Perspective.API_CENTRIC))
-		    		getView().removeAPISelection(selectedSelection);
-		    	if(perspective.equals(Perspective.PROJECT_CENTRIC))
-		    		getView().removeProjectSelection(selectedSelection);
-		    	updateControls();
-	    	}
-	    });
+		toolItemDeleteAPI.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected( final SelectionEvent event ) {
+				IStructuredSelection sel = (IStructuredSelection) tableVW.getSelection();
+				if(sel.isEmpty())
+					return;
+				Selection selectedSelection = (Selection) sel.getFirstElement();
+				if(perspective.equals(Perspective.API_CENTRIC))
+					getView().removeAPISelection(selectedSelection);
+				if(perspective.equals(Perspective.PROJECT_CENTRIC))
+					getView().removeProjectSelection(selectedSelection);
+				updateControls();
+			}
+		});
 
 
-	    tableVW.addSelectionChangedListener(new ISelectionChangedListener() {
+		tableVW.addSelectionChangedListener(new ISelectionChangedListener() {
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				boolean enabled = !event.getSelection().isEmpty();
@@ -371,7 +369,7 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 		tableVWProjects.setInput(Iterables.toArray(view.getProjectSelections(),Object.class));
 		updateComboMetrics();
 		comboGraphDetails.setSelection(new StructuredSelection(view.getGraphDetails()));
-        enableControls(!getView().sealed());
+		enableControls(!getView().sealed());
 	}
 
 	private void enableControls(boolean enabled) {
@@ -392,50 +390,50 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 				ViewFactory.getCurrent().completePackageView().getName()
 				: ViewFactory.getCurrent().completeProjectView().getName();
 	}
-	*/
-	
-	
-	
-	
+	 */
+
+
+
+
 	private String getCompleteAPIViewName() {
 		return ViewFactory.getCurrent().completePackageView().getName();
-				
+
 	}
-	
+
 	private String getCompleteProjectViewName() {
 		return ViewFactory.getCurrent().completeProjectView().getName();
 	}
 
-	
+
 	private ArrayList<String> viewSourceNames(Perspective p) {
 		ArrayList<String> elements = new ArrayList<String>();
 		View thisView = getView();
 		for(View v : Store.getCurrent().getRegisteredViews()) {
 			if(v.getPerspective().equals(p)
-				&& !v.equals(thisView)
-				&& !thisView.hasTransitiveDependant(v))
+					&& !v.equals(thisView)
+					&& !thisView.hasTransitiveDependant(v))
 				elements.add(v.getName());
 		}
 		return elements;
 	}
 
-	
+
 	private void updateComboVWAPISource() {
 		comboVWAPISource.setInput(viewSourceNames(Perspective.API_CENTRIC));
 		String sourceViewName = getView().getAPISourceViewName();
 		comboVWAPISource.setSelection(new StructuredSelection(sourceViewName == null ? getCompleteAPIViewName() : sourceViewName));
 	}
-	
+
 	private void updateComboVWProjectSource() {
 		comboVWProjectSource.setInput(viewSourceNames(Perspective.PROJECT_CENTRIC));
 		String sourceViewName = getView().getProjectSourceViewName();
 		comboVWProjectSource.setSelection(new StructuredSelection(sourceViewName == null ? getCompleteProjectViewName() : sourceViewName));
 	}
-	
-	
+
+
 	private void updateComboMetrics() {
-        comboMetrics.setInput(MetricType.supportedMetrics(getView().getRenderable()));
-        comboMetrics.setSelection(new StructuredSelection(getView().getMetricType()));
+		comboMetrics.setInput(MetricType.supportedMetrics(getView().getRenderable()));
+		comboMetrics.setSelection(new StructuredSelection(getView().getMetricType()));
 	}
 
 	public void setViewEditor(ViewEditor viewEditor) {

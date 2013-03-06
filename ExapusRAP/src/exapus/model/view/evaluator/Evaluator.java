@@ -46,6 +46,8 @@ public abstract class Evaluator {
 
 	public void evaluate() {
 		ICopyingForestVisitor v = newVisitor();
+		FactForest dualForest = getDualSourceForest();
+		v.setDualForest(dualForest);
 		FactForest sourceForest = getSourceForest();
 		FactForest forest = v.copy(sourceForest);
 		calculateMetrics(forest);
@@ -56,10 +58,22 @@ public abstract class Evaluator {
 
 	protected abstract FactForest getCompleteForest();
 	
+	protected abstract FactForest getCompleteDualForest();
+	
+	
+	
 	protected FactForest getSourceForest() {
 		String sourceViewName = getView().getSourceViewName();
 		if(sourceViewName == null)
 			return getCompleteForest();
+		else
+			return Store.getCurrent().getView(sourceViewName).evaluate();
+	}
+	
+	protected FactForest getDualSourceForest() {
+		String sourceViewName = getView().getDualSourceViewName();
+		if(sourceViewName == null)
+			return getCompleteDualForest();
 		else
 			return Store.getCurrent().getView(sourceViewName).evaluate();
 	}

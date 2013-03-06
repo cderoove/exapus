@@ -19,6 +19,12 @@ public abstract class CopyingForestVisitor implements ICopyingForestVisitor {
 	}
 	
 	protected FactForest forestCopy;
+	
+	protected FactForest dualForest;
+	
+	public void setDualForest(FactForest dualForest) {
+		this.dualForest = dualForest;
+	}
 
 	protected void clear() {
 		forestCopy = null;

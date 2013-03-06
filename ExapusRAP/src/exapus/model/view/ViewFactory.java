@@ -90,7 +90,9 @@ public class ViewFactory {
 	}
 	
 	
-	private static String TAGGED_API_VIEW_NAME = "Tagged APIs";
+	private static String TAGGED_API_VIEW_NAME = "API Tags";
+	
+	private static String TAGGED_PROJECT_VIEW_NAME = "Project Tags";
 			
 	public View testAPITagSelectionView() {
 		View view = new View("API tag selection test", Perspective.API_CENTRIC);
@@ -101,6 +103,33 @@ public class ViewFactory {
 		return view;
 	}
 
+	public View taggedProjectsView() {
+		View view = new View(TAGGED_PROJECT_VIEW_NAME, Perspective.PROJECT_CENTRIC);
+		view.addProjectSelection(UniversalSelection.getCurrent());
+		view.addAPISelection(UniversalSelection.getCurrent());
+		return view;
+	}
+	
+	public View projectsWithBothTagsView() {
+		View view = new View("Tagged Projects", Perspective.PROJECT_CENTRIC);
+		view.setAPISourceViewName(TAGGED_API_VIEW_NAME);
+		view.setProjectSourceViewName(TAGGED_PROJECT_VIEW_NAME);
+		view.addProjectSelection(UniversalSelection.getCurrent());
+		view.addAPISelection(UniversalSelection.getCurrent());
+		return view;
+	}
+	
+	public View apisWithBothTagsView() {
+		View view = new View("Tagged APIs", Perspective.API_CENTRIC);
+		view.setAPISourceViewName(TAGGED_API_VIEW_NAME);
+		view.setProjectSourceViewName(TAGGED_PROJECT_VIEW_NAME);
+		view.addProjectSelection(UniversalSelection.getCurrent());
+		view.addAPISelection(UniversalSelection.getCurrent());
+		return view;
+	}
+
+
+	
 
 	public View viewFromCSVTags(File file) throws IOException {
 		ImmutableList<Selection> selections = Files.readLines(file, Charsets.UTF_8,

@@ -1,34 +1,24 @@
 package exapus.gui.editors.forest.tree;
 
-import com.google.common.base.Function;
-import com.google.common.base.Predicates;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Iterators;
-import com.google.common.primitives.Ints;
-import exapus.gui.editors.view.IViewEditorPage;
-import exapus.gui.editors.view.ViewEditor;
-import exapus.gui.util.Util;
-import exapus.gui.views.forest.reference.ForestReferenceViewPart;
-import exapus.gui.views.store.StoreListContentProvider;
-import exapus.gui.views.store.StoreView;
-import exapus.model.forest.FactForest;
-import exapus.model.forest.ForestElement;
-import exapus.model.forest.Member;
-import exapus.model.forest.PackageLayer;
-import exapus.model.forest.Ref;
-import exapus.model.metrics.MetricType;
-import exapus.model.store.Store;
-import exapus.model.view.View;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.ToolBarManager;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.viewers.*;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TreePath;
+import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.TreeViewerColumn;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.window.Window;
 import org.eclipse.rwt.RWT;
 import org.eclipse.swt.SWT;
@@ -36,32 +26,41 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
-import org.eclipse.ui.*;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.IPropertyListener;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPartSite;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
-import org.eclipse.ui.dialogs.FilteredTree;
-import org.eclipse.ui.dialogs.ListSelectionDialog;
-import org.eclipse.ui.dialogs.PatternFilter;
 
-import java.io.ObjectInputStream.GetField;
-import java.util.ArrayList;
-import java.util.List;
+import com.google.common.collect.Iterables;
+import com.google.common.primitives.Ints;
 
-import javax.servlet.FilterConfig;
+import exapus.gui.editors.view.IViewEditorPage;
+import exapus.gui.editors.view.ViewEditor;
+import exapus.gui.util.Util;
+import exapus.gui.views.forest.reference.ForestReferenceViewPart;
+import exapus.gui.views.store.StoreView;
+import exapus.model.forest.FactForest;
+import exapus.model.forest.ForestElement;
+import exapus.model.forest.Ref;
+import exapus.model.metrics.MetricType;
+import exapus.model.store.Store;
+import exapus.model.view.Perspective;
+import exapus.model.view.View;
 
 public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IViewEditorPage {
 
@@ -125,6 +124,8 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 
 	private Composite editorComposite;
 	private ToolItem revealButton;
+	private TreeViewerColumn tagsCol;
+	private TreeViewerColumn duallTagsCol;
 
 	/*
      public boolean isDualFactForestViewer() {
@@ -340,10 +341,16 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 			}
 		});
 
-		TreeViewerColumn tagsCol = new TreeViewerColumn(viewer, SWT.NONE);
+		tagsCol = new TreeViewerColumn(viewer, SWT.NONE);
 		tagsCol.getColumn().setText("Tags");
 		tagsCol.getColumn().setWidth(150);
 		tagsCol.setLabelProvider(new ForestTreeLabelProviders.TagsColumnLabelProvider());
+		
+		duallTagsCol = new TreeViewerColumn(viewer, SWT.NONE);
+		duallTagsCol.getColumn().setText("Dual Tags");
+		duallTagsCol.getColumn().setWidth(150);
+		duallTagsCol.setLabelProvider(new ForestTreeLabelProviders.DualTagsColumnLabelProvider());
+
 		
 		TreeViewerColumn elementCol = new TreeViewerColumn(viewer, SWT.NONE);
 		elementCol.getColumn().setText("Element");
@@ -418,7 +425,7 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 		filterComposite = new Composite(parent, SWT.NONE);
 		filterComposite.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false,1,1));
 		filterComposite.setLayout(new GridLayout(2,false));
-
+		
 		Label apiFilterLabel = new Label(filterComposite, SWT.NONE);
 		apiFilterLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false,1,1));
 		apiFilterLabel.setText("Referenced Name:");
@@ -659,7 +666,17 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 					viewer.setInput(getForest());
 				updatePackageStyleButtons();
 				updateRevealButton();
+				updateTagColumnLabels();
 			}
+
+			
+			private void updateTagColumnLabels() {
+				Perspective p = getView().getPerspective();
+				tagsCol.getColumn().setText(p.getShortLabel() + " Tags");
+				duallTagsCol.getColumn().setText(p.getDual().getShortLabel() + " Tags");	
+			}
+
+
 
 			private void updateRevealButton() {
 				revealButton.setEnabled(!viewer.getSelection().isEmpty());

@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.google.common.collect.Iterables;
 
+import exapus.model.forest.FactForest;
 import exapus.model.forest.ForestElement;
 import exapus.model.forest.ILayerContainer;
 import exapus.model.forest.InboundRef;
@@ -132,6 +133,10 @@ public class FastSelectiveCopyingForestVisitor extends CopyingForestVisitor impl
 		return true;
 	}
 
+	
+
+	
+	
 	private boolean applyTags(Ref copy) {
 		Iterator<Selection> i = selections.iterator();
 		while(i.hasNext()) {
@@ -148,6 +153,23 @@ public class FastSelectiveCopyingForestVisitor extends CopyingForestVisitor impl
 		return true;
 	}
 	//end code duplication
+
+	private boolean applyDualTags(Ref copy, Ref dualInDualSource) {
+		Iterator<Selection> i = dual_selections.iterator();
+		while(i.hasNext()) {
+			Selection selection =  i.next();
+			if(selection.hasTag()) {
+				if(selection.matches(dualInDualSource)) {
+					if(copy.addTag(selection.getTag()))
+						//re-iterate when a new tag has been added
+						//i = selections.iterator(); 
+						;
+				}
+			}
+		}
+		return true;
+
+	}
 
 
 	@Override
@@ -191,21 +213,31 @@ public class FastSelectiveCopyingForestVisitor extends CopyingForestVisitor impl
 
 	private boolean visitReference(final Ref ref) {
 		if(anySelectionMatches(ref)) {
+			//dual according to source forest  (e.g., in all projects) 
 			Ref dual = ref.getDual();
+			
+			//corresponding element for dual in the view-specific dual source forest (e.g., in tagged projects)
+			Ref dualInDualSource = (Ref) dualForest.getCorrespondingForestElement(dual);
+			if(dualInDualSource == null) 
+				return false; //could not reside in the dual one
+			
 			Member parentCopy = (Member) getCopy(ref.getParent());
 			for(Selection dual_selection : dual_selections) {
 				//ref has to match one of the selections
-				if(dual_selection.matches(dual)) {
+				if(dual_selection.matches(dualInDualSource)) {
 					Member parentCopyAsMember = (Member) parentCopy;
 					Ref copy = Ref.from(ref);
+					copy.copyDualTagsFrom(dualInDualSource);
 					parentCopyAsMember.addAPIReference(copy);
 					applyTags(copy);
+					applyDualTags(copy, dualInDualSource);
 					return true;
 				}
 			}
 		}
 		return false;
 	}			
+
 
 	@Override
 	public boolean visitInboundReference(final InboundRef inboundRef) {
@@ -215,7 +247,7 @@ public class FastSelectiveCopyingForestVisitor extends CopyingForestVisitor impl
 	@Override
 	public boolean visitOutboundReference(OutboundRef outboundRef) {
 		return visitReference(outboundRef);
-	}					
+	}
 
 
 }

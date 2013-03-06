@@ -31,4 +31,10 @@ public class APICentricEvaluator extends Evaluator {
 		result = new InboundFactForest(null);
 	}
 
+
+	@Override
+	protected FactForest getCompleteDualForest() {
+		return Store.getCurrent().getWorkspaceModel().getProjectCentricForest();
+	}
+
 }
