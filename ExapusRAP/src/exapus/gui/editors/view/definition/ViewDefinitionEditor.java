@@ -1,11 +1,7 @@
 package exapus.gui.editors.view.definition;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 
-import exapus.model.details.GraphDetails;
-import exapus.model.metrics.MetricType;
-import exapus.model.view.*;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -24,21 +20,29 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
-import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 
 import exapus.gui.editors.view.IViewEditorPage;
 import exapus.gui.editors.view.ViewEditor;
 import exapus.gui.util.Util;
-import exapus.gui.views.store.StoreListContentProvider;
+import exapus.model.details.GraphDetails;
+import exapus.model.metrics.MetricType;
 import exapus.model.store.Store;
+import exapus.model.view.Perspective;
+import exapus.model.view.Selection;
+import exapus.model.view.View;
+import exapus.model.view.ViewFactory;
 
 //todo: implement view change listener, also in other editor parts
 public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{

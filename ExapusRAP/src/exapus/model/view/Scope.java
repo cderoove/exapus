@@ -1,5 +1,11 @@
 package exapus.model.view;
 
+import exapus.model.forest.ForestElement;
+import exapus.model.forest.Member;
+import exapus.model.forest.PackageLayer;
+import exapus.model.forest.PackageTree;
+import exapus.model.forest.Ref;
+
 public enum Scope {
 
 	TAG_SCOPE("Selects elements carrying a tag with the given name.", TagScopedSelection.class),
@@ -30,8 +36,37 @@ public enum Scope {
 	public Class<? extends ScopedSelection> getSelectionClass() {
 		return selectionClass;
 	}
-
 	
+	public static Scope forTagging(PackageTree tree) {
+		return ROOT_SCOPE;
+	}
 
+	public static Scope forTagging(PackageLayer layer) {
+		return PACKAGE_SCOPE;
+	}
+	
+	public static Scope forTagging(Member member) {
+		if(member.getElement().isMethod())
+			return METHOD_SCOPE;
+		return TYPE_SCOPE; //includes field members
+	}
+	
+	public static Scope forTagging(Ref ref) {
+		Member parentMember =  ref.getParentMember();
+		return forTagging(parentMember);
+	}
+	
+	public static Scope forTagging(ForestElement e) {
+		if(e instanceof Ref)
+			return forTagging((Ref) e);
+		if(e instanceof Member)
+			return forTagging((Member) e);
+		if(e instanceof PackageLayer)
+			return forTagging((PackageLayer) e);
+		if(e instanceof PackageTree)
+			return forTagging((PackageTree) e);
+		return null;		
+	}
+	
 	
 }

@@ -38,6 +38,7 @@ import exapus.model.view.Perspective;
 import exapus.model.view.View;
 
 public class StoreView extends ViewPart implements IDoubleClickListener {
+	
 	public StoreView() {
 	}
 	

@@ -71,6 +71,7 @@ public class SelectionDialog extends Dialog {
 
 	private String sourceViewName;
 	private Label scopeDescriptionLabel;
+	private Button scopedSelectionButton;
 
 	public Selection getSelection() {
 		return selection;
@@ -80,7 +81,18 @@ public class SelectionDialog extends Dialog {
 		super(parentShell);
 		this.perspective = perspective;
 		this.sourceViewName = sourceViewName;
-
+	}
+	
+	//todo, should be refactored such that all widgets always read and write these fields, instead of only at init time
+	private Class<? extends Selection> predefinedSelectionType = null;
+	private QName predefinedScopeName = null;
+	private Scope predefinedScope = null;
+	
+	public SelectionDialog(Shell shell, Perspective perspective, String sourceViewName, Class<? extends Selection> selectionType, QName scopeName, Scope scope) {
+		this(shell, perspective, sourceViewName);
+		predefinedSelectionType = selectionType;
+		predefinedScopeName = scopeName;
+		predefinedScope = scope;
 	}
 
 	//adapted from RAP controls demo
@@ -98,9 +110,10 @@ public class SelectionDialog extends Dialog {
 	}
 
 	protected Control createDialogArea(final Composite p) {
+		
 		Composite composite = (Composite) super.createDialogArea(p);
 		composite.setLayout(new GridLayout(2, false));
-
+		
 		Label lblType = new Label(composite, SWT.NONE);
 		GridData gd_lblType = new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1);
 		lblType.setLayoutData(gd_lblType);
@@ -120,17 +133,10 @@ public class SelectionDialog extends Dialog {
 			}
 		});
 
-
-
 		selectionTypeComboVW.addSelectionChangedListener(new ISelectionChangedListener() {
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
-				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-				Object selected = selection.getFirstElement();
-				if(selected.equals(UniversalSelection.class))
-					scopedSelectionComposite.setVisible(false);
-				if(selected.equals(ScopedSelection.class))
-					scopedSelectionComposite.setVisible(true);
+				updateDetailComposite();				
 			}
 		});
 
@@ -150,6 +156,14 @@ public class SelectionDialog extends Dialog {
 		scopedSelectionScopeComboVW.getControl().setLayoutData(gd_scopedSelectionScopeComboVW);
 		scopedSelectionScopeComboVW.setContentProvider(ArrayContentProvider.getInstance());
 		scopedSelectionScopeComboVW.setInput(Scope.supportedSelectionScopes());
+		
+		scopedSelectionScopeComboVW.addSelectionChangedListener(new ISelectionChangedListener() {
+			@Override
+			public void selectionChanged(SelectionChangedEvent event) {
+				updateDetailComposite();
+			}
+		});
+
 		
 
 		Label spacer = new Label(scopedSelectionComposite, SWT.NONE);
@@ -194,11 +208,11 @@ public class SelectionDialog extends Dialog {
 		scopedSelectionNameComboVW.getCombo().setEnabled(false);
 
 
-		final Button button = new Button(scopedSelectionComposite, SWT.PUSH);
-		button.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));	
-		button.setText("...");
-		button.setEnabled(false);
-		button.addSelectionListener(new SelectionAdapter() {
+		scopedSelectionButton = new Button(scopedSelectionComposite, SWT.PUSH);
+		scopedSelectionButton.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));	
+		scopedSelectionButton.setText("...");
+		scopedSelectionButton.setEnabled(false);
+		scopedSelectionButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				ElementTreeSelectionDialog dialog = new ElementTreeSelectionDialog(getShell(), new ForestTreeLabelProviders.PatternColumnLabelProvider(false), new ScopeSelectionForestTreeContentProvider());
@@ -238,24 +252,40 @@ public class SelectionDialog extends Dialog {
 		scopedSelectionTagText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false,2,1));
 		scopedSelectionTagText.setEnabled(false);
 
-
-
-		scopedSelectionScopeComboVW.addSelectionChangedListener(new ISelectionChangedListener() {
-			@Override
-			public void selectionChanged(SelectionChangedEvent event) {
-				scopedSelectionNameComboVW.getControl().setEnabled(true);
-				scopedSelectionTagText.setEnabled(true);
-				button.setEnabled(true);
-				scopedSelectionNameComboVW.setInput(getProposalStrings());
-				scopeDescriptionLabel.setText(getSelectedScope().getDescription());
-			}
-		});
-
-
+		if(predefinedScope != null) 
+			scopedSelectionScopeComboVW.setSelection(new StructuredSelection(predefinedScope));
+		if(predefinedSelectionType != null) 
+			selectionTypeComboVW.setSelection(new StructuredSelection(predefinedSelectionType));
+		if(predefinedScopeName != null)
+			scopedSelectionNameComboVW.getCombo().setText(predefinedScopeName.getIdentifier());
+		
 
 		return composite;
+		
 	}
 	
+	
+	
+	protected void updateDetailComposite() {
+		Class<Selection> selectedType = getSelectedType();
+		if(UniversalSelection.class.equals(selectedType));
+			scopedSelectionComposite.setVisible(false);
+		if(ScopedSelection.class.equals(selectedType)) {
+			Scope selectedScope = getSelectedScope();
+			if(selectedScope == null)
+				return;
+			scopeDescriptionLabel.setText(selectedScope.getDescription());
+			scopedSelectionComposite.setVisible(true);
+			scopedSelectionNameComboVW.getControl().setEnabled(true);
+			scopedSelectionTagText.setEnabled(true);
+			scopedSelectionButton.setEnabled(true);
+			String currentName = scopedSelectionNameComboVW.getCombo().getText();
+			scopedSelectionNameComboVW.setInput(getProposalStrings()); //disabled for expensive scopes
+			//scopedSelectionNameComboVW.setSelection(new StructuredSelection(currentName));
+			scopedSelectionNameComboVW.getCombo().setText(currentName);
+		}
+	}
+
 	private FactForest getProposalFactForest() {
 		if(sourceViewName != null && Store.getCurrent().hasRegisteredView(sourceViewName)) {
 			View sourceView = Store.getCurrent().getView(sourceViewName);
@@ -376,7 +406,28 @@ public class SelectionDialog extends Dialog {
 			return null;
 		return (Class<Selection>) selType.getFirstElement();
 	}
-
+	
+	
+	public void setSelectedType(Class<? extends Selection> selectionType) {
+		selectionTypeComboVW.setSelection(new StructuredSelection(selectionType));
+		updateDetailComposite();
+	}
+	
+	public void setSelectedScope(Scope scope) {
+		scopedSelectionScopeComboVW.setSelection(new StructuredSelection(scope));
+		updateDetailComposite();
+	}
+	
+	public void setSelectedName(QName name) {
+		scopedSelectionNameComboVW.setSelection(new StructuredSelection(name.toString()));
+		scopedSelectionNameComboVW.getCombo().setText(name.toString());
+		updateDetailComposite();
+	}
+	
+	public void setTitle(String dialogTitle) {
+		getShell().setText(dialogTitle);
+	}
+	
 
 	@SuppressWarnings("unused")
 	private Scope getSelectedScope() {
@@ -390,6 +441,7 @@ public class SelectionDialog extends Dialog {
 	}
 
 
+	
 	private void updateSelection() {
 		selection = null;
 		Class<Selection> selectedType = getSelectedType();

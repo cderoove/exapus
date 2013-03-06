@@ -6,6 +6,7 @@ import java.util.List;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -51,6 +52,7 @@ import com.google.common.primitives.Ints;
 
 import exapus.gui.editors.view.IViewEditorPage;
 import exapus.gui.editors.view.ViewEditor;
+import exapus.gui.editors.view.definition.SelectionDialog;
 import exapus.gui.util.Util;
 import exapus.gui.views.forest.reference.ForestReferenceViewPart;
 import exapus.gui.views.store.StoreView;
@@ -60,6 +62,9 @@ import exapus.model.forest.Ref;
 import exapus.model.metrics.MetricType;
 import exapus.model.store.Store;
 import exapus.model.view.Perspective;
+import exapus.model.view.Scope;
+import exapus.model.view.ScopedSelection;
+import exapus.model.view.Selection;
 import exapus.model.view.View;
 
 public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IViewEditorPage {
@@ -126,6 +131,7 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 	private ToolItem revealButton;
 	private TreeViewerColumn tagsCol;
 	private TreeViewerColumn duallTagsCol;
+	private ToolItem annotateButton;
 
 	/*
      public boolean isDualFactForestViewer() {
@@ -267,6 +273,7 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 
 
 		new ToolItem(bar, SWT.SEPARATOR);	    
+		
 		revealButton = new ToolItem(bar, SWT.PUSH);
 		revealButton.setToolTipText("Reveal selection in other view");
 		revealButton.setImage(Util.getImageFromPlugin("link-editor.gif"));
@@ -276,6 +283,17 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 			}
 
 		});
+		
+		annotateButton = new ToolItem(bar, SWT.PUSH);
+		annotateButton.setToolTipText("Add tag to selection");
+		annotateButton.setImage(Util.getImageFromPlugin("annotate.gif"));
+		annotateButton.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(final SelectionEvent event) {
+				addTagToSelection();
+			}
+
+		});
+
 
 
 
@@ -416,7 +434,7 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
-				updateRevealButton();
+				updateSelectionDependentButtons();
 			}
 		});
 
@@ -458,6 +476,35 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 
 	}
 
+	protected void addTagToSelection() {
+		ForestElement selected = getSelectedForestElement();
+		if(selected == null)
+			return;
+		View targetView = getView(); //TODO: should be selected by user
+		Perspective perspective = targetView.getPerspective(); 
+		SelectionDialog selectionDialog  = new SelectionDialog(getSite().getShell(),
+											                   perspective, 
+											                   targetView.getName(),
+											                   ScopedSelection.class,
+											                   selected.getQName(),
+											                   Scope.forTagging(selected));
+		int returnCode = selectionDialog.open();
+		if(returnCode == IDialogConstants.OK_ID) {
+			Selection newSelection = selectionDialog.getSelection();
+			if(newSelection != null) {
+				if(perspective.equals(Perspective.API_CENTRIC))
+					targetView.addAPISelection(newSelection);
+				if(perspective.equals(Perspective.PROJECT_CENTRIC))
+					targetView.addProjectSelection(newSelection);
+			}
+		}
+		
+		updateControls();
+	
+	}
+
+		
+	
 
 
 	public void setFilter(String projectFilter, String apiFilter) {
@@ -468,15 +515,20 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 		updateFilterControls(true);
 		applyFilter(true);
 	}
-
-	private void revealSelectionInOtherView() {
+	
+	
+	private ForestElement getSelectedForestElement() {
 		StructuredSelection sel = (StructuredSelection) viewer.getSelection();
 		if(sel.isEmpty())
-			return;
+			return null;
 		ForestElement selected = (ForestElement) sel.getFirstElement();
+		return selected;
+	}
+
+	private void revealSelectionInOtherView() {
+		ForestElement selected = getSelectedForestElement();
 		if(selected == null)
 			return;
-
 		ElementListSelectionDialog dialog = new ElementListSelectionDialog(getSite().getShell(), new LabelProvider());
 		dialog.setElements(Iterables.toArray(Store.getCurrent().getRegisteredViews(), Object.class));
 		dialog.setTitle("Choose View");
@@ -662,10 +714,20 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 
 			public void updateControls() {
 				updateMetrics();
-				if(viewer.getInput() != getForest())
+				FactForest newForest = getForest();
+				if(viewer.getInput() != newForest) {
+					Object[] oldExpanded = viewer.getExpandedElements();
+					Object[] newExpanded = newForest.getCorrespondingForestElements(oldExpanded);
+					StructuredSelection oldSelected = (StructuredSelection) viewer.getSelection();
+					StructuredSelection newSelected = new StructuredSelection(newForest.getCorrespondingForestElements(oldSelected.toArray()));
+					
 					viewer.setInput(getForest());
+					viewer.setSelection(newSelected, true);
+					viewer.setExpandedElements(newExpanded);    
+					
+				}
 				updatePackageStyleButtons();
-				updateRevealButton();
+				updateSelectionDependentButtons();
 				updateTagColumnLabels();
 			}
 
@@ -678,8 +740,10 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 
 
 
-			private void updateRevealButton() {
-				revealButton.setEnabled(!viewer.getSelection().isEmpty());
+			private void updateSelectionDependentButtons() {
+				boolean hasSelection = !viewer.getSelection().isEmpty();
+				revealButton.setEnabled(hasSelection);
+				annotateButton.setEnabled(hasSelection);
 			}
 
 
