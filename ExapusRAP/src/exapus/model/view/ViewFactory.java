@@ -110,7 +110,6 @@ public class ViewFactory {
 	
 	public View tagsForProjects() {
 		View view = new View(VIEW_TAGS_PROJECTS, Perspective.PROJECT_CENTRIC);
-		view.setAPISourceViewName(VIEW_TAGS_DOMAINS);
 		view.addProjectSelection(UniversalSelection.getCurrent());
 		view.addAPISelection(UniversalSelection.getCurrent());
 		view.setDescription("Defines tags for projects");

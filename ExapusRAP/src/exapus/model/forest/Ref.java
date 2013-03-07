@@ -1,22 +1,15 @@
 package exapus.model.forest;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
-
-import com.google.common.collect.HashMultiset;
-import com.google.common.collect.Multiset;
 import org.eclipse.jdt.core.ICompilationUnit;
-import org.eclipse.jdt.core.IMember;
-import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.SourceRange;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 
-import com.google.common.base.Objects;
+import com.google.common.collect.Multiset;
 
+import exapus.model.store.Store;
 import exapus.model.tags.Cloud;
+import exapus.model.tags.Tag;
 import exapus.model.visitors.IForestVisitor;
 
 public abstract class Ref extends ForestElement {
@@ -152,6 +145,12 @@ public abstract class Ref extends ForestElement {
 	
     public void copyDualTagsFrom(Ref dual) {
     	updatedDualTags = dual.getTags();
+    }
+    
+    public boolean addDualTag(Tag tag) {
+    	Cloud before = updatedDualTags;
+    	updatedDualTags = Store.getCurrent().getOrRegisterExtendedCloud(updatedDualTags, tag);
+    	return updatedDualTags != before;
     }
 
 	abstract public void acceptVisitor(IForestVisitor v);

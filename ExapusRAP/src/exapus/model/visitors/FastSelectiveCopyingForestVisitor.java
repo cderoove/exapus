@@ -23,6 +23,7 @@ public class FastSelectiveCopyingForestVisitor extends CopyingForestVisitor impl
 	protected Iterable<Selection> selections;	
 	protected Iterable<Selection> dual_selections;
 
+	
 	public FastSelectiveCopyingForestVisitor(Iterable<Selection> selections, Iterable<Selection> dual_selections) {
 		super();
 		this.selections = selections;
@@ -160,7 +161,7 @@ public class FastSelectiveCopyingForestVisitor extends CopyingForestVisitor impl
 			Selection selection =  i.next();
 			if(selection.hasTag()) {
 				if(selection.matches(dualInDualSource)) {
-					if(copy.addTag(selection.getTag()))
+					if(copy.addDualTag(selection.getTag()))
 						//re-iterate when a new tag has been added
 						//i = selections.iterator(); 
 						;
@@ -213,15 +214,19 @@ public class FastSelectiveCopyingForestVisitor extends CopyingForestVisitor impl
 
 	private boolean visitReference(final Ref ref) {
 		if(anySelectionMatches(ref)) {
-			//dual according to source forest  (e.g., in all projects) 
+			//dual resides in workspace forest (All APIs/ All Projects)
 			Ref dual = ref.getDual();
+			Ref dualInDualSource;
 			
-			//corresponding element for dual in the view-specific dual source forest (e.g., in tagged projects)
-			//Ref dualInDualSource = (Ref) dualForest.getCorrespondingForestElement(dual);
-            // TODO: a temporary fix, line above slows down calculation ~150 times
-			Ref dualInDualSource = dual;
+			if(dual.getParentFactForest() != dualForest)
+				 dualInDualSource = (Ref) dualForest.getCorrespondingForestElement(dual);
+			else 
+				//this will speed computation up for views that depend 
+				//immediately on the workspace forests
+				dualInDualSource = dual;
+			
 			if(dualInDualSource == null)
-				return false; //could not reside in the dual one
+				return false; 
 			
 			Member parentCopy = (Member) getCopy(ref.getParent());
 			for(Selection dual_selection : dual_selections) {

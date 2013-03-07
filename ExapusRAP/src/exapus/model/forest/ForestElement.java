@@ -1,13 +1,11 @@
 package exapus.model.forest;
 
-import com.google.common.collect.HashMultiset;
-import com.google.common.collect.Multiset;
-import exapus.gui.editors.forest.graph.INode;
-import exapus.model.metrics.IMetricValue;
-import exapus.model.metrics.MetricType;
-import exapus.model.store.Store;
-import exapus.model.tags.Cloud;
-import exapus.model.tags.Tag;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jdt.core.ICompilationUnit;
@@ -15,14 +13,15 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import com.google.common.collect.HashMultiset;
+import com.google.common.collect.Multiset;
+
+import exapus.gui.editors.forest.graph.INode;
+import exapus.model.metrics.IMetricValue;
+import exapus.model.metrics.MetricType;
+import exapus.model.store.Store;
+import exapus.model.tags.Cloud;
+import exapus.model.tags.Tag;
 
 public abstract class ForestElement implements INode {
 	
@@ -209,7 +208,7 @@ public abstract class ForestElement implements INode {
     	tags = Store.getCurrent().getOrRegisterExtendedCloud(tags, tag);
     	return tags != before;
     }
-
+    
     public void copyTagsFrom(ForestElement e) {
     	tags = e.tags;
     }
