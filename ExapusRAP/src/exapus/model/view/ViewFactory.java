@@ -86,7 +86,7 @@ public class ViewFactory {
 		view.setProjectSourceViewName(VIEW_TAGS_PROJECTS);
 		view.addProjectSelection(UniversalSelection.getCurrent());
 		view.addAPISelection(UniversalSelection.getCurrent());
-		view.setDescription("Projects and all tags.");
+		view.setDescription("Projects and all tags");
 		return view;
 	}
 	
@@ -110,7 +110,7 @@ public class ViewFactory {
 	
 	public View tagsForProjects() {
 		View view = new View(VIEW_TAGS_PROJECTS, Perspective.PROJECT_CENTRIC);
-		view.setAPISourceViewName(VIEW_TAGS_SUBAPI);
+		view.setAPISourceViewName(VIEW_TAGS_DOMAINS);
 		view.addProjectSelection(UniversalSelection.getCurrent());
 		view.addAPISelection(UniversalSelection.getCurrent());
 		view.setDescription("Defines tags for projects");
@@ -159,12 +159,12 @@ public class ViewFactory {
 			}
 		});
 		
-		View view = new View(VIEW_TAGGED_APIS, Perspective.API_CENTRIC);
+		View view = new View(VIEW_TAGS_API, Perspective.API_CENTRIC);
 		for(Selection selection : selections) {
 			view.addAPISelection(selection);
 		}
 		view.addProjectSelection(UniversalSelection.getCurrent());
-		view.setDescription("Defines tags for APIs.");
+		view.setDescription("Defines tags for APIs");
 		return view;
 
 	}
