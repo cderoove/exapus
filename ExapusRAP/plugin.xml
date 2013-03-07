@@ -18,8 +18,6 @@
             name="Progress">
       </view>
       
-      
-      
       <view
             allowMultiple="false"
             class="exapus.gui.views.store.StoreView"
@@ -30,6 +28,11 @@
             class="exapus.gui.views.forest.reference.ForestReferenceViewPart"
             id="exapus.gui.views.forest.ForestReferenceView"
             name="Source">
+      </view>
+      <view
+            class="exapus.gui.views.forest.tagcloud.ForestElementTagCloudViewPart"
+            id="exapus.gui.views.forest.tagcloud.ForestElementTagCloudView"
+            name="Tag cloud">
       </view>
    </extension>
    <extension
