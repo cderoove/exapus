@@ -57,7 +57,7 @@ public abstract class Evaluator {
 
         long stopTime = System.currentTimeMillis();
         long elapsedTime = stopTime - startTime;
-        System.err.printf("Spent on evaluation: %d s\n", elapsedTime / 1000);
+        System.err.printf("Spent on %s: %d s\n", getView().getName(), elapsedTime / 1000);
     }
 
     private void propagateTags(FactForest forest) {

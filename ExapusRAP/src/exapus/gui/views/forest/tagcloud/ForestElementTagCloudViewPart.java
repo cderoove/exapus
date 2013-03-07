@@ -11,20 +11,15 @@ import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.TreeSet;
+
 
 public class ForestElementTagCloudViewPart extends SelectedForestElementBrowserViewPart {
+
+    private static final int GROUPNG = 21;
 
     public static final String ID = "exapus.gui.views.forest.tagcloud.ForestElementTagCloudView";
 
     protected String textToRender(ForestElement fe) {
-/*        if (fe.getParentFactForest().getDirection().equals(Direction.INBOUND)) {
-            if (fe instanceof Ref)
-                fe = ((Ref) fe).getDual();
-            else
-                return "API-centric";
-        }*/
-
         DescriptiveStatistics ds = new DescriptiveStatistics();
         Multiset<String> allTags = fe.getAllDualTags();
         for (String s : allTags.elementSet()) {
@@ -32,10 +27,10 @@ public class ForestElementTagCloudViewPart extends SelectedForestElementBrowserV
         }
 
         Multimap<Integer, String> freqs = HashMultimap.create();
-        System.err.println("ds = " + ds.toString());
+        //System.err.println("ds = " + ds.toString());
         for (String s : allTags.elementSet()) {
             int size = getSize(ds, allTags.count(s));
-            System.err.printf("%d -> %d\n", allTags.count(s), size);
+            //System.err.printf("%d -> %d\n", allTags.count(s), size);
             freqs.put(size, s);
         }
 
@@ -46,29 +41,19 @@ public class ForestElementTagCloudViewPart extends SelectedForestElementBrowserV
         StringBuilder html = new StringBuilder();
         html.append(JavaSource2HTMLLineHighlightingConverter.HTML_SITE_HEADER);
 
+        int sum = 0;
         for (Integer size : ordered) {
             for (String s : freqs.get(size)) {
-                //html.append(String.format("<font size=\"%d\">%s</font>&nbsp;", size, s));
+                if (sum + size >= GROUPNG) {
+                    html.append("<br>");
+                    sum = 0;
+                }
+                sum += size;
+                html.append(String.format("<font size=\"%d\">%s</font>&nbsp;&nbsp;", size, s));
             }
-            //html.append("<br>");
         }
 
-
-/*
-        html.append(String.format("<font size=\"%d\">%s</font><br>", 2, "2"));
-        html.append(String.format("<font size=\"%d\">%s</font><br>", 3, "3"));
-        html.append(String.format("<font size=\"%d\">%s</font><br>", 4, "4"));
-        html.append(String.format("<font size=\"%d\">%s</font><br>", 5, "5"));
-        html.append(String.format("<font size=\"%d\">%s</font><br>", 6, "6"));
-        html.append(String.format("<font size=\"%d\">%s</font><br>", 7, "7"));
-        html.append(String.format("<font size=\"%d\">%s</font><br>", 8, "8"));
-        html.append(String.format("<font size=\"%d\">%s</font><br>", 9, "9"));
-        html.append(String.format("<font size=\"%d\">%s</font><br>", 10, "10"));
-        html.append(String.format("<font size=\"%d\">%s</font><br>", 11, "11"));
-        html.append(String.format("<font size=\"%d\">%s</font><br>", 12, "12"));
-*/
-
-        html.append(allTags.toString());
+        //html.append(allTags.toString());
         html.append(JavaSource2HTMLLineHighlightingConverter.HTML_SITE_FOOTER);
 
         //System.err.println("html = " + html);

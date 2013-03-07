@@ -53,37 +53,6 @@ public class Member extends MemberContainer {
 		}
 		return references;
 	}
-/*
-
-    public Multiset<String> getAllTags() {
-        if (allTags!= null) return allTags;
-
-        allTags = HashMultiset.create();
-
-        for (Ref ref : getAllReferences()) {
-            for (String s : ref.getAllTags()) {
-                allTags.add(s, ref.getAllTags().count(s));
-            }
-        }
-
-        return allTags;
-    }
-
-    public Multiset<String> getAllDualTags() {
-        if (allDualTags != null) return allDualTags;
-
-        allDualTags = HashMultiset.create();
-
-        for (Ref ref : getAllReferences()) {
-            for (String s : ref.getAllDualTags()) {
-                allDualTags.add(s, ref.getAllDualTags().count(s));
-            }
-        }
-
-        return allDualTags;
-    }
-*/
-
 
     public void addAPIReference(Ref reference) {
 		references.add(reference);
