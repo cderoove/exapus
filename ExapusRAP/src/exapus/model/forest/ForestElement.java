@@ -230,6 +230,19 @@ public abstract class ForestElement implements INode {
 
         if (this.parent != null) this.parent.addDualTagToAll(tags);
     }
+    
+	abstract public ForestElement getCorrespondingForestElement(ForestElement element);
+	
+	public ForestElement getCorrespondingForestElement(Iterator<ForestElement> ancestors, ForestElement element) {
+		ForestElement ancestor = ancestors.next();
+		ForestElement correspondingAncestor = getCorrespondingForestElement(ancestor);
+		if(correspondingAncestor == null)
+			return null;
+		if(ancestors.hasNext())
+			return correspondingAncestor.getCorrespondingForestElement(ancestors, element);
+		return correspondingAncestor.getCorrespondingForestElement(element);
+	}
+
 
 	public ForestElement getCorrespondingForestElement(boolean copyWhenMissing, Iterator<ForestElement> ancestors, ForestElement element) {
 		ForestElement ancestor = ancestors.next();
@@ -256,4 +269,5 @@ public abstract class ForestElement implements INode {
     public Multiset<String> getAllDualTags() {
         return allDualTags;
     }
+
 }

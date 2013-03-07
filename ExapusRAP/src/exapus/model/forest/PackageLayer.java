@@ -224,31 +224,20 @@ public class PackageLayer extends MemberContainer implements ILayerContainer {
 	}
 
 
-	/*
-	@Override
-	ForestElement getCorrespondingForestElement(boolean copyWhenMissing, Iterator<ForestElement> ancestors, ForestElement element) {
-		ForestElement ancestor = ancestors.next();
-		if(ancestor instanceof PackageLayer) {
-			PackageLayer correspondingLayer = getLayer(ancestor.getName());
-			if(correspondingLayer == null) 
-				return null;
-			if(ancestors.hasNext())
-				return correspondingLayer.getCorrespondingForestElement(copyWhenMissing, ancestors, element);
-			return correspondingLayer.getCorrespondingForestElement(copyWhenMissing, element);
+
+	public ForestElement getCorrespondingForestElement(ForestElement element) {
+		if(element instanceof Member) {
+			Member member = (Member) element;
+			return getMember(member);
 		}
-		if(ancestor instanceof Member) {
-			Member originalMember = (Member) ancestor;
-			Member correspondingMember = getMember(originalMember.getName(), originalMember.getElement());
-			if(correspondingMember == null)
-				return null;
-			if(ancestors.hasNext())
-				return correspondingMember.getCorrespondingForestElement(copyWhenMissing,ancestors, element);
-			return correspondingMember.getCorrespondingForestElement(copyWhenMissing,element);
+		if(element instanceof PackageLayer) {
+			return getLayer(element.getName());
 		}
 		return null;
 	}
-	*/
 
+	
+	
 	@Override
 	public ForestElement getCorrespondingForestElement(boolean copyWhenMissing, ForestElement element) {
 		if(element instanceof PackageLayer) {

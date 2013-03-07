@@ -97,7 +97,12 @@ public abstract class FactForest extends Observable {
     }
     
     public ForestElement getCorrespondingForestElement(ForestElement element) {
-    	return getCorrespondingForestElement(false, element);
+    	if(element instanceof PackageTree)
+    		return getPackageTree(element.getName());
+    	Iterator<ForestElement> ancestors = element.getAncestors().iterator();
+    	if(ancestors.hasNext())
+    		return getCorrespondingForestElement(ancestors, element);
+    	return null;
     }
 
     public ForestElement getCorrespondingForestElement(boolean copyWhenMissing, ForestElement element) {
@@ -115,7 +120,15 @@ public abstract class FactForest extends Observable {
     }
     
     public Object[] getCorrespondingForestElements(Object[] elements) {
-    	return getCorrespondingForestElements(false,elements);
+    	ArrayList<Object> corresponding = new ArrayList<Object>(elements.length);
+    	for(Object element : elements) {
+    		if(element instanceof ForestElement) {
+    			ForestElement correspondingElement = getCorrespondingForestElement((ForestElement) element);
+    			if(correspondingElement != null)
+    				corresponding.add(correspondingElement);
+    		}
+    	}
+    	return corresponding.toArray();
     }
 
     
@@ -140,6 +153,16 @@ public abstract class FactForest extends Observable {
 			return correspondingAncestor.getCorrespondingForestElement(copyWhenMissing, ancestors, element);
 		return correspondingAncestor.getCorrespondingForestElement(copyWhenMissing, element);
 	}
-	
+
+	public ForestElement getCorrespondingForestElement(Iterator<ForestElement> ancestors, ForestElement element) {
+		ForestElement ancestor = ancestors.next();
+		ForestElement correspondingAncestor = getCorrespondingForestElement(ancestor);
+		if(correspondingAncestor == null)
+			return null;
+		if(ancestors.hasNext())
+			return correspondingAncestor.getCorrespondingForestElement(ancestors, element);
+		return correspondingAncestor.getCorrespondingForestElement(element);
+	}
+
 	
 }

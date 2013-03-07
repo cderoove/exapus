@@ -148,6 +148,13 @@ public abstract class MemberContainer extends ForestElement {
 		return null;
 	}
 
+	public ForestElement getCorrespondingForestElement(ForestElement element) {
+		if(element instanceof Member) {
+			Member member = (Member) element;
+			return getMember(member);
+		}
+		return null;
+	}
 	
 
 	

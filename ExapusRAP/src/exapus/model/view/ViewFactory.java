@@ -82,7 +82,6 @@ public class ViewFactory {
 	
 	public View taggedProjects() {
 		View view = new View(VIEW_TAGGED_PROJECTS, Perspective.PROJECT_CENTRIC);
-		view.setAPISourceViewName(VIEW_TAGS_DOMAINS);
 		view.setProjectSourceViewName(VIEW_TAGS_PROJECTS);
 		view.addProjectSelection(UniversalSelection.getCurrent());
 		view.addAPISelection(UniversalSelection.getCurrent());

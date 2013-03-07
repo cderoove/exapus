@@ -155,6 +155,12 @@ public class PackageTree extends ForestElement  implements ILayerContainer  {
 				l.acceptVisitor(v);
 	}
 
+	public ForestElement getCorrespondingForestElement(ForestElement element) {
+		UqName name = element.getName();
+		return getLayer(name);
+	}
+
+	
 	@Override
 	public ForestElement getCorrespondingForestElement(boolean copyWhenMissing, ForestElement element) {
 		if(element instanceof PackageLayer) {

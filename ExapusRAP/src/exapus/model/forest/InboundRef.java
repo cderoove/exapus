@@ -48,11 +48,6 @@ public class InboundRef extends Ref {
 			v.visitInboundReference(this);
 	}
 
-	@Override
-	public ForestElement getCorrespondingForestElement(boolean copyWhenMissing, ForestElement ancestor) {
-		return null;
-	}
-	
 
 	
 }

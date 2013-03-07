@@ -158,15 +158,13 @@ public abstract class Ref extends ForestElement {
 	public boolean equals(Object other) {
 		if(other == null)
 			return false;
-		if(other == this)
-			return true;
 		if(other instanceof Ref) {
 			Ref ref = (Ref) other;
-			return ref.direction == direction
+			return ref.lineNumber == lineNumber
 					&& ref.pattern == pattern
 					&& ref.element == element
+					&& ref.direction == direction
 					&& ref.range.equals(range)
-					&& ref.lineNumber == lineNumber
 					&& ref.rname.equals(rname);
 		}
 		return false;
@@ -179,6 +177,18 @@ public abstract class Ref extends ForestElement {
     public Multiset<String> getAllDualTags() {
         return getDualTags().toMultiset();
     }
+
+	@Override
+	public ForestElement getCorrespondingForestElement(ForestElement ancestor) {
+		return null;
+	}
+	
+	@Override
+	public ForestElement getCorrespondingForestElement(boolean copyWhenMissing, ForestElement ancestor) {
+		return null;
+	}
+	
+
 
 }
 

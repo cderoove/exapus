@@ -74,10 +74,6 @@ public class OutboundRef extends Ref {
 			v.visitOutboundReference(this);
 	}
 
-	@Override
-	public ForestElement getCorrespondingForestElement(boolean copyWhenMissing, ForestElement ancestor) {
-		return null;
-	}
 
 	
 	
