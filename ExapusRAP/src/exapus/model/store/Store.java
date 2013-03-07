@@ -94,6 +94,8 @@ public class Store extends Observable {
 	}
 	
 	public View getView(String name) {
+		if(name == null)
+			return null;
 		return registry.get(name);
 	}
 	

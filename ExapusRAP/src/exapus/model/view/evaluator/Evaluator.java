@@ -3,7 +3,6 @@ package exapus.model.view.evaluator;
 import exapus.model.forest.FactForest;
 import exapus.model.metrics.MetricType;
 import exapus.model.stats.StatsCollectionVisitor;
-import exapus.model.store.Store;
 import exapus.model.tags.TagsPropagationVisitor;
 import exapus.model.view.View;
 import exapus.model.visitors.ICopyingForestVisitor;
@@ -75,24 +74,20 @@ public abstract class Evaluator {
 
 	protected abstract FactForest getCompleteForest();
 	
-	protected abstract FactForest getCompleteDualForest();
-	
-	
+	protected abstract FactForest getDualCompleteForest();
 	
 	protected FactForest getSourceForest() {
-		String sourceViewName = getView().getSourceViewName();
-		if(sourceViewName == null)
-			return getCompleteForest();
-		else
-			return Store.getCurrent().getView(sourceViewName).evaluate();
+		View sourceView= getView().getSourceView();
+		if(sourceView != null)
+			return sourceView.evaluate();
+		return getCompleteForest();
 	}
 	
 	protected FactForest getDualSourceForest() {
-		String sourceViewName = getView().getDualSourceViewName();
-		if(sourceViewName == null)
-			return getCompleteDualForest();
-		else
-			return Store.getCurrent().getView(sourceViewName).evaluate();
+		View sourceView= getView().getDualSourceView();
+		if(sourceView != null)
+			return sourceView.evaluate();
+		return getDualCompleteForest();	
 	}
 	
 	protected void calculateMetrics(FactForest forest) {
