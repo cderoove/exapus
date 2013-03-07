@@ -1,9 +1,12 @@
 package exapus.model.tags;
 
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlValue;
 
 import com.google.common.base.Objects;
 
+@XmlRootElement
 public class Tag implements Comparable<Tag> {
 
 	private String identifier;
@@ -16,7 +19,7 @@ public class Tag implements Comparable<Tag> {
 		this.identifier = identifier;
 	}
 	
-	@XmlElement
+	@XmlValue
 	public String getIdentifier() {
 		return this.identifier;
 	}

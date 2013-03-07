@@ -14,7 +14,6 @@ import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.google.common.base.Objects;
-import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 
 import exapus.model.details.GraphDetails;
@@ -60,12 +59,22 @@ public class View {
 	
     @XmlElementWrapper(name="APISelection")
     @XmlElements({ @XmlElement(name="Universal", type=UniversalSelection.class), 
-    	@XmlElement(name="ScopedSelection", type=ScopedSelection.class)})
+    	@XmlElement(name="Method", type=MethodScopedSelection.class),
+    	@XmlElement(name="Package", type=PackageScopedSelection.class),
+    	@XmlElement(name="Prefix", type=PrefixScopedSelection.class),
+    	@XmlElement(name="Root", type=RootScopedSelection.class),
+    	@XmlElement(name="Tag", type=TagScopedSelection.class),
+    	@XmlElement(name="Type", type=TypeScopedSelection.class)  })
 	private List<Selection> apiselection;
 	
     @XmlElementWrapper(name="ProjectSelection")
     @XmlElements({ @XmlElement(name="Universal", type=UniversalSelection.class), 
-    	@XmlElement(name="ScopedSelection", type=ScopedSelection.class)})
+    	@XmlElement(name="Method", type=MethodScopedSelection.class),
+    	@XmlElement(name="Package", type=PackageScopedSelection.class),
+    	@XmlElement(name="Prefix", type=PrefixScopedSelection.class),
+    	@XmlElement(name="Root", type=RootScopedSelection.class),
+    	@XmlElement(name="Tag", type=TagScopedSelection.class),
+    	@XmlElement(name="Type", type=TypeScopedSelection.class)  })
 	private List<Selection> projectselection;
 
     private MetricType metricType;
@@ -88,7 +97,6 @@ public class View {
 		return sealed;
 	}
 	
-	
 	public View getSourceView() {
 		return Store.getCurrent().getView(getSourceViewName());
 	}		
@@ -96,7 +104,6 @@ public class View {
 	public View getDualSourceView() {
 		return Store.getCurrent().getView(getDualSourceViewName());
 	}
-	
 	
 	public String getSourceViewName() {
 		return getSourceViewName(perspective);
@@ -146,6 +153,7 @@ public class View {
 		return perspective;
 	}
 
+	@XmlElement
 	public boolean getRenderable() {
 		return renderable;
 	}

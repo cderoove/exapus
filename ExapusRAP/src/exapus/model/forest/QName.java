@@ -55,13 +55,24 @@ public class QName {
 		return identifier;
 	}
 	
-	public QName(Iterable<String> i) {
-		components = new ArrayList<UqName>();
+	//only to be used by JAXB
+	public void setIdentifier(String identifier) {
+		 this.identifier = identifier;
+		components = toQNameComponents(Splitter.on('.').split(identifier));
+	}
+
+	private static ArrayList<UqName> toQNameComponents(Iterable<String> i) {
+		ArrayList<UqName >components = new ArrayList<UqName>();
 		if (!(i.iterator().hasNext()))
 			components.add(UqName.EMPTY);
 		else
 			for (String s : i)
 				components.add(new UqName(s));
+		return components;
+	}
+	
+	public QName(Iterable<String> i) {
+		components = toQNameComponents(i);
 		identifier = Joiner.on('.').join(i);
 	}
 	

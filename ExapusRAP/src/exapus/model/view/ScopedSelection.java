@@ -127,7 +127,7 @@ public class ScopedSelection extends Selection {
 		return true;
 	}
 	
-		
+	@XmlElement
 	public Scope getScope() {
 		return scope;
 	}
@@ -141,7 +141,7 @@ public class ScopedSelection extends Selection {
 		return name;
 	}
 
-	private void setQName(QName name) {
+	public void setQName(QName name) {
 		this.name = name;
 	}
 
