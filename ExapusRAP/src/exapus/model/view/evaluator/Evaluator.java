@@ -1,11 +1,10 @@
 package exapus.model.view.evaluator;
 
-import exapus.model.forest.ExapusModel;
 import exapus.model.forest.FactForest;
-import exapus.model.forest.OutboundFactForest;
 import exapus.model.metrics.MetricType;
 import exapus.model.stats.StatsCollectionVisitor;
 import exapus.model.store.Store;
+import exapus.model.tags.TagsPropagationVisitor;
 import exapus.model.view.View;
 import exapus.model.visitors.ICopyingForestVisitor;
 
@@ -45,16 +44,34 @@ public abstract class Evaluator {
 	}
 
 	public void evaluate() {
+        System.err.println("Evaluating view " + getView().getName());
+        long startTime = System.currentTimeMillis();
+
 		ICopyingForestVisitor v = newVisitor();
 		FactForest dualForest = getDualSourceForest();
 		v.setDualForest(dualForest);
 		FactForest sourceForest = getSourceForest();
 		FactForest forest = v.copy(sourceForest);
 		calculateMetrics(forest);
+        propagateTags(forest);
 		result = forest;
-	}
-	
-	protected abstract ICopyingForestVisitor newVisitor();
+
+        long stopTime = System.currentTimeMillis();
+        long elapsedTime = stopTime - startTime;
+        System.err.printf("Spent on evaluation: %d s\n", elapsedTime / 1000);
+    }
+
+    private void propagateTags(FactForest forest) {
+        long startTime = System.currentTimeMillis();
+
+        forest.acceptVisitor(new TagsPropagationVisitor(getView()));
+
+        long stopTime = System.currentTimeMillis();
+        long elapsedTime = stopTime - startTime;
+        System.err.printf("\tTags propagation: %d ms\n", elapsedTime);
+    }
+
+    protected abstract ICopyingForestVisitor newVisitor();
 
 	protected abstract FactForest getCompleteForest();
 	
@@ -98,7 +115,7 @@ public abstract class Evaluator {
 
             long stopTime = System.currentTimeMillis();
             long elapsedTime = stopTime - startTime;
-            System.err.printf("Metric calculation: %d ms\n", elapsedTime);
+            System.err.printf("\tMetric calculation: %d ms\n", elapsedTime);
 
             calculateStats(view, forest);
         }
@@ -111,7 +128,7 @@ public abstract class Evaluator {
 
         long stopTime = System.currentTimeMillis();
         long elapsedTime = stopTime - startTime;
-        System.err.printf("Stats calculation: %d ms\n", elapsedTime);
+        System.err.printf("\tStats calculation: %d ms\n", elapsedTime);
     }
 
 }

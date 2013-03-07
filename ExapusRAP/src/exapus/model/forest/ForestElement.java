@@ -1,5 +1,7 @@
 package exapus.model.forest;
 
+import com.google.common.collect.HashMultiset;
+import com.google.common.collect.Multiset;
 import exapus.gui.editors.forest.graph.INode;
 import exapus.model.metrics.IMetricValue;
 import exapus.model.metrics.MetricType;
@@ -33,6 +35,9 @@ public abstract class ForestElement implements INode {
 	private UqName id;
 	
 	private QName qid;
+
+    private Multiset<String> allTags = HashMultiset.create();
+    private Multiset<String> allDualTags = HashMultiset.create();
 		
 	public ForestElement(UqName id) {
 		this.id = id;
@@ -139,12 +144,12 @@ public abstract class ForestElement implements INode {
 	public InboundFactForest getAPICentricForest() {
 		return getExapusModel().getAPICentricForest();
 	}
-	
+
 
 	public InboundFactForest getProjectCentricForest() {
 		return getExapusModel().getAPICentricForest();
 	}
-	
+
 	public FactForest getDualFactForest() {
 		return getParentFactForest().getDualFactForest();
 	}
@@ -159,8 +164,6 @@ public abstract class ForestElement implements INode {
 		return JavaCore.create(getCorrespondingIProject());
 	}
 
-	public abstract ICompilationUnit getCorrespondingICompilationUnit();
-
 	public String getSourceString() {
 		ICompilationUnit icu = getCorrespondingICompilationUnit();
 		if(icu == null)
@@ -172,11 +175,11 @@ public abstract class ForestElement implements INode {
 			return null;
 		}
 	}
-	
+
 	public int getSourceCharacterIndexOffset() {
 		return 0;
 	}
-	
+
 	public int getSourceLineNumberOffset() {
 		return 0;
 	}
@@ -192,25 +195,43 @@ public abstract class ForestElement implements INode {
     public Set<MetricType> getRegisteredMetrics() {
         return metrics.keySet();
     }
-    
+
     public Cloud getTags() {
     	return tags;
     }
-    
+
     public boolean hasTag(Tag tag) {
     	return tags.hasTag(tag);
     }
-        
+
     public boolean addTag(Tag tag) {
     	Cloud before = tags;
     	tags = Store.getCurrent().getOrRegisterExtendedCloud(tags, tag);
     	return tags != before;
     }
-    
+
     public void copyTagsFrom(ForestElement e) {
     	tags = e.tags;
     }
-        
+
+    public void addTagToAll(Cloud tags) {
+        Multiset<String> multiset = tags.toMultiset();
+        for (String s : multiset.elementSet()) {
+            this.allTags.add(s, multiset.count(s));
+        }
+
+        if (this.parent != null) this.parent.addTagToAll(tags);
+    }
+
+    public void addDualTagToAll(Cloud tags) {
+        Multiset<String> multiset = tags.toMultiset();
+        for (String s : multiset.elementSet()) {
+            this.allDualTags.add(s, multiset.count(s));
+        }
+
+        if (this.parent != null) this.parent.addDualTagToAll(tags);
+    }
+
 	public ForestElement getCorrespondingForestElement(boolean copyWhenMissing, Iterator<ForestElement> ancestors, ForestElement element) {
 		ForestElement ancestor = ancestors.next();
 		ForestElement correspondingAncestor = getCorrespondingForestElement(copyWhenMissing, ancestor);
@@ -221,11 +242,19 @@ public abstract class ForestElement implements INode {
 		return correspondingAncestor.getCorrespondingForestElement(copyWhenMissing, element);
 	}
 
+    public Cloud getDualTags() {
+        return Cloud.EMPTY_CLOUD;
+    }
+
 	abstract public ForestElement getCorrespondingForestElement(boolean copyWhenMissing, ForestElement ancestor);
 
-	public Cloud getDualTags() {
-		return Cloud.EMPTY_CLOUD;
-	}
+    public abstract ICompilationUnit getCorrespondingICompilationUnit();
 
-    
+    public Multiset<String> getAllTags() {
+        return allTags;
+    }
+
+    public Multiset<String> getAllDualTags() {
+        return allDualTags;
+    }
 }

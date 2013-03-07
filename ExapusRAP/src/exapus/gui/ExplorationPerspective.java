@@ -1,10 +1,9 @@
 package exapus.gui;
 
+import exapus.gui.views.forest.reference.ForestReferenceViewPart;
+import exapus.gui.views.forest.tagcloud.ForestElementTagCloudViewPart;
 import org.eclipse.ui.*;
 
-import exapus.gui.editors.forest.graph.ForestGraphEditor;
-import exapus.gui.editors.forest.tree.ForestTreeEditor;
-import exapus.gui.views.forest.reference.ForestReferenceViewPart;
 import exapus.gui.views.store.StoreView;
 
 public class ExplorationPerspective implements IPerspectiveFactory {
@@ -17,8 +16,13 @@ public class ExplorationPerspective implements IPerspectiveFactory {
 		layout.setEditorAreaVisible(true); 
 
 		layout.addStandaloneView(StoreView.ID, true, IPageLayout.LEFT, 0.27f, editorArea);
+        layout.getViewLayout(StoreView.ID).setCloseable(false);
+
 		layout.addStandaloneView(ForestReferenceViewPart.ID, true, IPageLayout.BOTTOM, 0.70f, editorArea);
-		
+        layout.getViewLayout(ForestReferenceViewPart.ID).setCloseable(false);
+
+		layout.addStandaloneView(ForestElementTagCloudViewPart.ID, true, IPageLayout.RIGHT, 0.70f, ForestReferenceViewPart.ID);
+        layout.getViewLayout(ForestElementTagCloudViewPart.ID).setCloseable(false);
 		
 		
 		//layout.addStandaloneView("org.eclipse.ui.views.properties.PropertySheet", true, IPageLayout.BOTTOM, 0.60f, "results");

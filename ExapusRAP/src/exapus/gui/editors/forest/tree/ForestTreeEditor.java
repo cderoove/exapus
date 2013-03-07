@@ -3,6 +3,7 @@ package exapus.gui.editors.forest.tree;
 import java.util.ArrayList;
 import java.util.List;
 
+import exapus.gui.views.forest.tagcloud.ForestElementTagCloudViewPart;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ToolBarManager;
@@ -794,6 +795,7 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 			public void doubleClick(DoubleClickEvent event) {
 				try {
 					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(ForestReferenceViewPart.ID);
+					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(ForestElementTagCloudViewPart.ID);
 				} catch (PartInitException e) {
 					e.printStackTrace();
 				}

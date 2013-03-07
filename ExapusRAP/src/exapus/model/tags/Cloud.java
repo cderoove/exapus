@@ -5,8 +5,11 @@ import java.util.TreeSet;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Objects;
+import com.google.common.collect.HashMultiset;
 import com.google.common.collect.ImmutableSortedSet;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Multiset;
+import exapus.model.forest.Member;
 
 public class Cloud {
 
@@ -32,7 +35,15 @@ public class Cloud {
 	}
 		
 	private TreeSet<Tag> tags;
-		
+
+    public Multiset<String> toMultiset() {
+        Multiset<String> tags = HashMultiset.create();
+        for (Tag tag : this.tags) {
+            tags.add(tag.toString());
+        }
+        return tags;
+    }
+
 	private boolean add(Tag t) {
 		return tags.add(t);
 	}

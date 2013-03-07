@@ -33,7 +33,7 @@ import de.java2html.util.StringHolder;
 public class JavaSource2HTMLLineHighlightingConverter extends AbstractJavaSourceConverter {
 	//would have liked to specialize  JavaSource2HTMLConverter, but methods to be overridden are private so code is cloned from there
 
-	private final static String HTML_SITE_HEADER = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n"
+	public final static String HTML_SITE_HEADER = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n"
 			//     "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\"
 			// \"http://www.w3.org/TR/html4/loose.dtd\">\n"
 			+ "<html><head>\n"
@@ -44,7 +44,7 @@ public class JavaSource2HTMLLineHighlightingConverter extends AbstractJavaSource
 			+ "  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\" />\n"
 			+ "</head><body>\n";
 
-	private final static String HTML_SITE_FOOTER = "\n</body></html>";
+	public final static String HTML_SITE_FOOTER = "\n</body></html>";
 
 	private final static String HTML_BLOCK_SEPARATOR = "<p />\n";
 

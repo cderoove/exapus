@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import com.google.common.collect.HashMultiset;
+import com.google.common.collect.Multiset;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.IBuffer;
 import org.eclipse.jdt.core.ICompilationUnit;
@@ -51,8 +53,39 @@ public class Member extends MemberContainer {
 		}
 		return references;
 	}
-	
-	public void addAPIReference(Ref reference) {
+/*
+
+    public Multiset<String> getAllTags() {
+        if (allTags!= null) return allTags;
+
+        allTags = HashMultiset.create();
+
+        for (Ref ref : getAllReferences()) {
+            for (String s : ref.getAllTags()) {
+                allTags.add(s, ref.getAllTags().count(s));
+            }
+        }
+
+        return allTags;
+    }
+
+    public Multiset<String> getAllDualTags() {
+        if (allDualTags != null) return allDualTags;
+
+        allDualTags = HashMultiset.create();
+
+        for (Ref ref : getAllReferences()) {
+            for (String s : ref.getAllDualTags()) {
+                allDualTags.add(s, ref.getAllDualTags().count(s));
+            }
+        }
+
+        return allDualTags;
+    }
+*/
+
+
+    public void addAPIReference(Ref reference) {
 		references.add(reference);
 		reference.setParent(this);
 		getParentFactForest().fireUpdate(reference);

@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+import com.google.common.collect.HashMultiset;
+import com.google.common.collect.Multiset;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.JavaModelException;
@@ -146,7 +148,7 @@ public abstract class Ref extends ForestElement {
 	@Override
 	public Cloud getDualTags() {
 		return updatedDualTags;
-	};
+	}
 	
     public void copyDualTagsFrom(Ref dual) {
     	updatedDualTags = dual.getTags();
@@ -170,8 +172,14 @@ public abstract class Ref extends ForestElement {
 		}
 		return false;
 	}
-	
-	
-	
+
+    public Multiset<String> getAllTags() {
+        return getTags().toMultiset();
+    }
+
+    public Multiset<String> getAllDualTags() {
+        return getDualTags().toMultiset();
+    }
+
 }
 
