@@ -46,11 +46,7 @@ public abstract class Evaluator {
         System.err.println("Evaluating view " + getView().getName());
         long startTime = System.currentTimeMillis();
 
-		ICopyingForestVisitor v = newVisitor();
-		FactForest dualForest = getDualSourceForest();
-		v.setDualForest(dualForest);
-		FactForest sourceForest = getSourceForest();
-		FactForest forest = v.copy(sourceForest);
+        FactForest forest = fetchForest();
 		calculateMetrics(forest);
         propagateTags(forest);
 		result = forest;
@@ -58,6 +54,21 @@ public abstract class Evaluator {
         long stopTime = System.currentTimeMillis();
         long elapsedTime = stopTime - startTime;
         System.err.printf("Spent on %s: %d s\n", getView().getName(), elapsedTime / 1000);
+    }
+
+    private FactForest fetchForest() {
+        long startTime = System.currentTimeMillis();
+
+        ICopyingForestVisitor v = newVisitor();
+        FactForest dualForest = getDualSourceForest();
+        v.setDualForest(dualForest);
+        FactForest sourceForest = getSourceForest();
+
+        long stopTime = System.currentTimeMillis();
+        long elapsedTime = stopTime - startTime;
+        System.err.printf("\tFetching the forest: %d ms\n", elapsedTime);
+
+        return v.copy(sourceForest);
     }
 
     private void propagateTags(FactForest forest) {
