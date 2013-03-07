@@ -14,7 +14,7 @@ public class TagScopedSelection extends ScopedSelection {
 	@Override
 	protected void configureFor(Scope scope, QName name, Tag tag) {
 		super.configureFor(scope, name, tag);
-		nameAsTag = new Tag(name.getIdentifier());
+		setQName(name);
 	}
 	
 	@Override
@@ -51,6 +51,14 @@ public class TagScopedSelection extends ScopedSelection {
 	public boolean mayContainMatches(PackageTree packageTree) {
 		return true;
 	}
+
+	@Override
+	public void setQName(QName name) {
+		super.setQName(name);
+		nameAsTag = new Tag(name.getIdentifier());
+	}
+	
+
 
 
 
