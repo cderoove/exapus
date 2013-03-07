@@ -57,7 +57,7 @@ import exapus.model.view.View;
 
 public class SelectionDialog extends Dialog {
 
-	private Perspective perspective;
+	protected Perspective perspective;
 	private ComboViewer selectionTypeComboVW;
 	private Composite scopedSelectionComposite;
 	private ComboViewer scopedSelectionScopeComboVW;
@@ -447,12 +447,7 @@ public class SelectionDialog extends Dialog {
 		scopedSelectionNameComboVW.setSelection(new StructuredSelection(name.toString()));
 		scopedSelectionNameComboVW.getCombo().setText(name.toString());
 		updateDetailComposite();
-	}
-	
-	public void setTitle(String dialogTitle) {
-		getShell().setText(dialogTitle);
-	}
-	
+	}	
 
 	@SuppressWarnings("unused")
 	private Scope getSelectedScope() {

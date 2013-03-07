@@ -52,6 +52,7 @@ import com.google.common.primitives.Ints;
 
 import exapus.gui.editors.view.IViewEditorPage;
 import exapus.gui.editors.view.ViewEditor;
+import exapus.gui.editors.view.definition.AddTagToSelectionDialog;
 import exapus.gui.editors.view.definition.SelectionDialog;
 import exapus.gui.util.Util;
 import exapus.gui.views.forest.reference.ForestReferenceViewPart;
@@ -285,7 +286,7 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 		});
 		
 		annotateButton = new ToolItem(bar, SWT.PUSH);
-		annotateButton.setToolTipText("Add tag to selection");
+		annotateButton.setToolTipText("Add " + getView().getPerspective().getShortLabel() + " tag to selection");
 		annotateButton.setImage(Util.getImageFromPlugin("annotate.gif"));
 		annotateButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(final SelectionEvent event) {
@@ -477,14 +478,14 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 		ForestElement selected = getSelectedForestElement();
 		if(selected == null)
 			return;
-		View targetView = getView(); //TODO: should be selected by user
+		View targetView = getView(); 
 		Perspective perspective = targetView.getPerspective(); 
-		SelectionDialog selectionDialog  = new SelectionDialog(getSite().getShell(),
-											                   perspective, 
-											                   targetView.getName(),
-											                   ScopedSelection.class,
-											                   selected.getQName(),
-											                   Scope.forTagging(selected));
+		AddTagToSelectionDialog selectionDialog  = new AddTagToSelectionDialog(getSite().getShell(),
+				perspective, 
+				targetView.getName(),
+				ScopedSelection.class,
+				selected.getQName(),
+				Scope.forTagging(selected));		
 		int returnCode = selectionDialog.open();
 		if(returnCode == IDialogConstants.OK_ID) {
 			Selection newSelection = selectionDialog.getSelection();
@@ -495,7 +496,6 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 					targetView.addProjectSelection(newSelection);
 			}
 		}
-		
 		updateControls();
 	
 	}
