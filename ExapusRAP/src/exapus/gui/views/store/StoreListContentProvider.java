@@ -10,8 +10,6 @@ import exapus.gui.util.Util;
 import exapus.model.DeltaEvent;
 import exapus.model.IDeltaListener;
 import exapus.model.Observable;
-import exapus.model.forest.FactForest;
-import exapus.model.forest.PackageTree;
 import exapus.model.store.Store;
 import exapus.model.view.View;
 

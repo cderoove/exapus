@@ -116,23 +116,16 @@ public class Store extends Observable {
 	}		
 	
 	protected void registerCustomViews() {
-		registerDebugViews();
-		registerTaggedViews();
-	}
-
-	
-	private void registerDebugViews() {
-		registerView(ViewFactory.getCurrent().testAPICentricSelectionView()); 
-		registerView(ViewFactory.getCurrent().testAPICentricSelectionView2());
-		registerView(ViewFactory.getCurrent().testProjectCentricSelectionView());
-		registerView(ViewFactory.getCurrent().testAPITagSelectionView());
+		registerViewsForTags();
 	}
 	
-	private void registerTaggedViews() {
-		registerView(ViewFactory.getCurrent().taggedProjectsView());
-		registerView(ViewFactory.getCurrent().apisWithBothTagsView());
-		registerView(ViewFactory.getCurrent().projectsWithBothTagsView());
+	private void registerViewsForTags() {
+		ViewFactory factory = ViewFactory.getCurrent(); 
 		registerCSVTagView();
+		registerView(factory.tagsForSubAPIsView());
+		registerView(factory.tagsForDomains());
+		registerView(factory.tagsForProjects());
+		registerView(factory.taggedProjects());
 	}
 	
 	private void registerCSVTagView() {

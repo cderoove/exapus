@@ -44,6 +44,7 @@ public class View {
         sealed = false;
 	}
 	
+	private String description = ""; 
 	
 	private FactForest forest = null;
 	
@@ -378,6 +379,15 @@ public class View {
 				work.add(source);
 		}
 		return tags;
+	}
+
+	@XmlElement
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 	
 }

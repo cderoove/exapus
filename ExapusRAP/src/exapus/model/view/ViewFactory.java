@@ -2,9 +2,6 @@ package exapus.model.view;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Splitter;
@@ -14,7 +11,6 @@ import com.google.common.io.Files;
 import com.google.common.io.LineProcessor;
 
 import exapus.model.forest.QName;
-import exapus.model.store.Store;
 import exapus.model.tags.Tag;
 
 public class ViewFactory {
@@ -40,15 +36,15 @@ public class ViewFactory {
 		completePackageView.addAPISelection(universal);
 		completePackageView.addProjectSelection(universal);
 		completePackageView.setRenderable(true);
+		completePackageView.setDescription("All analyzed APIs");
 		completePackageView.seal();
 
 		completeProjectView = new View("All Projects", Perspective.PROJECT_CENTRIC);
 		completeProjectView.addAPISelection(universal);
 		completeProjectView.addProjectSelection(universal);
 		completeProjectView.setRenderable(true);
+		completeProjectView.setDescription("All analyzed Projects");
 		completeProjectView.seal();
-
-
 	}
 
 	public View completePackageView() {
@@ -59,41 +55,21 @@ public class ViewFactory {
 		return completeProjectView;
 	}
 
-	public View testAPICentricSelectionView() {
-		View view = new View("API-centric selection test", Perspective.API_CENTRIC);
-		view.addAPISelection(ScopedSelection.forScope(Scope.TYPE_SCOPE,  new QName("java.lang.Integer")));
-		view.addAPISelection(ScopedSelection.forScope(Scope.METHOD_SCOPE, new QName("java.util.Iterator.hasNext()")));
-		view.addAPISelection(ScopedSelection.forScope(Scope.PREFIX_SCOPE, new QName("javax")));
-		view.addAPISelection(ScopedSelection.forScope(Scope.PREFIX_SCOPE, new QName("org.apache.commons")));
-		view.addAPISelection(ScopedSelection.forScope(Scope.PACKAGE_SCOPE,new QName("org.apache.tools.ant")));
-		view.addProjectSelection(UniversalSelection.getCurrent());
-		view.setRenderable(false);
-
-		return view;
-	}
-
-	public View testAPICentricSelectionView2() {
-		View view = testAPICentricSelectionView();
-		view.setName("API-centric selection test 2");
-		view.removeProjectSelection(UniversalSelection.getCurrent());
-		view.addProjectSelection(ScopedSelection.forScope(Scope.PREFIX_SCOPE, new QName("org.sunflow")));
-		view.addProjectSelection(ScopedSelection.forScope(Scope.ROOT_SCOPE, new QName("tomcat")));		
-		return view;
-	}
-
-	public View testProjectCentricSelectionView() {
-		View view = new View("Project-centric selection test", Perspective.PROJECT_CENTRIC);
-		view.addProjectSelection(ScopedSelection.forScope(Scope.ROOT_SCOPE, new QName(Store.Settings.PROJECT_TEST.getValue())));
-		view.addAPISelection(ScopedSelection.forScope(Scope.TYPE_SCOPE, new QName("java.lang.String")));
-		view.setRenderable(false);
-		return view;
-	}
 	
 	
-	private static String TAGGED_API_VIEW_NAME = "API Tags";
+	private static String VIEW_TAGS_API = "Tags for APIs";
+
+	private static String VIEW_TAGS_SUBAPI = "Tags for Sub-APIs";
 	
-	private static String TAGGED_PROJECT_VIEW_NAME = "Project Tags";
-			
+	private static String VIEW_TAGS_DOMAINS = "Tags for Domains";
+	
+	private static String VIEW_TAGS_PROJECTS = "Tags for Projects";
+
+	private static String VIEW_TAGGED_PROJECTS = "Tagged Projects";
+
+	private static String VIEW_TAGGED_APIS = "Tagged APIs";
+
+	/*
 	public View testAPITagSelectionView() {
 		View view = new View("API tag selection test", Perspective.API_CENTRIC);
 		view.addProjectSelection(UniversalSelection.getCurrent());
@@ -102,32 +78,49 @@ public class ViewFactory {
 		view.setAPISourceViewName(TAGGED_API_VIEW_NAME);
 		return view;
 	}
-
-	public View taggedProjectsView() {
-		View view = new View(TAGGED_PROJECT_VIEW_NAME, Perspective.PROJECT_CENTRIC);
+	*/
+	
+	public View taggedProjects() {
+		View view = new View(VIEW_TAGGED_PROJECTS, Perspective.PROJECT_CENTRIC);
+		view.setAPISourceViewName(VIEW_TAGS_DOMAINS);
+		view.setProjectSourceViewName(VIEW_TAGS_PROJECTS);
 		view.addProjectSelection(UniversalSelection.getCurrent());
 		view.addAPISelection(UniversalSelection.getCurrent());
+		view.setDescription("Projects and all tags.");
 		return view;
 	}
 	
-	public View projectsWithBothTagsView() {
-		View view = new View("Tagged Projects", Perspective.PROJECT_CENTRIC);
-		view.setAPISourceViewName(TAGGED_API_VIEW_NAME);
-		view.setProjectSourceViewName(TAGGED_PROJECT_VIEW_NAME);
+	public View tagsForSubAPIsView() {
+		View view = new View(VIEW_TAGS_SUBAPI, Perspective.API_CENTRIC);
+		view.setAPISourceViewName(VIEW_TAGS_API);
 		view.addProjectSelection(UniversalSelection.getCurrent());
 		view.addAPISelection(UniversalSelection.getCurrent());
+		view.setDescription("Defines tags for sub-APIs");
 		return view;
 	}
 	
-	public View apisWithBothTagsView() {
-		View view = new View("Tagged APIs", Perspective.API_CENTRIC);
-		view.setAPISourceViewName(TAGGED_API_VIEW_NAME);
-		view.setProjectSourceViewName(TAGGED_PROJECT_VIEW_NAME);
+	public View tagsForDomains() {
+		View view = new View(VIEW_TAGS_DOMAINS, Perspective.API_CENTRIC);
+		view.setAPISourceViewName(VIEW_TAGS_SUBAPI);
 		view.addProjectSelection(UniversalSelection.getCurrent());
 		view.addAPISelection(UniversalSelection.getCurrent());
+		view.setDescription("Defines tags for API domains");
 		return view;
 	}
+	
+	public View tagsForProjects() {
+		View view = new View(VIEW_TAGS_PROJECTS, Perspective.PROJECT_CENTRIC);
+		view.setAPISourceViewName(VIEW_TAGS_SUBAPI);
+		view.addProjectSelection(UniversalSelection.getCurrent());
+		view.addAPISelection(UniversalSelection.getCurrent());
+		view.setDescription("Defines tags for projects");
+		return view;
+	}
+	
+	
 
+
+	
 
 	
 
@@ -166,11 +159,12 @@ public class ViewFactory {
 			}
 		});
 		
-		View view = new View(TAGGED_API_VIEW_NAME, Perspective.API_CENTRIC);
+		View view = new View(VIEW_TAGGED_APIS, Perspective.API_CENTRIC);
 		for(Selection selection : selections) {
 			view.addAPISelection(selection);
 		}
 		view.addProjectSelection(UniversalSelection.getCurrent());
+		view.setDescription("Defines tags for APIs.");
 		return view;
 
 	}

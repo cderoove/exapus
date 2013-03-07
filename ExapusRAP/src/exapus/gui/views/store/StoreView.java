@@ -15,6 +15,7 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.rwt.RWT;
 import org.eclipse.swt.SWT;
@@ -22,6 +23,7 @@ import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.List;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
@@ -73,11 +75,20 @@ public class StoreView extends ViewPart implements IDoubleClickListener {
 	@Override
 	public void createPartControl(final Composite parent) {
 		parent.setLayout(new FillLayout());
+
+		List list = new List(parent, SWT.SINGLE);
+		list.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
+		list.setData(RWT.CUSTOM_ITEM_HEIGHT, Integer.valueOf(62));
+
 		
-		listView = new ListViewer(parent, SWT.SINGLE);
+		listView = new ListViewer(list);
+		
 		listView.setContentProvider(new StoreListContentProvider());
 		listView.addDoubleClickListener(this);
+		listView.setSorter(new ViewerSorter());
+		listView.setLabelProvider(new StoreListLabelProvider());
 		listView.setInput(Store.getCurrent());	
+		
 		
 		
 		/*
