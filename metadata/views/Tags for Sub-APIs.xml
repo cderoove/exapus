@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<view>
+    <APISelection>
+        <Universal/>
+    </APISelection>
+    <ProjectSelection>
+        <Universal/>
+    </ProjectSelection>
+    <APISourceViewName>Tags for APIs</APISourceViewName>
+    <description>Defines tags for sub-APIs</description>
+    <graphDetails>GROUPED_PACKAGES</graphDetails>
+    <metricType>ALL</metricType>
+    <name>Tags for Sub-APIs</name>
+    <perspective>API_CENTRIC</perspective>
+    <renderable>false</renderable>
+</view>

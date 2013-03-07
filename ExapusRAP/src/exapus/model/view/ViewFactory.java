@@ -36,14 +36,14 @@ public class ViewFactory {
 		completePackageView.addAPISelection(universal);
 		completePackageView.addProjectSelection(universal);
 		completePackageView.setRenderable(true);
-		completePackageView.setDescription("All analyzed APIs");
+		completePackageView.setDescription("APIs that are loaded");
 		completePackageView.seal();
 
 		completeProjectView = new View("All Projects", Perspective.PROJECT_CENTRIC);
 		completeProjectView.addAPISelection(universal);
 		completeProjectView.addProjectSelection(universal);
 		completeProjectView.setRenderable(true);
-		completeProjectView.setDescription("All analyzed Projects");
+		completeProjectView.setDescription("Projects that are loaded");
 		completeProjectView.seal();
 	}
 
@@ -56,6 +56,7 @@ public class ViewFactory {
 	}
 
 	
+	//the following should only be used while bootstrapping
 	
 	private static String VIEW_TAGS_API = "Tags for APIs";
 
@@ -69,17 +70,6 @@ public class ViewFactory {
 
 	private static String VIEW_TAGGED_APIS = "Tagged APIs";
 
-	/*
-	public View testAPITagSelectionView() {
-		View view = new View("API tag selection test", Perspective.API_CENTRIC);
-		view.addProjectSelection(UniversalSelection.getCurrent());
-		view.addAPISelection(ScopedSelection.forScope(Scope.TAG_SCOPE, new QName("ant")));
-		view.addAPISelection(ScopedSelection.forScope(Scope.TAG_SCOPE, new QName("annotation"), new Tag("additional")));
-		view.setAPISourceViewName(TAGGED_API_VIEW_NAME);
-		return view;
-	}
-	*/
-	
 	public View taggedProjects() {
 		View view = new View(VIEW_TAGGED_PROJECTS, Perspective.PROJECT_CENTRIC);
 		view.setProjectSourceViewName(VIEW_TAGS_PROJECTS);
@@ -114,12 +104,6 @@ public class ViewFactory {
 		view.setDescription("Defines tags for projects");
 		return view;
 	}
-	
-	
-
-
-	
-
 	
 
 	public View viewFromCSVTags(File file) throws IOException {
@@ -157,12 +141,12 @@ public class ViewFactory {
 			}
 		});
 		
-		View view = new View(VIEW_TAGS_API, Perspective.API_CENTRIC);
+		View view = new View("Tags for APIs (CSV)", Perspective.API_CENTRIC);
 		for(Selection selection : selections) {
 			view.addAPISelection(selection);
 		}
 		view.addProjectSelection(UniversalSelection.getCurrent());
-		view.setDescription("Defines tags for APIs");
+		view.setDescription("Corresponds to current apis.csv");
 		return view;
 
 	}

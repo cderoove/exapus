@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<view>
+    <APISelection>
+        <Universal/>
+    </APISelection>
+    <ProjectSelection>
+        <Universal/>
+    </ProjectSelection>
+    <description>Defines tags for projects</description>
+    <graphDetails>GROUPED_PACKAGES</graphDetails>
+    <metricType>ALL</metricType>
+    <name>Tags for Projects</name>
+    <perspective>PROJECT_CENTRIC</perspective>
+    <renderable>false</renderable>
+</view>

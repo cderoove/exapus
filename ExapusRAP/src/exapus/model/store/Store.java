@@ -106,7 +106,9 @@ public class Store extends Observable {
 		
 	public void registerViews() {
 		registerDefaultViews();
-		registerCustomViews();
+		//bootstrapPredefinedViews(); can be used to re-create files
+		registerViewsFromDirectory();
+		registerCSVTagView();
 	}
 
 	
@@ -115,11 +117,8 @@ public class Store extends Observable {
 		registerView(ViewFactory.getCurrent().completeProjectView());
 	}		
 	
-	protected void registerCustomViews() {
-		registerViewsForTags();
-	}
 	
-	private void registerViewsForTags() {
+	protected void bootstrapPredefinedViews() {
 		ViewFactory factory = ViewFactory.getCurrent(); 
 		registerCSVTagView();
 		registerView(factory.tagsForSubAPIsView());
@@ -158,6 +157,25 @@ public class Store extends Observable {
 		View view = reader.read(new FileInputStream(file));
 		registerView(view);
 	}
+	
+	private void registerViewsFromDirectory() {
+		File folder = new File(Settings.PREDEFINED_VIEWS.getValue());
+		if(!folder.isDirectory()) {
+			System.err.println("Invalid path to predefined views (views.path property in exapus.properties).");
+			return;
+		}
+		for(File file : folder.listFiles()) {
+			try {
+				registerViewFromFile(file);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (JAXBException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	
 		
 	// This file should be located in the same dir as eclipse.ini
 	// I.e., for Mac OS: PATH_TO_THE_ECLPSE_DIR/Eclipse.app/Contents/MacOS/
@@ -180,14 +198,18 @@ public class Store extends Observable {
             Settings.DOT_EXC.setValue(prop.getProperty(Settings.DOT_EXC.key));
             Settings.API_TAGS.setValue(prop.getProperty(Settings.API_TAGS.key));
             Settings.PROJECT_TEST.setValue(prop.getProperty(Settings.PROJECT_TEST.key));
+            Settings.PREDEFINED_VIEWS.setValue(prop.getProperty(Settings.PREDEFINED_VIEWS.key));
+
         } catch (IOException ex) {
+    		System.err.println("Invalid path to exapus.properties configuration file.");
             ex.printStackTrace();
         }
     }
 
     public static enum Settings {
         DOT_EXC("dot.path", "/usr/local/bin/dot"),
-        API_TAGS("tags.path", "/Users/cderoove/Documents/Docs/VUB/research/papers/authored/quaatlas/data/apis.csv"),
+        API_TAGS("tags.path", "/Users/cderoove/git/exapus/metadata/apis.csv"),
+        PREDEFINED_VIEWS("views.path", "/Users/cderoove/git/exapus/metadata/views/"),
         PROJECT_TEST("test.project", "sunflow");
 
         

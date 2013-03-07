@@ -35,6 +35,7 @@ For instance, using the pre-installed [EGit](http://www.eclipse.org/egit/) ([tut
 * Configure system-specific paths 
   * Copy the file `exapus.properties` (located alongside this README.md) to the same location as your `eclipse.ini` file (e.g., on a Mac: `PATH_TO_THE_ECLPSE_DIR/Eclipse.app/Contents/MacOS/exapus.properties`). 
   * Edit the `dot.path` property such that it points to your [Graphviz](http://www.graphviz.org) `dot` executable
+  * Edit the `views.path` property such that it points to a folder containing predefined view definitions (e.g., `Tags\ for\ APIs.xml`). Example definition files can be found in the `metadata/views` folder alongside this file. 
 
 ## Launching Exapus
 
