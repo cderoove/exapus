@@ -217,8 +217,10 @@ public class FastSelectiveCopyingForestVisitor extends CopyingForestVisitor impl
 			Ref dual = ref.getDual();
 			
 			//corresponding element for dual in the view-specific dual source forest (e.g., in tagged projects)
-			Ref dualInDualSource = (Ref) dualForest.getCorrespondingForestElement(dual);
-			if(dualInDualSource == null) 
+			//Ref dualInDualSource = (Ref) dualForest.getCorrespondingForestElement(dual);
+            // TODO: a temporary fix, line above slows down calculation ~150 times
+			Ref dualInDualSource = dual;
+			if(dualInDualSource == null)
 				return false; //could not reside in the dual one
 			
 			Member parentCopy = (Member) getCopy(ref.getParent());
