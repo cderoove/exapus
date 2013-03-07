@@ -295,9 +295,6 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 		});
 
 
-
-
-
 		// Tree viewer
 
 		/*

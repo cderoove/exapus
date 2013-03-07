@@ -33,7 +33,7 @@ public class APICentricEvaluator extends Evaluator {
 
 
 	@Override
-	protected FactForest getCompleteDualForest() {
+	protected FactForest getDualCompleteForest() {
 		return Store.getCurrent().getWorkspaceModel().getProjectCentricForest();
 	}
 

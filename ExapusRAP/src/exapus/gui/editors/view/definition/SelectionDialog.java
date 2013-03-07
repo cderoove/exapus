@@ -36,7 +36,6 @@ import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 
 import com.google.common.base.Function;
-import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 
 import exapus.gui.editors.forest.tree.ForestTreeLabelProviders;
@@ -67,9 +66,10 @@ public class SelectionDialog extends Dialog {
 	private ComboViewer scopedSelectionNameComboVW;
 
 	private Selection selection;
-	private Text scopedSelectionTagText;
-
-	private String sourceViewName;
+	//private Text scopedSelectionTagText;
+	private ComboViewer scopedSelectionTagComboVW;
+	
+	private String viewName;
 	private Label scopeDescriptionLabel;
 	private Button scopedSelectionButton;
 
@@ -77,10 +77,10 @@ public class SelectionDialog extends Dialog {
 		return selection;
 	}
 
-	public SelectionDialog(Shell parentShell, Perspective perspective, String sourceViewName) {
+	public SelectionDialog(Shell parentShell, Perspective perspective, String viewName) {
 		super(parentShell);
 		this.perspective = perspective;
-		this.sourceViewName = sourceViewName;
+		this.viewName = viewName;
 	}
 	
 	//todo, should be refactored such that all widgets always read and write these fields, instead of only at init time
@@ -248,9 +248,18 @@ public class SelectionDialog extends Dialog {
 		Label tagLabel = new Label(scopedSelectionComposite, SWT.NONE);
 		tagLabel.setText("Add Tag:");
 		tagLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1));
+		/*
 		scopedSelectionTagText = new Text(scopedSelectionComposite, SWT.BORDER);
 		scopedSelectionTagText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false,2,1));
 		scopedSelectionTagText.setEnabled(false);
+		*/
+		
+		//Combo with free-form text entry
+		scopedSelectionTagComboVW = new ComboViewer(scopedSelectionComposite, SWT.NONE);
+		scopedSelectionTagComboVW.getControl().setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		scopedSelectionTagComboVW.setContentProvider(ArrayContentProvider.getInstance());
+		scopedSelectionTagComboVW.setSorter(new ViewerSorter());
+		scopedSelectionTagComboVW.getCombo().setEnabled(false);
 
 		if(predefinedScope != null) 
 			scopedSelectionScopeComboVW.setSelection(new StructuredSelection(predefinedScope));
@@ -268,30 +277,35 @@ public class SelectionDialog extends Dialog {
 	
 	protected void updateDetailComposite() {
 		Class<Selection> selectedType = getSelectedType();
-		if(UniversalSelection.class.equals(selectedType));
+		if(UniversalSelection.class.equals(selectedType)) {
 			scopedSelectionComposite.setVisible(false);
+			return;
+		}
 		if(ScopedSelection.class.equals(selectedType)) {
+			scopedSelectionComposite.setVisible(true);
 			Scope selectedScope = getSelectedScope();
 			if(selectedScope == null)
 				return;
 			scopeDescriptionLabel.setText(selectedScope.getDescription());
-			scopedSelectionComposite.setVisible(true);
 			scopedSelectionNameComboVW.getControl().setEnabled(true);
-			scopedSelectionTagText.setEnabled(true);
+			scopedSelectionTagComboVW.getControl().setEnabled(true);
 			scopedSelectionButton.setEnabled(true);
+			
 			String currentName = scopedSelectionNameComboVW.getCombo().getText();
 			scopedSelectionNameComboVW.setInput(getProposalStrings()); //disabled for expensive scopes
 			//scopedSelectionNameComboVW.setSelection(new StructuredSelection(currentName));
 			scopedSelectionNameComboVW.getCombo().setText(currentName);
+			
+			String currentTag = scopedSelectionTagComboVW.getCombo().getText();
+			scopedSelectionTagComboVW.setInput(getProposalTagStrings());
+			scopedSelectionTagComboVW.getCombo().setText(currentTag);
 		}
 	}
 
 	private FactForest getProposalFactForest() {
-		if(sourceViewName != null && Store.getCurrent().hasRegisteredView(sourceViewName)) {
-			View sourceView = Store.getCurrent().getView(sourceViewName);
-			if(sourceView.getPerspective().equals(perspective))
-				return sourceView.evaluate();
-		}
+		View sourceView = getSourceView();
+		if(sourceView != null && sourceView.getPerspective().equals(perspective))
+			return sourceView.evaluate();
 		ExapusModel workspaceModel = Store.getCurrent().getWorkspaceModel();
 		return perspective.equals(Perspective.API_CENTRIC) ? workspaceModel.getAPICentricForest() : workspaceModel.getProjectCentricForest();
 	}
@@ -366,20 +380,31 @@ public class SelectionDialog extends Dialog {
 		}),String.class);
 	}
 
+	
+	private View getView() {
+		if(viewName == null)
+			return null;
+		return Store.getCurrent().getView(viewName);
+	}
+
 	private View getSourceView() {
+		View view = getView();
+		if(view == null)
+			return null;
+		String sourceViewName = view.getSourceViewName();
 		if(sourceViewName == null)
 			return null;
 		return Store.getCurrent().getView(sourceViewName);
 	}
 
 	private String[] getProposalTagStrings() {
-		View view = getSourceView();
+		View view = getView();
 		if(view == null)
 			return new String[0];
 		if(Perspective.API_CENTRIC.equals(perspective))
-			return Iterables.toArray(view.getAPITagsAdded(), String.class);
+			return Iterables.toArray(view.getTransitiveAPITagsAdded(), String.class);
 		if(Perspective.PROJECT_CENTRIC.equals(perspective))
-			return Iterables.toArray(view.getAPITagsAdded(), String.class);
+			return Iterables.toArray(view.getTransitiveProjectTagsAdded(), String.class);
 		return new String[0];
 	}
 
@@ -460,7 +485,7 @@ public class SelectionDialog extends Dialog {
 
 			selection = ScopedSelection.forScope(selectedScope, name);
 			
-			String scopedSelectionTag = scopedSelectionTagText.getText().trim();
+			String scopedSelectionTag = scopedSelectionTagComboVW.getCombo().getText().trim();
 			if(!scopedSelectionTag.isEmpty())
 				((ScopedSelection) selection).setTag(new Tag(scopedSelectionTag));
 			return;

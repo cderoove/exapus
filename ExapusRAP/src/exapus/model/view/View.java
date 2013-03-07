@@ -87,6 +87,16 @@ public class View {
 		return sealed;
 	}
 	
+	
+	public View getSourceView() {
+		return Store.getCurrent().getView(getSourceViewName());
+	}		
+	
+	public View getDualSourceView() {
+		return Store.getCurrent().getView(getDualSourceViewName());
+	}
+	
+	
 	public String getSourceViewName() {
 		return getSourceViewName(perspective);
 	}
@@ -120,6 +130,7 @@ public class View {
 	public String getProjectSourceViewName() {
 		return projectSource;
 	}
+	
 	
 	public void setProjectSourceViewName(String n) {
 		if(Objects.equal(this.projectSource, n))
@@ -323,18 +334,48 @@ public class View {
 	}
 	
 	public Iterable<String> getAPITagsAdded() {
-		return getTagsAdded(apiselection);
+		return getTagsAdded(Perspective.API_CENTRIC);
+	}
+	
+	public Iterable<String> getTransitiveAPITagsAdded() {
+		return getTransitiveAPITagsAdded(Perspective.API_CENTRIC);
 	}
 	
 	public Iterable<String> getProjectTagsAdded() {
-		return getTagsAdded(projectselection);
+		return getTagsAdded(Perspective.PROJECT_CENTRIC);
+	}
+	
+	public Iterable<String> getTransitiveProjectTagsAdded() {
+		return getTransitiveAPITagsAdded(Perspective.PROJECT_CENTRIC);
 	}
 
+	private Iterable<String> getTagsAdded(Perspective p) {
+		if(Perspective.API_CENTRIC == p)
+			return getTagsAdded(apiselection);
+		if(Perspective.PROJECT_CENTRIC == p)
+			return getTagsAdded(projectselection);
+		return null;
+	}
+	
 	private static Iterable<String> getTagsAdded(Iterable<Selection> selections) {
 		Set<String> tags = new HashSet<String>();
 		for(Selection selection : selections) {
 			if(selection.hasTag())
 				tags.add(selection.getTagString());
+		}
+		return tags;
+	}
+	
+	private Iterable<String> getTransitiveAPITagsAdded(Perspective p) {
+		LinkedList<View> work = new LinkedList<View>();
+		Set<String> tags = new HashSet<String>();
+		work.add(this);
+		while(!work.isEmpty()) {
+			View current = work.removeFirst();
+			Iterables.addAll(tags, current.getTagsAdded(p));
+			View source = current.getSourceView();
+			if(source != null)
+				work.add(source);
 		}
 		return tags;
 	}
