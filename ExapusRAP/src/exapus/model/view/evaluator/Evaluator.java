@@ -63,12 +63,13 @@ public abstract class Evaluator {
         FactForest dualForest = getDualSourceForest();
         v.setDualForest(dualForest);
         FactForest sourceForest = getSourceForest();
+        FactForest copy = v.copy(sourceForest);
 
         long stopTime = System.currentTimeMillis();
         long elapsedTime = stopTime - startTime;
         System.err.printf("\tFetching the forest: %d ms\n", elapsedTime);
 
-        return v.copy(sourceForest);
+        return copy;
     }
 
     private void propagateTags(FactForest forest) {
