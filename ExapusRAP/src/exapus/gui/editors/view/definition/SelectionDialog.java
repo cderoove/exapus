@@ -12,15 +12,10 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ControlAdapter;
-import org.eclipse.swt.events.ControlEvent;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.*;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -29,7 +24,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 
@@ -68,7 +62,8 @@ public class SelectionDialog extends Dialog {
 	private Selection selection;
 	//private Text scopedSelectionTagText;
 	private ComboViewer scopedSelectionTagComboVW;
-	
+	private ComboViewer scopedSelectionParentTagComboVW;
+
 	private String viewName;
 	private Label scopeDescriptionLabel;
 	private Button scopedSelectionButton;
@@ -85,13 +80,14 @@ public class SelectionDialog extends Dialog {
 	
 	//todo, should be refactored such that all widgets always read and write these fields, instead of only at init time
 	private Class<? extends Selection> predefinedSelectionType = null;
-	private QName predefinedScopeName = null;
+	private ForestElement predefinedElement = null;
 	private Scope predefinedScope = null;
 	
-	public SelectionDialog(Shell shell, Perspective perspective, String sourceViewName, Class<? extends Selection> selectionType, QName scopeName, Scope scope) {
+	public SelectionDialog(Shell shell, Perspective perspective, String sourceViewName,
+                           Class<? extends Selection> selectionType, ForestElement selected, Scope scope) {
 		this(shell, perspective, sourceViewName);
 		predefinedSelectionType = selectionType;
-		predefinedScopeName = scopeName;
+		predefinedElement = selected;
 		predefinedScope = scope;
 	}
 
@@ -240,6 +236,7 @@ public class SelectionDialog extends Dialog {
 					Object[] selection = dialog.getResult(); 
 					ForestElement element = (ForestElement) selection[0];
 					scopedSelectionNameComboVW.getCombo().setText(element.getQName().toString());
+                    scopedSelectionParentTagComboVW.setInput(element.getTags().toMultiset(true).elementSet());
 				}
 
 			}
@@ -256,25 +253,62 @@ public class SelectionDialog extends Dialog {
 		
 		//Combo with free-form text entry
 		scopedSelectionTagComboVW = new ComboViewer(scopedSelectionComposite, SWT.NONE);
-		scopedSelectionTagComboVW.getControl().setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		scopedSelectionTagComboVW.getControl().setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		scopedSelectionTagComboVW.setContentProvider(ArrayContentProvider.getInstance());
 		scopedSelectionTagComboVW.setSorter(new ViewerSorter());
 		scopedSelectionTagComboVW.getCombo().setEnabled(false);
+ /*       scopedSelectionTagComboVW.addSelectionChangedListener(new ISelectionChangedListener() {
+            @Override
+            public void selectionChanged(SelectionChangedEvent selectionChangedEvent) {
+                IStructuredSelection selection = (IStructuredSelection) selectionChangedEvent.getSelection();
+                System.err.println("selection = " + selection);
+                System.err.println("idx = " + scopedSelectionTagComboVW.getCombo().getSelectionIndex());
+            }
+        });
+*/
+        scopedSelectionTagComboVW.getCombo().addModifyListener(new ModifyListener() {
+            @Override
+            public void modifyText(ModifyEvent e) {
+                System.err.println("scopedSelectionTagComboVW.getSelection().isEmpty() = " + scopedSelectionTagComboVW.getSelection().isEmpty());
+                if (!scopedSelectionTagComboVW.getSelection().isEmpty()) {
+                    scopedSelectionParentTagComboVW.setSelection(null);
+                } else {
+                    if (scopedSelectionParentTagComboVW.getCombo().getItems().length > 0) {
+                        scopedSelectionParentTagComboVW.getCombo().select(0);
+                    }
+                }
+                scopedSelectionParentTagComboVW.getCombo().setEnabled(scopedSelectionTagComboVW.getSelection().isEmpty());
+            }
+        });
+
+        Label parentTagLabel = new Label(scopedSelectionComposite, SWT.NONE);
+        parentTagLabel.setText("Add Parent Tag:");
+        parentTagLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1));
+        scopedSelectionParentTagComboVW = new ComboViewer(scopedSelectionComposite, SWT.READ_ONLY);
+        scopedSelectionParentTagComboVW.getControl().setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+        scopedSelectionParentTagComboVW.setContentProvider(ArrayContentProvider.getInstance());
+        scopedSelectionParentTagComboVW.setSorter(new ViewerSorter());
+        scopedSelectionParentTagComboVW.getCombo().setEnabled(false);
 
 		if(predefinedScope != null) 
 			scopedSelectionScopeComboVW.setSelection(new StructuredSelection(predefinedScope));
 		if(predefinedSelectionType != null) 
 			selectionTypeComboVW.setSelection(new StructuredSelection(predefinedSelectionType));
-		if(predefinedScopeName != null)
-			scopedSelectionNameComboVW.getCombo().setText(predefinedScopeName.getIdentifier());
-		
+		if(predefinedElement != null)  {
+            scopedSelectionNameComboVW.getCombo().setText(predefinedElement.getQName().getIdentifier());
+            scopedSelectionParentTagComboVW.setInput(predefinedElement.getTags().toMultiset(true).elementSet());
+            if (scopedSelectionParentTagComboVW.getCombo().getItems().length > 0) {
+                scopedSelectionParentTagComboVW.getCombo().select(0);
+            }
+        }
+
 
 		return composite;
 		
 	}
-	
-	
-	
+
+
+
 	protected void updateDetailComposite() {
 		Class<Selection> selectedType = getSelectedType();
 		if(UniversalSelection.class.equals(selectedType)) {
@@ -289,17 +323,26 @@ public class SelectionDialog extends Dialog {
 			scopeDescriptionLabel.setText(selectedScope.getDescription());
 			scopedSelectionNameComboVW.getControl().setEnabled(true);
 			scopedSelectionTagComboVW.getControl().setEnabled(true);
+            scopedSelectionParentTagComboVW.getControl().setEnabled(true);
 			scopedSelectionButton.setEnabled(true);
 			
 			String currentName = scopedSelectionNameComboVW.getCombo().getText();
 			scopedSelectionNameComboVW.setInput(getProposalStrings()); //disabled for expensive scopes
 			//scopedSelectionNameComboVW.setSelection(new StructuredSelection(currentName));
 			scopedSelectionNameComboVW.getCombo().setText(currentName);
-			
-			String currentTag = scopedSelectionTagComboVW.getCombo().getText();
-			scopedSelectionTagComboVW.setInput(getProposalTagStrings());
-			scopedSelectionTagComboVW.getCombo().setText(currentTag);
-		}
+
+            if (Scope.TAG_SCOPE.equals(selectedScope)) {
+                scopedSelectionTagComboVW.getCombo().setEnabled(false);
+                scopedSelectionParentTagComboVW.getCombo().setEnabled(false);
+            } else {
+                String currentTag = scopedSelectionTagComboVW.getCombo().getText();
+                scopedSelectionTagComboVW.setInput(getProposalTagStrings());
+                scopedSelectionTagComboVW.getCombo().setText(currentTag);
+
+                String currentParentTag = scopedSelectionParentTagComboVW.getCombo().getText();
+                scopedSelectionParentTagComboVW.getCombo().setText(currentParentTag);
+            }
+        }
 	}
 
 	private FactForest getProposalFactForest() {
@@ -481,9 +524,14 @@ public class SelectionDialog extends Dialog {
 			selection = ScopedSelection.forScope(selectedScope, name);
 			
 			String scopedSelectionTag = scopedSelectionTagComboVW.getCombo().getText().trim();
-			if(!scopedSelectionTag.isEmpty())
-				((ScopedSelection) selection).setTag(new Tag(scopedSelectionTag));
-			return;
+			if(!scopedSelectionTag.isEmpty()) {
+                Tag addedTag = new Tag(scopedSelectionTag);
+                String parentTag = scopedSelectionParentTagComboVW.getCombo().getText().trim();
+                if (!parentTag.isEmpty()) {
+                    addedTag.setParentName(parentTag);
+                }
+                ((ScopedSelection) selection).setTag(addedTag);
+            }
 		}
 	}
 

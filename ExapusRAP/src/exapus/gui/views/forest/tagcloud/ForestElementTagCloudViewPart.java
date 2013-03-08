@@ -6,6 +6,7 @@ import com.google.common.collect.Multiset;
 import exapus.gui.editors.SelectedForestElementBrowserViewPart;
 import exapus.gui.views.forest.reference.JavaSource2HTMLLineHighlightingConverter;
 import exapus.model.forest.ForestElement;
+import exapus.model.tags.Tag;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
 import java.util.ArrayList;
@@ -22,7 +23,11 @@ public class ForestElementTagCloudViewPart extends SelectedForestElementBrowserV
     protected String textToRender(ForestElement fe) {
         DescriptiveStatistics ds = new DescriptiveStatistics();
         Multiset<String> allTags = fe.getAllDualTags();
+
+        //System.err.println("allTags = " + allTags);
+
         for (String s : allTags.elementSet()) {
+            if (s.contains("::")) continue;
             ds.addValue(allTags.count(s));
         }
 
@@ -44,6 +49,7 @@ public class ForestElementTagCloudViewPart extends SelectedForestElementBrowserV
         int sum = 0;
         for (Integer size : ordered) {
             for (String s : freqs.get(size)) {
+                if (s.contains("::")) continue;
                 if (sum + size >= GROUPNG) {
                     html.append("<br>");
                     sum = 0;

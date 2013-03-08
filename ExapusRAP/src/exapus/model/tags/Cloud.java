@@ -1,7 +1,6 @@
 package exapus.model.tags;
 
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.*;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Objects;
@@ -27,7 +26,13 @@ public class Cloud {
 	
 	
 	public String getCanonicalString() {
-		return Joiner.on(',').join(tags);
+        List<String> names = new ArrayList<String>();
+        for (Tag tag : tags) {
+            //System.err.println(tag.toDebugString());
+            names.add(tag.getLabelName());
+        }
+
+		return Joiner.on(',').join(names);
 	}
 	
 	public String toString() {
@@ -36,12 +41,17 @@ public class Cloud {
 		
 	private TreeSet<Tag> tags;
 
-    public Multiset<String> toMultiset() {
+    public Multiset<String> toMultiset(boolean onlySuper) {
         Multiset<String> tags = HashMultiset.create();
         for (Tag tag : this.tags) {
-            tags.add(tag.toString());
+            if ((onlySuper && tag.isSuperTag()) || !onlySuper)
+                tags.add(tag.getIdentifier());
         }
         return tags;
+    }
+
+    public Multiset<String> toMultiset() {
+        return toMultiset(false);
     }
 
 	private boolean add(Tag t) {

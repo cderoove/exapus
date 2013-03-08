@@ -142,7 +142,7 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 	 */
 
 	class MetricComparator extends ViewerComparator {
-		private int direction = SWT.DOWN;
+		private int direction = SWT.UP;
 
 		@Override
 		public int compare(Viewer viewer, Object e1, Object e2) {
@@ -485,7 +485,7 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 				perspective, 
 				targetView.getName(),
 				ScopedSelection.class,
-				selected.getQName(),
+				selected,
 				Scope.forTagging(selected));		
 		int returnCode = selectionDialog.open();
 		if(returnCode == IDialogConstants.OK_ID) {
@@ -941,7 +941,7 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 									viewer.getTree().setSortDirection(comparator.change());
 								} else {
 									sorting = SortBy.METRIC;
-									comparator.setDirection(SWT.DOWN);
+									comparator.setDirection(SWT.UP);
 								}
 								TreePath[] expanded = viewer.getExpandedTreePaths();
 								viewer.refresh();

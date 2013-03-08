@@ -2,6 +2,22 @@
 <view>
     <APISelection>
         <Universal/>
+        <Type>
+            <QName>org.w3c.dom.Document</QName>
+            <scope>TYPE_SCOPE</scope>
+            <tag>
+                <identifier>DOM::querying</identifier>
+                <parentName>DOM</parentName>
+            </tag>
+        </Type>
+        <Type>
+            <QName>javax.swing.AbstractAction</QName>
+            <scope>TYPE_SCOPE</scope>
+            <tag>
+                <identifier>Swing::fsdfas</identifier>
+                <parentName>Swing</parentName>
+            </tag>
+        </Type>
     </APISelection>
     <ProjectSelection>
         <Universal/>

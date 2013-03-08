@@ -279,7 +279,7 @@ public class View {
     public void setGraphDetails(GraphDetails graphDetails) {
         if (this.graphDetails != graphDetails) {
             this.graphDetails = graphDetails;
-            System.err.println("setGraphDetails");
+            //System.err.println("setGraphDetails");
             makeDirty();
         }
     }

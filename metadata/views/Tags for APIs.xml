@@ -4,487 +4,681 @@
         <Prefix>
             <QName>com.google.common</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>Guava</tag>
+            <tag>
+                <identifier>Guava</identifier>
+            </tag>
         </Prefix>
         <Prefix>
             <QName>com.lowagie.text</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>iText</tag>
+            <tag>
+                <identifier>iText</identifier>
+            </tag>
         </Prefix>
         <Package>
             <QName>com.apple.eawt</QName>
             <scope>PACKAGE_SCOPE</scope>
-            <tag>eawt</tag>
+            <tag>
+                <identifier>eawt</identifier>
+            </tag>
         </Package>
         <Prefix>
             <QName>com.opensymphony.oscache</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>OSCache</tag>
+            <tag>
+                <identifier>OSCache</identifier>
+            </tag>
         </Prefix>
         <Prefix>
             <QName>com.thoughtworks.xstream</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>XStream</tag>
+            <tag>
+                <identifier>XStream</identifier>
+            </tag>
         </Prefix>
         <Prefix>
             <QName>com.jgoodies</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>JGoodies</tag>
+            <tag>
+                <identifier>JGoodies</identifier>
+            </tag>
         </Prefix>
         <Prefix>
             <QName>com.sun.image.codec.jpeg</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>jpeg</tag>
+            <tag>
+                <identifier>jpeg</identifier>
+            </tag>
         </Prefix>
         <Prefix>
             <QName>javax.swing</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>Swing</tag>
+            <tag>
+                <identifier>Swing</identifier>
+            </tag>
         </Prefix>
         <Prefix>
             <QName>com.sun.java.swing</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>Swing</tag>
+            <tag>
+                <identifier>Swing</identifier>
+            </tag>
         </Prefix>
         <Package>
             <QName>java_cup.runtime</QName>
             <scope>PACKAGE_SCOPE</scope>
-            <tag>CUP</tag>
+            <tag>
+                <identifier>CUP</identifier>
+            </tag>
         </Package>
         <Package>
             <QName>java.sql</QName>
             <scope>PACKAGE_SCOPE</scope>
-            <tag>SQL</tag>
+            <tag>
+                <identifier>SQL</identifier>
+            </tag>
         </Package>
         <Prefix>
             <QName>java.rmi</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>RMI</tag>
+            <tag>
+                <identifier>RMI</identifier>
+            </tag>
         </Prefix>
         <Package>
             <QName>java.applet</QName>
             <scope>PACKAGE_SCOPE</scope>
-            <tag>applet</tag>
+            <tag>
+                <identifier>applet</identifier>
+            </tag>
         </Package>
         <Prefix>
             <QName>java.nio</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>nio</tag>
+            <tag>
+                <identifier>nio</identifier>
+            </tag>
         </Prefix>
         <Prefix>
             <QName>java.security</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>security</tag>
+            <tag>
+                <identifier>security</identifier>
+            </tag>
         </Prefix>
         <Package>
             <QName>java.util</QName>
             <scope>PACKAGE_SCOPE</scope>
-            <tag>util</tag>
+            <tag>
+                <identifier>util</identifier>
+            </tag>
         </Package>
         <Package>
             <QName>java.util.zip</QName>
             <scope>PACKAGE_SCOPE</scope>
-            <tag>zip</tag>
+            <tag>
+                <identifier>zip</identifier>
+            </tag>
         </Package>
         <Package>
             <QName>java.util.regex</QName>
             <scope>PACKAGE_SCOPE</scope>
-            <tag>regex</tag>
+            <tag>
+                <identifier>regex</identifier>
+            </tag>
         </Package>
         <Prefix>
             <QName>java.util.concurrent</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>concurrent</tag>
+            <tag>
+                <identifier>concurrent</identifier>
+            </tag>
         </Prefix>
         <Package>
             <QName>java.util.jar</QName>
             <scope>PACKAGE_SCOPE</scope>
-            <tag>jar</tag>
+            <tag>
+                <identifier>jar</identifier>
+            </tag>
         </Package>
         <Package>
             <QName>java.util.logging</QName>
             <scope>PACKAGE_SCOPE</scope>
-            <tag>logging</tag>
+            <tag>
+                <identifier>logging</identifier>
+            </tag>
         </Package>
         <Package>
             <QName>java.net</QName>
             <scope>PACKAGE_SCOPE</scope>
-            <tag>net</tag>
+            <tag>
+                <identifier>net</identifier>
+            </tag>
         </Package>
         <Package>
             <QName>javax.net</QName>
             <scope>PACKAGE_SCOPE</scope>
-            <tag>net</tag>
+            <tag>
+                <identifier>net</identifier>
+            </tag>
         </Package>
         <Package>
             <QName>java.io</QName>
             <scope>PACKAGE_SCOPE</scope>
-            <tag>io</tag>
+            <tag>
+                <identifier>io</identifier>
+            </tag>
         </Package>
         <Prefix>
             <QName>java.awt</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>AWT</tag>
+            <tag>
+                <identifier>AWT</identifier>
+            </tag>
         </Prefix>
         <Prefix>
             <QName>sun.awt</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>AWT</tag>
+            <tag>
+                <identifier>AWT</identifier>
+            </tag>
         </Prefix>
         <Package>
             <QName>java.math</QName>
             <scope>PACKAGE_SCOPE</scope>
-            <tag>math</tag>
+            <tag>
+                <identifier>math</identifier>
+            </tag>
         </Package>
         <Prefix>
             <QName>java.beans</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>beans</tag>
+            <tag>
+                <identifier>beans</identifier>
+            </tag>
         </Prefix>
         <Package>
             <QName>java.text</QName>
             <scope>PACKAGE_SCOPE</scope>
-            <tag>text</tag>
+            <tag>
+                <identifier>text</identifier>
+            </tag>
         </Package>
         <Package>
             <QName>java.lang</QName>
             <scope>PACKAGE_SCOPE</scope>
-            <tag>lang</tag>
+            <tag>
+                <identifier>lang</identifier>
+            </tag>
         </Package>
         <Package>
             <QName>java.lang.annotation</QName>
             <scope>PACKAGE_SCOPE</scope>
-            <tag>annotation</tag>
+            <tag>
+                <identifier>annotation</identifier>
+            </tag>
         </Package>
         <Prefix>
             <QName>javax.annotation</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>annotation</tag>
+            <tag>
+                <identifier>annotation</identifier>
+            </tag>
         </Prefix>
         <Package>
             <QName>java.lang.reflect</QName>
             <scope>PACKAGE_SCOPE</scope>
-            <tag>reflect</tag>
+            <tag>
+                <identifier>reflect</identifier>
+            </tag>
         </Package>
         <Package>
             <QName>java.lang.management</QName>
             <scope>PACKAGE_SCOPE</scope>
-            <tag>management</tag>
+            <tag>
+                <identifier>management</identifier>
+            </tag>
         </Package>
         <Package>
             <QName>java.lang.ref</QName>
             <scope>PACKAGE_SCOPE</scope>
-            <tag>ref</tag>
+            <tag>
+                <identifier>ref</identifier>
+            </tag>
         </Package>
         <Prefix>
             <QName>org.jaxen</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>Jaxen</tag>
+            <tag>
+                <identifier>Jaxen</identifier>
+            </tag>
         </Prefix>
         <Prefix>
             <QName>org.jdom</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>JDOM</tag>
+            <tag>
+                <identifier>JDOM</identifier>
+            </tag>
         </Prefix>
         <Prefix>
             <QName>org.antlr</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>ANTLR 3</tag>
+            <tag>
+                <identifier>ANTLR </identifier>
+            3</tag>
         </Prefix>
         <Prefix>
             <QName>antlr</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>ANTLR 2</tag>
+            <tag>
+                <identifier>ANTLR </identifier>
+            2</tag>
         </Prefix>
         <Prefix>
             <QName>org.python</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>Jython</tag>
+            <tag>
+                <identifier>Jython</identifier>
+            </tag>
         </Prefix>
         <Package>
             <QName>org.mozilla.javascript</QName>
             <scope>PACKAGE_SCOPE</scope>
-            <tag>Rhino</tag>
+            <tag>
+                <identifier>Rhino</identifier>
+            </tag>
         </Package>
         <Prefix>
             <QName>org.springframework</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>Spring</tag>
+            <tag>
+                <identifier>Spring</identifier>
+            </tag>
         </Prefix>
         <Prefix>
             <QName>org.hibernate</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>Hibernate</tag>
+            <tag>
+                <identifier>Hibernate</identifier>
+            </tag>
         </Prefix>
         <Prefix>
             <QName>org.objectweb.asm</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>ASM</tag>
+            <tag>
+                <identifier>ASM</identifier>
+            </tag>
         </Prefix>
         <Prefix>
             <QName>org.mortbay.jetty</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>Jetty</tag>
+            <tag>
+                <identifier>Jetty</identifier>
+            </tag>
         </Prefix>
         <Prefix>
             <QName>org.jfree.chart</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>JFreeChart</tag>
+            <tag>
+                <identifier>JFreeChart</identifier>
+            </tag>
         </Prefix>
         <Prefix>
             <QName>org.jfree.data</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>JFreeChart</tag>
+            <tag>
+                <identifier>JFreeChart</identifier>
+            </tag>
         </Prefix>
         <Prefix>
             <QName>org.hamcrest</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>Hamcrest</tag>
+            <tag>
+                <identifier>Hamcrest</identifier>
+            </tag>
         </Prefix>
         <Prefix>
             <QName>org.xml.sax</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>SAX</tag>
+            <tag>
+                <identifier>SAX</identifier>
+            </tag>
         </Prefix>
         <Prefix>
             <QName>org.syntax.jedit</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>jEdit</tag>
+            <tag>
+                <identifier>jEdit</identifier>
+            </tag>
         </Prefix>
         <Package>
             <QName>org.codehaus.plexus.util.xml.pull</QName>
             <scope>PACKAGE_SCOPE</scope>
-            <tag>PlexusXml</tag>
+            <tag>
+                <identifier>PlexusXml</identifier>
+            </tag>
         </Package>
         <Prefix>
             <QName>org.jgraph</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>JGraph</tag>
+            <tag>
+                <identifier>JGraph</identifier>
+            </tag>
         </Prefix>
         <Prefix>
             <QName>org.dom4j</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>dom4j</tag>
+            <tag>
+                <identifier>dom4j</identifier>
+            </tag>
         </Prefix>
         <Prefix>
             <QName>org.htmlparser</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>htmlparser</tag>
+            <tag>
+                <identifier>htmlparser</identifier>
+            </tag>
         </Prefix>
         <Prefix>
             <QName>org.jgroups</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>JGroups</tag>
+            <tag>
+                <identifier>JGroups</identifier>
+            </tag>
         </Prefix>
         <Prefix>
             <QName>org.apache.xml</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>ApacheXml</tag>
+            <tag>
+                <identifier>ApacheXml</identifier>
+            </tag>
         </Prefix>
         <Prefix>
             <QName>org.apache.xerces</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>ApacheXml</tag>
+            <tag>
+                <identifier>ApacheXml</identifier>
+            </tag>
         </Prefix>
         <Prefix>
             <QName>org.apache.xpath</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>ApacheXml</tag>
+            <tag>
+                <identifier>ApacheXml</identifier>
+            </tag>
         </Prefix>
         <Prefix>
             <QName>org.apache.xmlrpc</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>xmlrpc</tag>
+            <tag>
+                <identifier>xmlrpc</identifier>
+            </tag>
         </Prefix>
         <Prefix>
             <QName>org.apache.log4j</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>log4j</tag>
+            <tag>
+                <identifier>log4j</identifier>
+            </tag>
         </Prefix>
         <Prefix>
             <QName>org.apache.tools.ant</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>ant</tag>
+            <tag>
+                <identifier>ant</identifier>
+            </tag>
         </Prefix>
         <Prefix>
             <QName>org.apache.log</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>AvalonLogKit</tag>
+            <tag>
+                <identifier>AvalonLogKit</identifier>
+            </tag>
         </Prefix>
         <Prefix>
             <QName>org.slf4j</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>SLF4J</tag>
+            <tag>
+                <identifier>SLF4J</identifier>
+            </tag>
         </Prefix>
         <Prefix>
             <QName>org.apache.commons</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>commons</tag>
+            <tag>
+                <identifier>commons</identifier>
+            </tag>
         </Prefix>
         <Prefix>
             <QName>org.apache.velocity</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>Velocity</tag>
+            <tag>
+                <identifier>Velocity</identifier>
+            </tag>
         </Prefix>
         <Prefix>
             <QName>org.apache.poi</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>POI</tag>
+            <tag>
+                <identifier>POI</identifier>
+            </tag>
         </Prefix>
         <Prefix>
             <QName>org.apache.avalon</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>Avalon</tag>
+            <tag>
+                <identifier>Avalon</identifier>
+            </tag>
         </Prefix>
         <Prefix>
             <QName>org.apache.maven</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>Maven</tag>
+            <tag>
+                <identifier>Maven</identifier>
+            </tag>
         </Prefix>
         <Prefix>
             <QName>org.apache.oro</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>ORO</tag>
+            <tag>
+                <identifier>ORO</identifier>
+            </tag>
         </Prefix>
         <Prefix>
             <QName>org.apache.lucene</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>Lucene</tag>
+            <tag>
+                <identifier>Lucene</identifier>
+            </tag>
         </Prefix>
         <Prefix>
             <QName>org.apache.struts</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>Struts</tag>
+            <tag>
+                <identifier>Struts</identifier>
+            </tag>
         </Prefix>
         <Prefix>
             <QName>org.apache.bcel</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>BCEL</tag>
+            <tag>
+                <identifier>BCEL</identifier>
+            </tag>
         </Prefix>
         <Prefix>
             <QName>org.apache.ecs</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>ECS</tag>
+            <tag>
+                <identifier>ECS</identifier>
+            </tag>
         </Prefix>
         <Prefix>
             <QName>org.apache.bsf</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>BSF</tag>
+            <tag>
+                <identifier>BSF</identifier>
+            </tag>
         </Prefix>
         <Prefix>
             <QName>org.eclipse.jdt</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>JDT</tag>
+            <tag>
+                <identifier>JDT</identifier>
+            </tag>
         </Prefix>
         <Prefix>
             <QName>org.w3c.dom</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>DOM</tag>
+            <tag>
+                <identifier>DOM</identifier>
+            </tag>
         </Prefix>
         <Prefix>
             <QName>org.w3c.tidy</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>Tidy</tag>
+            <tag>
+                <identifier>Tidy</identifier>
+            </tag>
         </Prefix>
         <Prefix>
             <QName>org.bouncycastle</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>bouncycastle</tag>
+            <tag>
+                <identifier>bouncycastle</identifier>
+            </tag>
         </Prefix>
         <Prefix>
             <QName>org.jivesoftware.smack</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>Smack</tag>
+            <tag>
+                <identifier>Smack</identifier>
+            </tag>
         </Prefix>
         <Prefix>
             <QName>javassist</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>Javassist</tag>
+            <tag>
+                <identifier>Javassist</identifier>
+            </tag>
         </Prefix>
         <Package>
             <QName>Jama</QName>
             <scope>PACKAGE_SCOPE</scope>
-            <tag>JAMA</tag>
+            <tag>
+                <identifier>JAMA</identifier>
+            </tag>
         </Package>
         <Package>
             <QName>sun.misc</QName>
             <scope>PACKAGE_SCOPE</scope>
-            <tag>sun.misc</tag>
+            <tag>
+                <identifier>sun</identifier>
+            .misc</tag>
         </Package>
         <Prefix>
             <QName>gnu.regexp</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>gnu.regexp</tag>
+            <tag>
+                <identifier>gnu</identifier>
+            .regexp</tag>
         </Prefix>
         <Prefix>
             <QName>junit</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>JUnit 3</tag>
+            <tag>
+                <identifier>JUnit </identifier>
+            3</tag>
         </Prefix>
         <Package>
             <QName>ognl</QName>
             <scope>PACKAGE_SCOPE</scope>
-            <tag>OGNL</tag>
+            <tag>
+                <identifier>OGNL</identifier>
+            </tag>
         </Package>
         <Package>
             <QName>javax.jnlp</QName>
             <scope>PACKAGE_SCOPE</scope>
-            <tag>JNLP</tag>
+            <tag>
+                <identifier>JNLP</identifier>
+            </tag>
         </Package>
         <Prefix>
             <QName>javax.naming</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>JNDI</tag>
+            <tag>
+                <identifier>JNDI</identifier>
+            </tag>
         </Prefix>
         <Prefix>
             <QName>javax.ejb</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>EJB</tag>
+            <tag>
+                <identifier>EJB</identifier>
+            </tag>
         </Prefix>
         <Prefix>
             <QName>javax.transaction</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>JTA</tag>
+            <tag>
+                <identifier>JTA</identifier>
+            </tag>
         </Prefix>
         <Prefix>
             <QName>javax.persistence</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>JPA</tag>
+            <tag>
+                <identifier>JPA</identifier>
+            </tag>
         </Prefix>
         <Prefix>
             <QName>javax.imageio</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>image</tag>
+            <tag>
+                <identifier>image</identifier>
+            </tag>
         </Prefix>
         <Prefix>
             <QName>javax.servlet</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>servlet</tag>
+            <tag>
+                <identifier>servlet</identifier>
+            </tag>
         </Prefix>
         <Prefix>
             <QName>javax.media</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>JMF</tag>
+            <tag>
+                <identifier>JMF</identifier>
+            </tag>
         </Prefix>
         <Package>
             <QName>javax.activation</QName>
             <scope>PACKAGE_SCOPE</scope>
-            <tag>JAF</tag>
+            <tag>
+                <identifier>JAF</identifier>
+            </tag>
         </Package>
         <Prefix>
             <QName>javax.mail</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>mail</tag>
+            <tag>
+                <identifier>mail</identifier>
+            </tag>
         </Prefix>
         <Prefix>
             <QName>javax.print</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>print</tag>
+            <tag>
+                <identifier>print</identifier>
+            </tag>
         </Prefix>
         <Prefix>
             <QName>javax.rmi</QName>
             <scope>PREFIX_SCOPE</scope>
-            <tag>IIOP</tag>
+            <tag>
+                <identifier>IIOP</identifier>
+            </tag>
         </Prefix>
     </APISelection>
     <ProjectSelection>

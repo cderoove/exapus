@@ -18,13 +18,13 @@ public class ExplorationPerspective implements IPerspectiveFactory {
 		layout.addStandaloneView(StoreView.ID, true, IPageLayout.LEFT, 0.27f, editorArea);
         layout.getViewLayout(StoreView.ID).setCloseable(false);
 
-		layout.addStandaloneView(ForestReferenceViewPart.ID, true, IPageLayout.BOTTOM, 0.70f, editorArea);
+        layout.addStandaloneView(ForestElementTagCloudViewPart.ID, true, IPageLayout.BOTTOM, 0.70f, editorArea);
+        layout.getViewLayout(ForestElementTagCloudViewPart.ID).setCloseable(false);
+
+        layout.addStandaloneView(ForestReferenceViewPart.ID, true, IPageLayout.RIGHT, 0.30f, ForestElementTagCloudViewPart.ID);
         layout.getViewLayout(ForestReferenceViewPart.ID).setCloseable(false);
 
-		layout.addStandaloneView(ForestElementTagCloudViewPart.ID, true, IPageLayout.RIGHT, 0.70f, ForestReferenceViewPart.ID);
-        layout.getViewLayout(ForestElementTagCloudViewPart.ID).setCloseable(false);
-		
-		
+
 		//layout.addStandaloneView("org.eclipse.ui.views.properties.PropertySheet", true, IPageLayout.BOTTOM, 0.60f, "results");
 		
 
