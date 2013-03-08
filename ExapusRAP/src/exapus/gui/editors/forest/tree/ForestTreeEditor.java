@@ -3,7 +3,6 @@ package exapus.gui.editors.forest.tree;
 import java.util.ArrayList;
 import java.util.List;
 
-import exapus.gui.views.forest.tagcloud.ForestElementTagCloudViewPart;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ToolBarManager;
@@ -54,9 +53,9 @@ import com.google.common.primitives.Ints;
 import exapus.gui.editors.view.IViewEditorPage;
 import exapus.gui.editors.view.ViewEditor;
 import exapus.gui.editors.view.definition.AddTagToSelectionDialog;
-import exapus.gui.editors.view.definition.SelectionDialog;
 import exapus.gui.util.Util;
 import exapus.gui.views.forest.reference.ForestReferenceViewPart;
+import exapus.gui.views.forest.tagcloud.ForestElementTagCloudViewPart;
 import exapus.gui.views.store.StoreView;
 import exapus.model.forest.FactForest;
 import exapus.model.forest.ForestElement;
@@ -88,7 +87,7 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 	private SortBy sorting = SortBy.NAME;
 	private MetricType sortingMetric;
 
-	private ForestTreeFilterVisitor filter;
+	private ForestTreeNameFilterVisitor filter;
 
 	private static enum SortBy {
 		NAME, METRIC
@@ -455,6 +454,14 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 				applyFilter(true);
 			}
 		});
+		
+		/*
+		Label apiFilterLabel = new Label(filterComposite, SWT.NONE);
+		apiFilterLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false,1,1));
+		apiFilterLabel.setText("Referenced Name:");
+		apiFilterText = new Text(filterComposite, SWT.BORDER);
+		apiFilterText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false,1,1));
+
 
 		Label projectFilterLabel = new Label(filterComposite, SWT.NONE);
 		projectFilterLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false,1,1));
@@ -469,6 +476,7 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 			}
 		});
 
+		*/
 		//cannot make the viewer fill the freed space
 		//filterComposite.setVisible(filterButton.getSelection());
 		filterComposite.setEnabled(filterButton.getSelection());
@@ -804,7 +812,7 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 
 
 			private void initFilter() {
-				filter = new ForestTreeFilterVisitor();
+				filter = new ForestTreeNameFilterVisitor();
 			}
 
 			@Override

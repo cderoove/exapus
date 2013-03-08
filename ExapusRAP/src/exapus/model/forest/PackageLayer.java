@@ -54,10 +54,6 @@ public class PackageLayer extends MemberContainer implements ILayerContainer {
 		}
 		return layers;
 	}
-
-
-
-	
 	
 	public PackageLayer getOrAddLayer(Iterator<UqName> i, PackageTree project) {
 		PackageLayer l = getOrAddLayer(i.next(), project);
@@ -249,5 +245,13 @@ public class PackageLayer extends MemberContainer implements ILayerContainer {
 		return super.getCorrespondingForestElement(copyWhenMissing,element);
 	}
 
+	@Override
+	public boolean hasChildren() {
+		return !members.isEmpty() || !layers.isEmpty();
+	}
+
+	public boolean removePackageLayer(PackageLayer packageLayer) {
+		return layers.remove(packageLayer);		
+	}
 
 }

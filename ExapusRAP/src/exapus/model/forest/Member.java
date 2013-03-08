@@ -214,4 +214,13 @@ public class Member extends MemberContainer {
 		return member;
 	}
 	
+	@Override
+	public boolean hasChildren() {
+		return !members.isEmpty() || !references.isEmpty();
+	}
+
+	public boolean removeReference(Ref ref) {
+		return references.remove(ref);
+	}
+	
 }

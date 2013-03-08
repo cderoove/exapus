@@ -85,8 +85,10 @@ public abstract class Ref extends ForestElement {
 		else
 			ref = OutboundRef.fromOutboundRef((OutboundRef) r);
 		ref.copyTagsFrom(r);
+		ref.copyUpdatedDualTagsFrom(r);
 		return ref;
 	}
+
 
 	public SourceRange getSourceRange() {
 		return range;
@@ -143,8 +145,10 @@ public abstract class Ref extends ForestElement {
 		return updatedDualTags;
 	}
 	
-    public void copyDualTagsFrom(Ref dual) {
-    	updatedDualTags = dual.getTags();
+    public boolean copyDualTagsFromDual(Ref dual) {
+    	Cloud before = updatedDualTags;
+    	updatedDualTags = Store.getCurrent().getOrRegisterExtendedCloud(updatedDualTags, dual.getTags());
+    	return updatedDualTags != before;
     }
     
     public boolean addDualTag(Tag tag) {
@@ -152,6 +156,11 @@ public abstract class Ref extends ForestElement {
     	updatedDualTags = Store.getCurrent().getOrRegisterExtendedCloud(updatedDualTags, tag);
     	return updatedDualTags != before;
     }
+    
+	private void copyUpdatedDualTagsFrom(Ref r) {
+		updatedDualTags = r.updatedDualTags;
+	}
+
 
 	abstract public void acceptVisitor(IForestVisitor v);
 
@@ -187,6 +196,20 @@ public abstract class Ref extends ForestElement {
 	public ForestElement getCorrespondingForestElement(boolean copyWhenMissing, ForestElement ancestor) {
 		return null;
 	}
+	
+	@Override
+	public boolean hasChildren() {
+		return false;
+	}
+
+	public Pattern getPattern() {
+		return pattern;
+	}
+	
+	public Element getElement() {
+		return element;
+	}
+
 	
 
 

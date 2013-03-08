@@ -234,7 +234,7 @@ public class FastSelectiveCopyingForestVisitor extends CopyingForestVisitor impl
 				if(dual_selection.matches(dualInDualSource)) {
 					Member parentCopyAsMember = (Member) parentCopy;
 					Ref copy = Ref.from(ref);
-					copy.copyDualTagsFrom(dualInDualSource);
+					copy.copyDualTagsFromDual(dualInDualSource);
 					parentCopyAsMember.addAPIReference(copy);
 					applyTags(copy);
 					applyDualTags(copy, dualInDualSource);

@@ -17,13 +17,13 @@ public class Tag implements Comparable<Tag> {
     }
 
     public Tag(String identifier) {
-        this.identifier = identifier;
+        this.identifier = identifier.intern();
     }
 
     public Tag(String identifier, String parentName) {
-        this.subName = identifier;
-        this.parentName = parentName;
-        this.identifier = String.format("%s::%s", parentName, identifier);
+        this.subName = identifier.intern();
+        this.parentName = parentName.intern();
+        this.identifier = String.format("%s::%s", parentName, identifier).intern();
     }
 
     @XmlElement

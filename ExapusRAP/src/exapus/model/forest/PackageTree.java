@@ -178,6 +178,14 @@ public class PackageTree extends ForestElement  implements ILayerContainer  {
 		tree.copyTagsFrom(original);
 		return tree;
 	}
+
+	@Override
+	public boolean hasChildren() {
+		return root.hasChildren();
+	}
 	
+	public boolean removePackageLayer(PackageLayer packageLayer) {
+		return root.removePackageLayer(packageLayer);
+	}
 
 }

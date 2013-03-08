@@ -251,9 +251,14 @@ public class Store extends Observable {
 		return cloud;
 	}
 	
-	public Cloud getOrRegisterExtendedCloud(Cloud cloud, Tag t) {
-		return getOrRegisterCloud(Cloud.from(cloud, t));
+	public Cloud getOrRegisterExtendedCloud(Cloud cloud, Tag extension) {
+		return getOrRegisterCloud(Cloud.from(cloud, extension));
 	}
+	
+	public Cloud getOrRegisterExtendedCloud(Cloud cloud, Cloud extension) {
+		return getOrRegisterCloud(Cloud.from(cloud, extension));
+	}
+
 	
 	
 	

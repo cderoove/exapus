@@ -58,6 +58,10 @@ public class Cloud {
 		return tags.add(t);
 	}
 	
+	private boolean add(Cloud c) {
+		return tags.addAll(c.tags);
+	}
+	
 	public boolean hasTag(Tag t) {
 		return tags.contains(t);
 	}
@@ -71,6 +75,12 @@ public class Cloud {
 	static public Cloud from(Cloud c, Tag t) {
 		Cloud clone = new Cloud(c);
 		clone.add(t);
+		return clone;
+	}
+	
+	static public Cloud from(Cloud c, Cloud tobeadded) {
+		Cloud clone = new Cloud(c);
+		clone.add(tobeadded);
 		return clone;
 	}
 	

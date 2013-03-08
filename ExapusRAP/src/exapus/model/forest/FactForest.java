@@ -78,6 +78,10 @@ public abstract class FactForest extends Observable {
 		return trees.get(name);
 	}
 	
+	public boolean removePackageTree(PackageTree tree) {
+		return (trees.remove(tree.getName()) != null);
+	}
+		
 	public PackageTree getOrAddPackageTree(PackageTree original) {
 		UqName name = original.getName();
 		PackageTree tree = getPackageTree(name);
@@ -162,6 +166,10 @@ public abstract class FactForest extends Observable {
 		if(ancestors.hasNext())
 			return correspondingAncestor.getCorrespondingForestElement(ancestors, element);
 		return correspondingAncestor.getCorrespondingForestElement(element);
+	}
+	
+	public boolean hasChildren() {
+		return !trees.isEmpty();
 	}
 
 	

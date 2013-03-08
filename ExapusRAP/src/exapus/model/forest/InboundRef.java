@@ -47,7 +47,5 @@ public class InboundRef extends Ref {
 	public void acceptVisitor(IForestVisitor v) {
 			v.visitInboundReference(this);
 	}
-
-
-	
+		
 }

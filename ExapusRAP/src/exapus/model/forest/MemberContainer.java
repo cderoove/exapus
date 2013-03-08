@@ -156,6 +156,10 @@ public abstract class MemberContainer extends ForestElement {
 		return null;
 	}
 	
+	public boolean removeMember(Member member) {
+		return members.remove(member);
+	}
+	
 
 	
 

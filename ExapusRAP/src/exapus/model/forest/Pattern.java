@@ -74,7 +74,10 @@ public enum Pattern {
 	TYPE_BOUND, TYPE_UNION_MEMBER, // one of the types in a union type
 	TYPE_ARRAY_COMPONENT,
 
-	CLASS_TYPE;
+	CLASS_TYPE,
+	
+	//only for facilitating selection against this particular kind
+	ANY;
 
 	static private Map<StructuralPropertyDescriptor, Pattern> type_mapping;
 
@@ -157,7 +160,7 @@ public enum Pattern {
 		if (n instanceof SuperMethodInvocation)
 			return SUPER_METHOD_CALL;
 		throw new Error("Don't know how to create forest Pattern for given method referencing node");
-
 	}
+	
 
 }

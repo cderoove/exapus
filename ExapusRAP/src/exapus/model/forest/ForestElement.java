@@ -12,6 +12,7 @@ import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.internal.core.builder.AdditionalTypeCollection;
 
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
@@ -269,5 +270,7 @@ public abstract class ForestElement implements INode {
     public Multiset<String> getAllDualTags() {
         return allDualTags;
     }
-
+    
+    abstract public boolean hasChildren();
+        
 }

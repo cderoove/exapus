@@ -91,12 +91,11 @@ public class ForestTreeContentProvider implements ITreeContentProvider, IDeltaLi
 
 	@Override
 	public boolean hasChildren(Object element) {
-		if (element instanceof Ref)
-			return false;
-		return getChildren(element).length > 0;
+		if(element instanceof ForestElement) {
+			return ((ForestElement) element).hasChildren();
+		}
+		return false;
 	}
-
-
 
 	@Override
 	public void delta(DeltaEvent event) {

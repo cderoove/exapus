@@ -17,8 +17,11 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
 public enum Element {
 	INSTANCE_METHOD, STATIC_METHOD, CONSTRUCTOR, INSTANCE_FIELD, STATIC_FIELD, INTERFACE, CLASS,
 	// added
-	ENUM, ENUM_CONSTANT, ANONYMOUS_CLASS, ANNOTATION_TYPEDECLARATION;
+	ENUM, ENUM_CONSTANT, ANONYMOUS_CLASS, ANNOTATION_TYPEDECLARATION,
 
+	//only for facilitating selection against this particular kind
+	ANY;
+	
 	public boolean declaresType() {
 		return this == INTERFACE || this == CLASS || this == ENUM || this == ENUM_CONSTANT || this == ANONYMOUS_CLASS || this == ANNOTATION_TYPEDECLARATION;
 	}
