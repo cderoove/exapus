@@ -461,7 +461,7 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 		apiFilterLabel.setText("Referenced Name:");
 		apiFilterText = new Text(filterComposite, SWT.BORDER);
 		apiFilterText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false,1,1));
-
+		*/
 
 		Label projectFilterLabel = new Label(filterComposite, SWT.NONE);
 		projectFilterLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false,1,1));
@@ -476,7 +476,7 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 			}
 		});
 
-		*/
+		
 		//cannot make the viewer fill the freed space
 		//filterComposite.setVisible(filterButton.getSelection());
 		filterComposite.setEnabled(filterButton.getSelection());
