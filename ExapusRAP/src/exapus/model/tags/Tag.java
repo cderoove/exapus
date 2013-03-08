@@ -55,6 +55,13 @@ public class Tag implements Comparable<Tag> {
 
     public String getLabelName() {
         if (isSuperTag()) return identifier;
+        if (subName == null || subName.isEmpty()) {
+            if (identifier.contains("::")) {
+                subName = identifier.substring(identifier.indexOf("::") + 2);
+            } else {
+                subName = identifier;
+            }
+        }
         return subName;
     }
 
