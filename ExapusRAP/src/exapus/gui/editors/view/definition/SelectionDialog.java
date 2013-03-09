@@ -269,7 +269,7 @@ public class SelectionDialog extends Dialog {
         scopedSelectionTagComboVW.getCombo().addModifyListener(new ModifyListener() {
             @Override
             public void modifyText(ModifyEvent e) {
-                System.err.println("scopedSelectionTagComboVW.getSelection().isEmpty() = " + scopedSelectionTagComboVW.getSelection().isEmpty());
+                //System.err.println("scopedSelectionTagComboVW.getSelection().isEmpty() = " + scopedSelectionTagComboVW.getSelection().isEmpty());
                 if (!scopedSelectionTagComboVW.getSelection().isEmpty()) {
                     scopedSelectionParentTagComboVW.setSelection(null);
                 } else {

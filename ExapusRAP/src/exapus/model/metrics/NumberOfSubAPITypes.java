@@ -12,12 +12,17 @@ import java.util.Set;
  */
 
 public class NumberOfSubAPITypes implements IMetricValue {
-    private Set<String> names = new HashSet<String>();
-    private Set<String> groupedNames = new HashSet<String>();
+    private Set<String> names;
+    private Set<String> groupedNames;
 
     public void addName(String name, ForestElement current, boolean fromDirectMember) {
+        if (names == null) names = new HashSet<String>();
         names.add(name);
-        if (fromDirectMember) groupedNames.add(name);
+
+        if (fromDirectMember) {
+            if (groupedNames == null) groupedNames = new HashSet<String>();
+            groupedNames.add(name);
+        }
 
         if (current.getParent() != null) {
             ((NumberOfSubAPITypes) current.getParent().getMetric(getType())).addName(name, current.getParent(), (current instanceof Member || current instanceof Ref));
@@ -26,8 +31,11 @@ public class NumberOfSubAPITypes implements IMetricValue {
 
     @Override
     public int getValue(boolean groupedPackages) {
-        if (groupedPackages) return groupedNames.size();
-        return names.size();
+        if (groupedPackages) {
+            if (groupedNames == null) return 0;
+            return groupedNames.size();
+        }
+        return names == null? 0 : names.size();
     }
 
     @Override
