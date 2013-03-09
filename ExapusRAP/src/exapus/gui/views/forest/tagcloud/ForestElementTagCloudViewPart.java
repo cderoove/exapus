@@ -6,12 +6,16 @@ import com.google.common.collect.Multiset;
 import exapus.gui.editors.SelectedForestElementBrowserViewPart;
 import exapus.gui.views.forest.reference.JavaSource2HTMLLineHighlightingConverter;
 import exapus.model.forest.ForestElement;
-import exapus.model.tags.Tag;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+import org.eclipse.rwt.RWT;
+import org.eclipse.rwt.service.IServiceHandler;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.*;
 
 
 public class ForestElementTagCloudViewPart extends SelectedForestElementBrowserViewPart {
@@ -20,23 +24,71 @@ public class ForestElementTagCloudViewPart extends SelectedForestElementBrowserV
 
     public static final String ID = "exapus.gui.views.forest.tagcloud.ForestElementTagCloudView";
 
+    public static final String HANDLER = "subTagsHtmlHandler";
+
+    public ForestElementTagCloudViewPart() {
+        super();
+        registerHandler();
+    }
+
+    private void registerHandler() {
+        RWT.getServiceManager().registerServiceHandler(HANDLER, new SubTagsHtmlHandler());
+    }
+
     protected String textToRender(ForestElement fe) {
+        final String MAIN_HTML_ID = uniqueId(fe, "");
+
         DescriptiveStatistics ds = new DescriptiveStatistics();
         Multiset<String> allTags = fe.getAllDualTags();
 
         //System.err.println("allTags = " + allTags);
 
+        Multimap<String, String> subTags = HashMultimap.create();
+
         for (String s : allTags.elementSet()) {
-            if (s.contains("::")) continue;
+            if (s.contains("::")) {
+                String supTag = s.substring(0, s.indexOf("::"));
+                String subTag = s.substring(s.indexOf("::") + 2);
+                subTags.put(supTag, subTag);
+            }
             ds.addValue(allTags.count(s));
         }
 
         Multimap<Integer, String> freqs = HashMultimap.create();
         //System.err.println("ds = " + ds.toString());
         for (String s : allTags.elementSet()) {
+            if (s.contains("::")) continue;
             int size = getSize(ds, allTags.count(s));
             //System.err.printf("%d -> %d\n", allTags.count(s), size);
             freqs.put(size, s);
+        }
+
+        Map<String, DescriptiveStatistics> subTagsDs = new HashMap<String, DescriptiveStatistics>();
+        for (String tag : allTags.elementSet()) {
+            if (tag.contains("::")) {
+                String supTag = tag.substring(0, tag.indexOf("::"));
+
+                if (!subTagsDs.containsKey(supTag)) {
+                    subTagsDs.put(supTag, new DescriptiveStatistics());
+                }
+                subTagsDs.get(supTag).addValue(allTags.count(tag));
+            }
+        }
+
+        Map<String, String> subTagsHtml = new HashMap<String, String>();
+        for (String tag : subTags.keySet()) {
+            final String SUBTAGS_HTML_ID = uniqueId(fe, tag);
+            subTagsHtml.put(tag, SUBTAGS_HTML_ID);
+
+            StringBuilder sugTagsHtml = new StringBuilder();
+            sugTagsHtml.append(JavaSource2HTMLLineHighlightingConverter.HTML_SITE_HEADER);
+            sugTagsHtml.append(String.format("<a href=\"%s\"><---Back</a><br><br>", getUniqueImageURL(MAIN_HTML_ID)));
+            for (String subTag : subTags.get(tag)) {
+                sugTagsHtml.append(String.format("<font size=\"%d\">%s</font>&nbsp;&nbsp;", getSize(subTagsDs.get(tag), allTags.count(tag + "::" + subTag)), subTag));
+            }
+            sugTagsHtml.append(JavaSource2HTMLLineHighlightingConverter.HTML_SITE_FOOTER);
+
+            registerHtml(SUBTAGS_HTML_ID, sugTagsHtml.toString());
         }
 
         List<Integer> ordered = new ArrayList<Integer>(freqs.keySet());
@@ -55,7 +107,11 @@ public class ForestElementTagCloudViewPart extends SelectedForestElementBrowserV
                     sum = 0;
                 }
                 sum += size;
-                html.append(String.format("<font size=\"%d\">%s</font>&nbsp;&nbsp;", size, s));
+                if (subTagsHtml.containsKey(s)) {
+                    html.append(String.format("<font size=\"%d\"><a href=\"%s\">%s</a></font>&nbsp;&nbsp;", size, getUniqueImageURL(subTagsHtml.get(s)), s));
+                } else {
+                    html.append(String.format("<font size=\"%d\">%s</font>&nbsp;&nbsp;", size, s));
+                }
             }
         }
 
@@ -64,8 +120,14 @@ public class ForestElementTagCloudViewPart extends SelectedForestElementBrowserV
 
         //System.err.println("html = " + html);
 
+
+        registerHtml(MAIN_HTML_ID, html.toString());
         return html.toString();
 
+    }
+
+    private String uniqueId(ForestElement fe, String supTag) {
+        return String.format("%s.tagCloud.%s", fe.getQName().toString(), supTag);
     }
 
 
@@ -81,6 +143,44 @@ public class ForestElementTagCloudViewPart extends SelectedForestElementBrowserV
         if (count < ds.getPercentile(75)) return 5;
         if (count < ds.getPercentile(90)) return 6;
         return 7;
+    }
+
+    private String getUniqueImageURL(String id) {
+        return createImageUrl(id);
+    }
+
+
+    protected void registerHtml(String id, String html) {
+        RWT.getSessionStore().setAttribute(id, html);
+    }
+
+    protected String createImageUrl(String id) {
+        StringBuffer url = new StringBuffer();
+        url.append(RWT.getRequest().getContextPath());
+        url.append(RWT.getRequest().getServletPath());
+        url.append("?");
+        url.append(IServiceHandler.REQUEST_PARAM);
+        url.append("=");
+        url.append(HANDLER);
+        url.append("&htmlId=");
+        url.append(id);
+        url.append("&nocache=");
+        url.append(System.currentTimeMillis());
+        return RWT.getResponse().encodeURL(url.toString());
+    }
+
+    private static class SubTagsHtmlHandler implements IServiceHandler {
+        public void service() throws IOException, ServletException {
+            String id = RWT.getRequest().getParameter("htmlId");
+            String html = (String) RWT.getSessionStore().getAttribute(id);
+            if (html != null) {
+                HttpServletResponse response = RWT.getResponse();
+                response.setContentType("text/HTML");
+                ServletOutputStream out = response.getOutputStream();
+                out.write(html.getBytes(Charset.forName("UTF-8")));
+                out.close();
+            }
+        }
     }
 
 }

@@ -10,7 +10,7 @@ import java.lang.reflect.Constructor;
  */
 public enum MetricType {
     PROJS(NumberOfProjsVisitor.class.getCanonicalName(),
-            "#proj",
+            "#projs",
             "Number of projects using APIs"),
     API_REFS(TotalNumberAPIReferencesVisitor.class.getCanonicalName(),
             "#refs",

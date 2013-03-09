@@ -522,17 +522,19 @@ public class SelectionDialog extends Dialog {
 			QName name = new QName(scopedSelectionNameComboVW.getCombo().getText());
 
 			selection = ScopedSelection.forScope(selectedScope, name);
-			
-			String scopedSelectionTag = scopedSelectionTagComboVW.getCombo().getText().trim();
-			if(!scopedSelectionTag.isEmpty()) {
-                Tag addedTag = new Tag(scopedSelectionTag);
+
+            String scopedSelectionTag = scopedSelectionTagComboVW.getCombo().getText().trim();
+            if (!scopedSelectionTag.isEmpty()) {
+                Tag addedTag = null;
                 String parentTag = scopedSelectionParentTagComboVW.getCombo().getText().trim();
                 if (!parentTag.isEmpty()) {
-                    addedTag.setParentName(parentTag);
+                    addedTag = new Tag(scopedSelectionTag, parentTag);
+                } else {
+                    addedTag = new Tag(scopedSelectionTag);
                 }
                 ((ScopedSelection) selection).setTag(addedTag);
             }
-		}
+        }
 	}
 
 }
