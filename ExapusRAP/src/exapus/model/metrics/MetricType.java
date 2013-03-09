@@ -15,7 +15,7 @@ public enum MetricType {
     API_REFS(TotalNumberAPIReferencesVisitor.class.getCanonicalName(),
             "#refs",
             "Total references to APIs from projects"),
-    API_ELEM(NumberOfProjsVisitor.class.getCanonicalName(),
+    API_ELEM(NumberReferencedDistinctAPIElementsVisitor.class.getCanonicalName(),
             "#elems",
             "Number of distinct API elements referenced by projects"),
     API_CHILDREN(APIChildrenVisitor.class.getCanonicalName(),
