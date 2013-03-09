@@ -4,8 +4,14 @@
 % Extract facts from API selection
 %
 extract([],[]).
-extract([H|T],L) :- atom(H), extract(T,L).
-extract([H1|T1],[H2|T2]) :- \+ atom(H1), extract(H1,H2), extract(T1,T2).
+extract([H|T],L) :- 
+  atom(H),
+  !,
+  extract(T,L).
+extract([H1|T1],[H2|T2]) :- 
+  !,
+  extract(H1,H2),
+  extract(T1,T2).
 extract(
     element(PfxPkg,[],Api),
     (Id,Display,PfxPkg,QName)
@@ -20,8 +26,10 @@ extract(
     ).
 
 
+%
 % Compare facts by the URI name
-apicompare(Op, (Id1,_,_,_), (Id2,_,_,_)) 
+%
+apiCompare(Op, (Id1,_,_,_), (Id2,_,_,_)) 
  :-
       Id1 == Id2, !, Op = '='
     ; Id1 @< Id2, !, Op = '<'
@@ -29,7 +37,7 @@ apicompare(Op, (Id1,_,_,_), (Id2,_,_,_))
 
 
 %
-% Render API selection facts in HTML
+% Render API selection facts as HTML
 %
 tohtml(
     (Id,Display,PfxPkg,QName),
@@ -39,8 +47,8 @@ tohtml(
       element('td',[],[PfxPkg]),
       element('td',[],[QName]) ])
   ) :- 
-    Link = element('a',[href=URL],[Id]),
-    atom_concat('http://101companies.org/wiki/Technology:',Id,URL).
+    atom_concat('http://101companies.org/wiki/Technology:',Id,URL),
+    Link = element('a',[href=URL],[Id]).
 
 
 %
@@ -51,7 +59,7 @@ tohtml(
    member(element('view',_,View),Xml),
    member(element('APISelection',_,Apis),View),
    extract(Apis,Facts1),
-   predsort(apicompare,Facts1,Facts2),
+   predsort(apiCompare,Facts1,Facts2),
    Header = element('tr',[],[
      element('th',[],['URI name']),
      element('th',[],['Display name']),
