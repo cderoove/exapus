@@ -150,7 +150,7 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 	 */
 
 	class MetricComparator extends ViewerComparator {
-		private int direction = SWT.UP;
+		private int direction = SWT.DOWN;
 
 		@Override
 		public int compare(Viewer viewer, Object e1, Object e2) {
