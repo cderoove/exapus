@@ -379,7 +379,8 @@
             <QName>org.syntax.jedit</QName>
             <scope>PREFIX_SCOPE</scope>
             <tag>
-                <identifier>jEdit</identifier>
+                <identifier>org.syntax.jedit</identifier>
+		<display>jEdit Syntax</display>
             </tag>
         </Prefix>
         <Package>
