@@ -6,12 +6,12 @@
     <ProjectSelection>
         <Universal/>
     </ProjectSelection>
+    <APISourceViewName>Tags for Domains</APISourceViewName>
     <description>All APIs with all tags</description>
     <graphDetails>GROUPED_PACKAGES</graphDetails>
     <metricType>ALL</metricType>
     <name>Tagged APIs</name>
     <perspective>API_CENTRIC</perspective>
-    <APISourceViewName>Tags for Domains</APISourceViewName>
     <projectSourceViewName>Tags for Projects</projectSourceViewName>
     <renderable>false</renderable>
 </view>
