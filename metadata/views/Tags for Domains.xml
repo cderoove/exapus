@@ -5,522 +5,522 @@
         <Tag>
             <QName>Guice</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Control</tag>
+            <tag><identifier>Control</identifier></tag>
         </Tag>
         <Tag>
             <QName>Guava base</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Basics</tag>
+            <tag><identifier>Basics</identifier></tag>
         </Tag>
         <Tag>
             <QName>Guava collections</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Data</tag>
+            <tag><identifier>Data</identifier></tag>
         </Tag>
         <Tag>
             <QName>iText</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Format</tag>
+            <tag><identifier>Format</identifier></tag>
         </Tag>
         <Tag>
             <QName>com.apple.eawt</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Basics</tag>
+            <tag><identifier>Basics</identifier></tag>
         </Tag>
         <Tag>
             <QName>OSCache</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Caching</tag>
+            <tag><identifier>Caching</identifier></tag>
         </Tag>
         <Tag>
             <QName>XStream</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>XML</tag>
+            <tag><identifier>XML</identifier></tag>
         </Tag>
         <Tag>
             <QName>JGoodies</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>GUI</tag>
+            <tag><identifier>GUI</identifier></tag>
         </Tag>
         <Tag>
             <QName>com.sun.image.codec.jpeg</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Format</tag>
+            <tag><identifier>Format</identifier></tag>
         </Tag>
         <Tag>
             <QName>Swing</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>GUI</tag>
+            <tag><identifier>GUI</identifier></tag>
         </Tag>
         <Tag>
             <QName>CUP</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Parsing</tag>
+            <tag><identifier>Parsing</identifier></tag>
         </Tag>
         <Tag>
             <QName>java.sql</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>SQL</tag>
+            <tag><identifier>SQL</identifier></tag>
         </Tag>
         <Tag>
             <QName>java.rmi</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Distribution</tag>
+            <tag><identifier>Distribution</identifier></tag>
         </Tag>
         <Tag>
             <QName>Java applet</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Component</tag>
+            <tag><identifier>Component</identifier></tag>
         </Tag>
         <Tag>
             <QName>java.nio</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>IO</tag>
+            <tag><identifier>IO</identifier></tag>
         </Tag>
         <Tag>
             <QName>Java security</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Security</tag>
+            <tag><identifier>Security</identifier></tag>
         </Tag>
         <Tag>
             <QName>Java collections</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Data</tag>
+            <tag><identifier>Data</identifier></tag>
         </Tag>
         <Tag>
             <QName>Java events</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Control</tag>
+            <tag><identifier>Control</identifier></tag>
         </Tag>
         <Tag>
             <QName>java.util.zip</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Format</tag>
+            <tag><identifier>Format</identifier></tag>
         </Tag>
         <Tag>
             <QName>java.util.regex</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Parsing</tag>
+            <tag><identifier>Parsing</identifier></tag>
         </Tag>
         <Tag>
             <QName>java.util.concurrent</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Concurrency</tag>
+            <tag><identifier>Concurrency</identifier></tag>
         </Tag>
         <Tag>
             <QName>java.util.jar</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Format</tag>
+            <tag><identifier>Format</identifier></tag>
         </Tag>
         <Tag>
             <QName>java.util.logging</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Logging</tag>
+            <tag><identifier>Logging</identifier></tag>
         </Tag>
         <Tag>
             <QName>java.net</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Distribution</tag>
+            <tag><identifier>Distribution</identifier></tag>
         </Tag>
         <Tag>
             <QName>javax.net</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Distribution</tag>
+            <tag><identifier>Distribution</identifier></tag>
         </Tag>
         <Tag>
             <QName>java.io</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>IO</tag>
+            <tag><identifier>IO</identifier></tag>
         </Tag>
         <Tag>
             <QName>AWT</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>GUI</tag>
+            <tag><identifier>GUI</identifier></tag>
         </Tag>
         <Tag>
             <QName>java.math</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Math</tag>
+            <tag><identifier>Math</identifier></tag>
         </Tag>
         <Tag>
             <QName>JavaBeans</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Component</tag>
+            <tag><identifier>Component</identifier></tag>
         </Tag>
         <Tag>
             <QName>java.text</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Format</tag>
+            <tag><identifier>Format</identifier></tag>
         </Tag>
         <Tag>
             <QName>java.lang</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Basics</tag>
+            <tag><identifier>Basics</identifier></tag>
         </Tag>
         <Tag>
             <QName>java.lang.annotation</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Meta</tag>
+            <tag><identifier>Meta</identifier></tag>
         </Tag>
         <Tag>
             <QName>javax.annotation</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Meta</tag>
+            <tag><identifier>Meta</identifier></tag>
         </Tag>
         <Tag>
             <QName>java.lang.reflect</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Meta</tag>
+            <tag><identifier>Meta</identifier></tag>
         </Tag>
         <Tag>
             <QName>java.lang.management</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Meta</tag>
+            <tag><identifier>Meta</identifier></tag>
         </Tag>
         <Tag>
             <QName>java.lang.ref</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Meta</tag>
+            <tag><identifier>Meta</identifier></tag>
         </Tag>
         <Tag>
             <QName>Jaxen</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>XML</tag>
+            <tag><identifier>XML</identifier></tag>
         </Tag>
         <Tag>
             <QName>JDOM</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>XML</tag>
+            <tag><identifier>XML</identifier></tag>
         </Tag>
         <Tag>
             <QName>ANTLR</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Parsing</tag>
+            <tag><identifier>Parsing</identifier></tag>
         </Tag>
         <Tag>
             <QName>Jython</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Meta</tag>
+            <tag><identifier>Meta</identifier></tag>
         </Tag>
         <Tag>
             <QName>Rhino</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Meta</tag>
+            <tag><identifier>Meta</identifier></tag>
         </Tag>
         <Tag>
             <QName>Spring</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Control</tag>
+            <tag><identifier>Control</identifier></tag>
         </Tag>
         <Tag>
             <QName>Spring</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>SQL</tag>
+            <tag><identifier>SQL</identifier></tag>
         </Tag>
         <Tag>
             <QName>Spring</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>NoSQL</tag>
+            <tag><identifier>NoSQL</identifier></tag>
         </Tag>
         <Tag>
             <QName>Spring</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Component</tag>
+            <tag><identifier>Component</identifier></tag>
         </Tag>
         <Tag>
             <QName>Spring</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Distribution</tag>
+            <tag><identifier>Distribution</identifier></tag>
         </Tag>
         <Tag>
             <QName>Spring</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Security</tag>
+            <tag><identifier>Security</identifier></tag>
         </Tag>
         <Tag>
             <QName>Spring</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Middleware</tag>
+            <tag><identifier>Middleware</identifier></tag>
         </Tag>
         <Tag>
             <QName>Spring</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Control</tag>
+            <tag><identifier>Control</identifier></tag>
         </Tag>
         <Tag>
             <QName>Hibernate</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>SQL</tag>
+            <tag><identifier>SQL</identifier></tag>
         </Tag>
         <Tag>
             <QName>ASM</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Meta</tag>
+            <tag><identifier>Meta</identifier></tag>
         </Tag>
         <Tag>
             <QName>Jetty</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Web</tag>
+            <tag><identifier>Web</identifier></tag>
         </Tag>
         <Tag>
             <QName>JFreeChart</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Productivity</tag>
+            <tag><identifier>Productivity</identifier></tag>
         </Tag>
         <Tag>
             <QName>Hamcrest</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Testing</tag>
+            <tag><identifier>Testing</identifier></tag>
         </Tag>
         <Tag>
             <QName>SAX</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>XML</tag>
+            <tag><identifier>XML</identifier></tag>
         </Tag>
         <Tag>
             <QName>org.syntax.jedit</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>GUI</tag>
+            <tag><identifier>GUI</identifier></tag>
         </Tag>
         <Tag>
             <QName>Plexus XML</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>XML</tag>
+            <tag><identifier>XML</identifier></tag>
         </Tag>
         <Tag>
             <QName>JGraph</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Productivity</tag>
+            <tag><identifier>Productivity</identifier></tag>
         </Tag>
         <Tag>
             <QName>dom4j</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>XML</tag>
+            <tag><identifier>XML</identifier></tag>
         </Tag>
         <Tag>
             <QName>org.htmlparser</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Parsing</tag>
+            <tag><identifier>Parsing</identifier></tag>
         </Tag>
         <Tag>
             <QName>JGroups</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Distribution</tag>
+            <tag><identifier>Distribution</identifier></tag>
         </Tag>
         <Tag>
             <QName>JGroups</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Middleware</tag>
+            <tag><identifier>Middleware</identifier></tag>
         </Tag>
         <Tag>
             <QName>Apache XML</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>XML</tag>
+            <tag><identifier>XML</identifier></tag>
         </Tag>
         <Tag>
             <QName>Apache XML-RPC</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Distribution</tag>
+            <tag><identifier>Distribution</identifier></tag>
         </Tag>
         <Tag>
             <QName>log4j</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Logging</tag>
+            <tag><identifier>Logging</identifier></tag>
         </Tag>
         <Tag>
             <QName>Ant</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Build</tag>
+            <tag><identifier>Build</identifier></tag>
         </Tag>
         <Tag>
             <QName>Avalon LogKit</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Logging</tag>
+            <tag><identifier>Logging</identifier></tag>
         </Tag>
         <Tag>
             <QName>SLF4J</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Logging</tag>
+            <tag><identifier>Logging</identifier></tag>
         </Tag>
         <Tag>
             <QName>Velocity</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Output</tag>
+            <tag><identifier>Output</identifier></tag>
         </Tag>
         <Tag>
             <QName>POI</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Productivity</tag>
+            <tag><identifier>Productivity</identifier></tag>
         </Tag>
         <Tag>
             <QName>Avalon</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Data</tag>
+            <tag><identifier>Data</identifier></tag>
         </Tag>
         <Tag>
             <QName>Avalon</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Component</tag>
+            <tag><identifier>Component</identifier></tag>
         </Tag>
         <Tag>
             <QName>Avalon</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Control</tag>
+            <tag><identifier>Control</identifier></tag>
         </Tag>
         <Tag>
             <QName>Maven</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Build</tag>
+            <tag><identifier>Build</identifier></tag>
         </Tag>
         <Tag>
             <QName>ORO</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Format</tag>
+            <tag><identifier>Format</identifier></tag>
         </Tag>
         <Tag>
             <QName>Lucene</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Search</tag>
+            <tag><identifier>Search</identifier></tag>
         </Tag>
         <Tag>
             <QName>Struts</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Web</tag>
+            <tag><identifier>Web</identifier></tag>
         </Tag>
         <Tag>
             <QName>BCEL</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Meta</tag>
+            <tag><identifier>Meta</identifier></tag>
         </Tag>
         <Tag>
             <QName>ECS</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>XML</tag>
+            <tag><identifier>XML</identifier></tag>
         </Tag>
         <Tag>
             <QName>BSF</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Meta</tag>
+            <tag><identifier>Meta</identifier></tag>
         </Tag>
         <Tag>
             <QName>JDT</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Meta</tag>
+            <tag><identifier>Meta</identifier></tag>
         </Tag>
         <Tag>
             <QName>DOM</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>XML</tag>
+            <tag><identifier>XML</identifier></tag>
         </Tag>
         <Tag>
             <QName>Tidy</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>XML</tag>
+            <tag><identifier>XML</identifier></tag>
         </Tag>
         <Tag>
             <QName>Bouncy Castle</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Encryption</tag>
+            <tag><identifier>Encryption</identifier></tag>
         </Tag>
         <Tag>
             <QName>Smack</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Middleware</tag>
+            <tag><identifier>Middleware</identifier></tag>
         </Tag>
         <Tag>
             <QName>BSF</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Javassist</tag>
+            <tag><identifier>Javassist</identifier></tag>
         </Tag>
         <Tag>
             <QName>JAMA</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Math</tag>
+            <tag><identifier>Math</identifier></tag>
         </Tag>
         <Tag>
             <QName>gnu.regexp</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Parsing</tag>
+            <tag><identifier>Parsing</identifier></tag>
         </Tag>
         <Tag>
             <QName>JUnit</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Testing</tag>
+            <tag><identifier>Testing</identifier></tag>
         </Tag>
         <Tag>
             <QName>OGNL</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Meta</tag>
+            <tag><identifier>Meta</identifier></tag>
         </Tag>
         <Tag>
             <QName>javax.jnlp</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Web</tag>
+            <tag><identifier>Web</identifier></tag>
         </Tag>
         <Tag>
             <QName>JNDI</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Distribution</tag>
+            <tag><identifier>Distribution</identifier></tag>
         </Tag>
         <Tag>
             <QName>JNDI</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Component</tag>
+            <tag><identifier>Component</identifier></tag>
         </Tag>
         <Tag>
             <QName>EJB</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Component</tag>
+            <tag><identifier>Component</identifier></tag>
         </Tag>
         <Tag>
             <QName>JTA</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Control</tag>
+            <tag><identifier>Control</identifier></tag>
         </Tag>
         <Tag>
             <QName>JPA</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>SQL</tag>
+            <tag><identifier>SQL</identifier></tag>
         </Tag>
         <Tag>
             <QName>javax.imageio</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Format</tag>
+            <tag><identifier>Format</identifier></tag>
         </Tag>
         <Tag>
             <QName>javax.servlet</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Web</tag>
+            <tag><identifier>Web</identifier></tag>
         </Tag>
         <Tag>
             <QName>JMF</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Format</tag>
+            <tag><identifier>Format</identifier></tag>
         </Tag>
         <Tag>
             <QName>JAF</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Format</tag>
+            <tag><identifier>Format</identifier></tag>
         </Tag>
         <Tag>
             <QName>JAF</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Component</tag>
+            <tag><identifier>Component</identifier></tag>
         </Tag>
         <Tag>
             <QName>JavaMail</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Productivity</tag>
+            <tag><identifier>Productivity</identifier></tag>
         </Tag>
         <Tag>
             <QName>Java Print Service</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Output</tag>
+            <tag><identifier>Output</identifier></tag>
         </Tag>
         <Tag>
             <QName>RMI-IIOP</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>Distribution</tag>
+            <tag><identifier>Distribution</identifier></tag>
         </Tag>
     </APISelection>
     <ProjectSelection>

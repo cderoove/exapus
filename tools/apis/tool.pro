@@ -59,7 +59,7 @@ tohtml(
      element('th',[],['Package'])]),
    maplist(tohtml,Facts2,Rows),
    open('output.html', write, Output, []),
-   Title = 'Quaatlas API list',
+   Title = 'Quaatlas: APIs',
    xml_write(Output, [
      element('html',[],[
        element('head',[],[element('title',[],[Title])]),
