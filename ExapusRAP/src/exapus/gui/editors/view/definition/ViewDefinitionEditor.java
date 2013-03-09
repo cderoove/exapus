@@ -107,6 +107,7 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 					getView().setPerspective((Perspective)selected);
 					updateComboVWAPISource();
 					updateComboVWProjectSource();
+                    updateComboMetrics();
 				}
 			}
 		});
@@ -436,7 +437,7 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 
 
 	private void updateComboMetrics() {
-		comboMetrics.setInput(MetricType.supportedMetrics(getView().getRenderable()));
+		comboMetrics.setInput(MetricType.supportedMetrics(getView().getRenderable(), getView().isAPICentric()));
 		comboMetrics.setSelection(new StructuredSelection(getView().getMetricType()));
 	}
 

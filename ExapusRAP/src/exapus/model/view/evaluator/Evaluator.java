@@ -112,7 +112,7 @@ public abstract class Evaluator {
             long startTime = System.currentTimeMillis();
 
             if (type == MetricType.ALL) {
-                for (MetricType metric : MetricType.supportedMetrics(view.getRenderable())) {
+                for (MetricType metric : MetricType.supportedMetrics(view.getRenderable(), view.isAPICentric())) {
                     if (metric == MetricType.ALL) continue;
                     forest.acceptVisitor(metric.getVisitor(view));
                 }

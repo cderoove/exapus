@@ -9,10 +9,13 @@ import java.lang.reflect.Constructor;
  * Keeping together metric visitors
  */
 public enum MetricType {
+    PROJS(NumberOfProjsVisitor.class.getCanonicalName(),
+            "#proj",
+            "Number of projects using APIs"),
     API_REFS(TotalNumberAPIReferencesVisitor.class.getCanonicalName(),
             "#refs",
             "Total references to APIs from projects"),
-    API_ELEM(NumberReferencedDistinctAPIElementsVisitor.class.getCanonicalName(),
+    API_ELEM(NumberOfProjsVisitor.class.getCanonicalName(),
             "#elems",
             "Number of distinct API elements referenced by projects"),
     API_CHILDREN(APIChildrenVisitor.class.getCanonicalName(),
@@ -56,9 +59,14 @@ public enum MetricType {
         return toolTip;
     }
 
-    public static MetricType[] supportedMetrics(boolean withoutAll) {
-        if (withoutAll) return new MetricType[]{API_REFS, API_ELEM, API_CHILDREN, API_SUPER, API_SUB};
-        return MetricType.class.getEnumConstants();
+    public static MetricType[] supportedMetrics(boolean withoutAll, boolean isAPICentric) {
+        if (isAPICentric) {
+            if (withoutAll) return new MetricType[]{PROJS, API_REFS, API_ELEM, API_CHILDREN, API_SUPER, API_SUB};
+            else return new MetricType[]{ALL, PROJS, API_REFS, API_ELEM, API_CHILDREN, API_SUPER, API_SUB};
+        } else {
+            if (withoutAll) return new MetricType[]{API_REFS, API_ELEM, API_CHILDREN, API_SUPER, API_SUB};
+            else return new MetricType[]{ALL, API_REFS, API_ELEM, API_CHILDREN, API_SUPER, API_SUB};
+        }
     }
 
     public static MetricType defaultValue(boolean withoutAll) {
@@ -66,8 +74,8 @@ public enum MetricType {
         return ALL;
     }
 
-    public static boolean supportsMetric(boolean renderable, MetricType metricType) {
-        MetricType[] metricTypes = supportedMetrics(renderable);
+    public static boolean supportsMetric(boolean renderable, boolean isAPICentric, MetricType metricType) {
+        MetricType[] metricTypes = supportedMetrics(renderable, isAPICentric);
         for (MetricType type : metricTypes) {
             if (metricType.equals(type)) return true;
         }

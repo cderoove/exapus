@@ -108,7 +108,7 @@ public class Store extends Observable {
 		registerDefaultViews();
 		//bootstrapPredefinedViews(); can be used to re-create files
 		registerViewsFromDirectory();
-		registerCSVTagView();
+		//registerCSVTagView();
 	}
 
 	
@@ -120,7 +120,7 @@ public class Store extends Observable {
 	
 	protected void bootstrapPredefinedViews() {
 		ViewFactory factory = ViewFactory.getCurrent(); 
-		registerCSVTagView();
+		//registerCSVTagView();
 		registerView(factory.tagsForSubAPIsView());
 		registerView(factory.tagsForDomains());
 		registerView(factory.tagsForProjects());

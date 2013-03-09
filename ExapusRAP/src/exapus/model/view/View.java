@@ -163,7 +163,7 @@ public class View {
 			this.renderable = renderable;
 			makeDirty();
 
-            if (!MetricType.supportsMetric(this.renderable, getMetricType())) {
+            if (!MetricType.supportsMetric(this.renderable, this.isAPICentric(), getMetricType())) {
                 this.metricType = MetricType.defaultValue(this.renderable);
             }
 		}

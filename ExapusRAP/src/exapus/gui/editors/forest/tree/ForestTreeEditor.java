@@ -355,7 +355,7 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 					viewer.getTree().setSortDirection(comparator.change());
 				} else {
 					sorting = SortBy.NAME;
-					comparator.setDirection(SWT.DOWN);
+					comparator.setDirection(SWT.UP);
 				}
 				TreePath[] expanded = viewer.getExpandedTreePaths();
 				viewer.refresh();
@@ -391,7 +391,7 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 
 		chosen = getView().getMetricType();
 		idxFirstMetricCol = viewer.getTree().getColumnCount();
-		for (MetricType metric : MetricType.supportedMetrics(getView().getRenderable())) {
+		for (MetricType metric : MetricType.supportedMetrics(getView().getRenderable(), getView().isAPICentric())) {
 			if (metric == MetricType.ALL) continue;
 			MetricColumn col = new MetricColumn(viewer.getTree().getColumnCount(), metric, viewer, SWT.RIGHT);
 			metricCols.add(col);
@@ -803,7 +803,13 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 					idx.add(i);
 				}
 
-				if (getView().getMetricType() != MetricType.ALL) {
+/*                System.err.println("idx before = ");
+                for (Integer integer : idx) {
+                    System.err.print(integer + ", ");
+                }
+                System.err.println("");*/
+
+                if (getView().getMetricType() != MetricType.ALL) {
 					for (MetricColumn metricCol : metricCols) {
 						if (metricCol.metricType != getView().getMetricType()) metricCol.clear();
 						else {
@@ -816,11 +822,36 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 					}
 
 				} else {
-					for (MetricColumn metricCol : metricCols) {
-						metricCol.init();
+                    boolean doSwap = false;
+                    int moveToEnd = -1; // This is to be extended when there is more than one column to be excluded from ALL
+                    for (MetricColumn metricCol : metricCols) {
+                        if (!MetricType.supportsMetric(getView().getRenderable(), getView().isAPICentric(), metricCol.metricType)) {
+                            moveToEnd = metricCol.idx;
+                            metricCol.clear();
+                            doSwap = true;
+                        } else {
+                            if (doSwap) {
+                                int swapIdx = metricCol.idx - 1;
+                                idx.set(swapIdx, metricCol.idx);
+                                idx.set(metricCol.idx, swapIdx);
+                            }
+
+                            metricCol.init();
+                        }
 					}
+
+                    if (doSwap) {
+                        idx.set(idx.size() - 1, moveToEnd);
+                    }
 				}
 
+/*
+                System.err.println("idx after = ");
+                for (Integer integer : idx) {
+                    System.err.print(integer + ", ");
+                }
+                System.err.println("");
+*/
 				viewer.getTree().setColumnOrder(Ints.toArray(idx));
 			}
 
