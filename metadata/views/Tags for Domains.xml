@@ -3,14 +3,159 @@
     <APISelection>
         <Universal/>
         <Tag>
+            <QName>Guice</QName>
+            <scope>TAG_SCOPE</scope>
+            <tag>Control</tag>
+        </Tag>
+        <Tag>
+            <QName>Guava base</QName>
+            <scope>TAG_SCOPE</scope>
+            <tag>Basics</tag>
+        </Tag>
+        <Tag>
+            <QName>Guava collections</QName>
+            <scope>TAG_SCOPE</scope>
+            <tag>Data</tag>
+        </Tag>
+        <Tag>
+            <QName>iText</QName>
+            <scope>TAG_SCOPE</scope>
+            <tag>Documents</tag>
+        </Tag>
+        <Tag>
+            <QName>com.apple.eawt</QName>
+            <scope>TAG_SCOPE</scope>
+            <tag>Basics</tag>
+        </Tag>
+        <Tag>
+            <QName>OSCache</QName>
+            <scope>TAG_SCOPE</scope>
+            <tag>Caching</tag>
+        </Tag>
+        <Tag>
+            <QName>XStream</QName>
+            <scope>TAG_SCOPE</scope>
+            <tag>XML</tag>
+        </Tag>
+        <Tag>
+            <QName>JGoodies</QName>
+            <scope>TAG_SCOPE</scope>
+            <tag>GUI</tag>
+        </Tag>
+        <Tag>
+            <QName>Codec JPEG</QName>
+            <scope>TAG_SCOPE</scope>
+            <tag>Format</tag>
+        </Tag>
+        <Tag>
             <QName>Swing</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>GUI domain</tag>
+            <tag>GUI</tag>
+        </Tag>
+        <Tag>
+            <QName>CUP</QName>
+            <scope>TAG_SCOPE</scope>
+            <tag>Parsing</tag>
+        </Tag>
+        <Tag>
+            <QName>java.sql</QName>
+            <scope>TAG_SCOPE</scope>
+            <tag>SQL</tag>
+        </Tag>
+        <Tag>
+            <QName>java.rmi</QName>
+            <scope>TAG_SCOPE</scope>
+            <tag>RMI</tag>
+        </Tag>
+        <Tag>
+            <QName>Java applet</QName>
+            <scope>TAG_SCOPE</scope>
+            <tag>Component</tag>
+        </Tag>
+        <Tag>
+            <QName>java.nio</QName>
+            <scope>TAG_SCOPE</scope>
+            <tag>IO</tag>
+        </Tag>
+        <Tag>
+            <QName>Java security</QName>
+            <scope>TAG_SCOPE</scope>
+            <tag>Security</tag>
+        </Tag>
+        <Tag>
+            <QName>Java collections</QName>
+            <scope>TAG_SCOPE</scope>
+            <tag>Data</tag>
+        </Tag>
+        <Tag>
+            <QName>Java events</QName>
+            <scope>TAG_SCOPE</scope>
+            <tag>Control</tag>
+        </Tag>
+        <Tag>
+            <QName>java.util.zip</QName>
+            <scope>TAG_SCOPE</scope>
+            <tag>Format</tag>
+        </Tag>
+        <Tag>
+            <QName>java.util.regex</QName>
+            <scope>TAG_SCOPE</scope>
+            <tag>Parsing</tag>
+        </Tag>
+        <Tag>
+            <QName>java.util.concurrent</QName>
+            <scope>TAG_SCOPE</scope>
+            <tag>Concurrency</tag>
+        </Tag>
+        <Tag>
+            <QName>java.util.jar</QName>
+            <scope>TAG_SCOPE</scope>
+            <tag>Format</tag>
+        </Tag>
+        <Tag>
+            <QName>java.util.logging</QName>
+            <scope>TAG_SCOPE</scope>
+            <tag>Logging</tag>
+        </Tag>
+        <Tag>
+            <QName>java.net</QName>
+            <scope>TAG_SCOPE</scope>
+            <tag>Network</tag>
+        </Tag>
+        <Tag>
+            <QName>javax.net</QName>
+            <scope>TAG_SCOPE</scope>
+            <tag>Network</tag>
+        </Tag>
+        <Tag>
+            <QName>java.io</QName>
+            <scope>TAG_SCOPE</scope>
+            <tag>IO</tag>
         </Tag>
         <Tag>
             <QName>AWT</QName>
             <scope>TAG_SCOPE</scope>
-            <tag>GUI domain</tag>
+            <tag>GUI</tag>
+        </Tag>
+        <Tag>
+            <QName>java.math</QName>
+            <scope>TAG_SCOPE</scope>
+            <tag>Math</tag>
+        </Tag>
+        <Tag>
+            <QName>JavaBeans</QName>
+            <scope>TAG_SCOPE</scope>
+            <tag>Component</tag>
+        </Tag>
+        <Tag>
+            <QName>java.text</QName>
+            <scope>TAG_SCOPE</scope>
+            <tag>Format</tag>
+        </Tag>
+        <Tag>
+            <QName>java.lang</QName>
+            <scope>TAG_SCOPE</scope>
+            <tag>Basics</tag>
         </Tag>
     </APISelection>
     <ProjectSelection>

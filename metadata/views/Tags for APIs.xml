@@ -2,6 +2,13 @@
 <view>
     <APISelection>
         <Prefix>
+            <QName>com.google.inject</QName>
+            <scope>PREFIX_SCOPE</scope>
+            <tag>
+                <identifier>Guice</identifier>
+            </tag>
+        </Prefix>
+        <Prefix>
             <QName>com.google.common</QName>
             <scope>PREFIX_SCOPE</scope>
             <tag>
@@ -19,7 +26,8 @@
             <QName>com.apple.eawt</QName>
             <scope>PACKAGE_SCOPE</scope>
             <tag>
-                <identifier>eawt</identifier>
+                <identifier>com.apple.eawt</identifier>
+		<display>eawt</display>
             </tag>
         </Package>
         <Prefix>
@@ -47,7 +55,8 @@
             <QName>com.sun.image.codec.jpeg</QName>
             <scope>PREFIX_SCOPE</scope>
             <tag>
-                <identifier>jpeg</identifier>
+                <identifier>com.sun.image.codec.jpeg</identifier>
+		<display>jpeg</display>
             </tag>
         </Prefix>
         <Prefix>
@@ -75,98 +84,112 @@
             <QName>java.sql</QName>
             <scope>PACKAGE_SCOPE</scope>
             <tag>
-                <identifier>SQL</identifier>
+                <identifier>java.sql</identifier>
+                <display>sql</display>
             </tag>
         </Package>
         <Prefix>
             <QName>java.rmi</QName>
             <scope>PREFIX_SCOPE</scope>
             <tag>
-                <identifier>RMI</identifier>
+                <identifier>java.rmi</identifier>
+                <display>rmi</display>
             </tag>
         </Prefix>
         <Package>
             <QName>java.applet</QName>
             <scope>PACKAGE_SCOPE</scope>
             <tag>
-                <identifier>applet</identifier>
+                <identifier>Java applet</identifier>
+                <display>applet</display>
             </tag>
         </Package>
         <Prefix>
             <QName>java.nio</QName>
             <scope>PREFIX_SCOPE</scope>
             <tag>
-                <identifier>nio</identifier>
+                <identifier>java.nio</identifier>
+                <display>nio</display>
             </tag>
         </Prefix>
         <Prefix>
             <QName>java.security</QName>
             <scope>PREFIX_SCOPE</scope>
             <tag>
-                <identifier>security</identifier>
+                <identifier>Java security</identifier>
+                <display>security</display>
             </tag>
         </Prefix>
         <Package>
             <QName>java.util</QName>
             <scope>PACKAGE_SCOPE</scope>
             <tag>
-                <identifier>util</identifier>
+                <identifier>java.util</identifier>
+                <display>util</display>
             </tag>
         </Package>
         <Package>
             <QName>java.util.zip</QName>
             <scope>PACKAGE_SCOPE</scope>
             <tag>
-                <identifier>zip</identifier>
+                <identifier>java.util.zip</identifier>
+                <display>zip</display>
             </tag>
         </Package>
         <Package>
             <QName>java.util.regex</QName>
             <scope>PACKAGE_SCOPE</scope>
             <tag>
-                <identifier>regex</identifier>
+                <identifier>java.util.regex</identifier>
+                <display>regex</display>
             </tag>
         </Package>
         <Prefix>
             <QName>java.util.concurrent</QName>
             <scope>PREFIX_SCOPE</scope>
             <tag>
-                <identifier>concurrent</identifier>
+                <identifier>java.util.concurrent</identifier>
+                <display>concurrent</display>
             </tag>
         </Prefix>
         <Package>
             <QName>java.util.jar</QName>
             <scope>PACKAGE_SCOPE</scope>
             <tag>
-                <identifier>jar</identifier>
+                <identifier>java.util.jar</identifier>
+                <display>jar</display>
             </tag>
         </Package>
         <Package>
             <QName>java.util.logging</QName>
             <scope>PACKAGE_SCOPE</scope>
             <tag>
-                <identifier>logging</identifier>
+                <identifier>java.util.logging</identifier>
+                <display>logging</display>
             </tag>
         </Package>
         <Package>
             <QName>java.net</QName>
             <scope>PACKAGE_SCOPE</scope>
             <tag>
-                <identifier>net</identifier>
+                <identifier>java.net</identifier>
+                <display>net</display>
             </tag>
         </Package>
         <Package>
             <QName>javax.net</QName>
             <scope>PACKAGE_SCOPE</scope>
             <tag>
-                <identifier>net</identifier>
+                <identifier>javax.net</identifier>
+                <display>net</display>
             </tag>
         </Package>
         <Package>
             <QName>java.io</QName>
             <scope>PACKAGE_SCOPE</scope>
             <tag>
-                <identifier>io</identifier>
+                <identifier>java.io</identifier>
+                <display>io</display>
             </tag>
         </Package>
         <Prefix>
@@ -187,63 +210,71 @@
             <QName>java.math</QName>
             <scope>PACKAGE_SCOPE</scope>
             <tag>
-                <identifier>math</identifier>
+                <identifier>java.math</identifier>
+		<display>math</display>
             </tag>
         </Package>
         <Prefix>
             <QName>java.beans</QName>
             <scope>PREFIX_SCOPE</scope>
             <tag>
-                <identifier>beans</identifier>
+                <identifier>JavaBeans</identifier>
             </tag>
         </Prefix>
         <Package>
             <QName>java.text</QName>
             <scope>PACKAGE_SCOPE</scope>
             <tag>
-                <identifier>text</identifier>
+                <identifier>java.text</identifier>
+		<display>text</display>
             </tag>
         </Package>
         <Package>
             <QName>java.lang</QName>
             <scope>PACKAGE_SCOPE</scope>
             <tag>
-                <identifier>lang</identifier>
+                <identifier>java.lang</identifier>
+		<display>lang</display>
             </tag>
         </Package>
         <Package>
             <QName>java.lang.annotation</QName>
             <scope>PACKAGE_SCOPE</scope>
             <tag>
-                <identifier>annotation</identifier>
+                <identifier>java.lang.annotation</identifier>
+		<display>annotation</display>
             </tag>
         </Package>
         <Prefix>
             <QName>javax.annotation</QName>
             <scope>PREFIX_SCOPE</scope>
             <tag>
-                <identifier>annotation</identifier>
+                <identifier>javax.annotation</identifier>
+		<display>annotation</display>
             </tag>
         </Prefix>
         <Package>
             <QName>java.lang.reflect</QName>
             <scope>PACKAGE_SCOPE</scope>
             <tag>
-                <identifier>reflect</identifier>
+                <identifier>java.lang.reflect</identifier>
+		<display>reflect</display>
             </tag>
         </Package>
         <Package>
             <QName>java.lang.management</QName>
             <scope>PACKAGE_SCOPE</scope>
             <tag>
-                <identifier>management</identifier>
+                <identifier>java.lang.management</identifier>
+		<display>management</display>
             </tag>
         </Package>
         <Package>
             <QName>java.lang.ref</QName>
             <scope>PACKAGE_SCOPE</scope>
             <tag>
-                <identifier>ref</identifier>
+                <identifier>java.lang.ref</identifier>
+		<display>ref</display>
             </tag>
         </Package>
         <Prefix>
@@ -264,15 +295,15 @@
             <QName>org.antlr</QName>
             <scope>PREFIX_SCOPE</scope>
             <tag>
-                <identifier>ANTLR </identifier>
-            3</tag>
+                <identifier>ANTLR</identifier>
+            </tag>
         </Prefix>
         <Prefix>
             <QName>antlr</QName>
             <scope>PREFIX_SCOPE</scope>
             <tag>
-                <identifier>ANTLR </identifier>
-            2</tag>
+                <identifier>ANTLR</identifier>
+            </tag>
         </Prefix>
         <Prefix>
             <QName>org.python</QName>
@@ -355,7 +386,7 @@
             <QName>org.codehaus.plexus.util.xml.pull</QName>
             <scope>PACKAGE_SCOPE</scope>
             <tag>
-                <identifier>PlexusXml</identifier>
+                <identifier>Plexus XML</identifier>
             </tag>
         </Package>
         <Prefix>
@@ -376,7 +407,8 @@
             <QName>org.htmlparser</QName>
             <scope>PREFIX_SCOPE</scope>
             <tag>
-                <identifier>htmlparser</identifier>
+                <identifier>org.htmlparser</identifier>
+		<display>htmlparser</display>
             </tag>
         </Prefix>
         <Prefix>
@@ -390,28 +422,29 @@
             <QName>org.apache.xml</QName>
             <scope>PREFIX_SCOPE</scope>
             <tag>
-                <identifier>ApacheXml</identifier>
+                <identifier>Apache XML</identifier>
             </tag>
         </Prefix>
         <Prefix>
             <QName>org.apache.xerces</QName>
             <scope>PREFIX_SCOPE</scope>
             <tag>
-                <identifier>ApacheXml</identifier>
+                <identifier>Apache XML</identifier>
             </tag>
         </Prefix>
         <Prefix>
             <QName>org.apache.xpath</QName>
             <scope>PREFIX_SCOPE</scope>
             <tag>
-                <identifier>ApacheXml</identifier>
+                <identifier>Apache XML</identifier>
             </tag>
         </Prefix>
         <Prefix>
             <QName>org.apache.xmlrpc</QName>
             <scope>PREFIX_SCOPE</scope>
             <tag>
-                <identifier>xmlrpc</identifier>
+                <identifier>Apache XML-RPC</identifier>
+		<display>xmlrpc</display>
             </tag>
         </Prefix>
         <Prefix>
@@ -425,14 +458,15 @@
             <QName>org.apache.tools.ant</QName>
             <scope>PREFIX_SCOPE</scope>
             <tag>
-                <identifier>ant</identifier>
+                <identifier>Ant</identifier>
             </tag>
         </Prefix>
         <Prefix>
             <QName>org.apache.log</QName>
             <scope>PREFIX_SCOPE</scope>
             <tag>
-                <identifier>AvalonLogKit</identifier>
+                <identifier>Avalon LogKit</identifier>
+                <display>Avalon</display>
             </tag>
         </Prefix>
         <Prefix>
@@ -446,7 +480,8 @@
             <QName>org.apache.commons</QName>
             <scope>PREFIX_SCOPE</scope>
             <tag>
-                <identifier>commons</identifier>
+                <identifier>Apache Commons</identifier>
+		<display>commons</display>
             </tag>
         </Prefix>
         <Prefix>
@@ -544,7 +579,7 @@
             <QName>org.bouncycastle</QName>
             <scope>PREFIX_SCOPE</scope>
             <tag>
-                <identifier>bouncycastle</identifier>
+                <identifier>Bouncy Castle</identifier>
             </tag>
         </Prefix>
         <Prefix>
@@ -572,21 +607,21 @@
             <QName>sun.misc</QName>
             <scope>PACKAGE_SCOPE</scope>
             <tag>
-                <identifier>sun</identifier>
-            .misc</tag>
+                <identifier>sun.misc</identifier>
+            </tag>
         </Package>
         <Prefix>
             <QName>gnu.regexp</QName>
             <scope>PREFIX_SCOPE</scope>
             <tag>
-                <identifier>gnu</identifier>
-            .regexp</tag>
+                <identifier>gnu.regexp</identifier>
+            </tag>
         </Prefix>
         <Prefix>
             <QName>junit</QName>
             <scope>PREFIX_SCOPE</scope>
             <tag>
-                <identifier>JUnit </identifier>
+                <identifier>JUnit</identifier>
             3</tag>
         </Prefix>
         <Package>
@@ -600,7 +635,8 @@
             <QName>javax.jnlp</QName>
             <scope>PACKAGE_SCOPE</scope>
             <tag>
-                <identifier>JNLP</identifier>
+                <identifier>javax.jnlp</identifier>
+		<display>jnlp</display>
             </tag>
         </Package>
         <Prefix>
@@ -635,14 +671,16 @@
             <QName>javax.imageio</QName>
             <scope>PREFIX_SCOPE</scope>
             <tag>
-                <identifier>image</identifier>
+                <identifier>javax.imageio</identifier>
+		<display>imageio</display>
             </tag>
         </Prefix>
         <Prefix>
             <QName>javax.servlet</QName>
             <scope>PREFIX_SCOPE</scope>
             <tag>
-                <identifier>servlet</identifier>
+                <identifier>javax.servlet</identifier>
+		<display>servlet</display>
             </tag>
         </Prefix>
         <Prefix>
@@ -663,21 +701,22 @@
             <QName>javax.mail</QName>
             <scope>PREFIX_SCOPE</scope>
             <tag>
-                <identifier>mail</identifier>
+                <identifier>JavaMail</identifier>
             </tag>
         </Prefix>
         <Prefix>
             <QName>javax.print</QName>
             <scope>PREFIX_SCOPE</scope>
             <tag>
-                <identifier>print</identifier>
+                <identifier>Java Print Service</identifier>
+		<display>print</display>
             </tag>
         </Prefix>
         <Prefix>
             <QName>javax.rmi</QName>
             <scope>PREFIX_SCOPE</scope>
             <tag>
-                <identifier>IIOP</identifier>
+                <identifier>RMI-IIOP</identifier>
             </tag>
         </Prefix>
     </APISelection>

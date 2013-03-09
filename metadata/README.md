@@ -1,5 +1,7 @@
 # Summary
 
+This documentation is outdated as it reflects the state of affairs when we were still using CSV rather than the more general XML format. 
+
 * apis.csv: metadata about APIs in the Expapus-specific Qualitas corpus
 * subapis.csv: basic metadata about sub-APIs (as sets of API members).
 * subapis/*.csv: actual quantification of sub-API members.
