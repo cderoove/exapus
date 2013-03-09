@@ -1,9 +1,5 @@
 package exapus.gui.editors.forest.tree;
 
-
-import java.util.regex.Pattern;
-
-import exapus.model.forest.ForestElement;
 import exapus.model.forest.InboundRef;
 import exapus.model.forest.Member;
 import exapus.model.forest.OutboundRef;
@@ -14,31 +10,9 @@ import exapus.model.visitors.CopyingForestVisitor;
 
 public class ForestTreeFilterVisitor extends CopyingForestVisitor {
 
-	private String apiFilter = ".*";
-	private String projectFilter = ".*";
-
-
-	
-	private static String toSearchString(String s) {
-		return ".*" + Pattern.quote(s.trim()) + ".*";
-	}
-
-	public void setApiFilter(String apiFilter) {
-		this.apiFilter = toSearchString(apiFilter);
-	}
-
-	public void setProjectFilter(String projectFilter) {
-		this.projectFilter = toSearchString(projectFilter);
-	}
-	
-	protected boolean selectRef(Ref ref) {
-		String apiText = ref.getReferencedName().toString();
-		String projectText = ref.getReferencingName().toString();
-		if(apiText.matches(apiFilter) && projectText.matches(projectFilter)) {
-			forestCopy.getCorrespondingForestElement(true, ref);
-			return true;
-		}
-		return false;
+	protected boolean copyRef(Ref ref) {
+		forestCopy.getCorrespondingForestElement(true, ref);
+		return true;
 	}
 
 	@Override
@@ -58,14 +32,12 @@ public class ForestTreeFilterVisitor extends CopyingForestVisitor {
 
 	@Override
 	public boolean visitInboundReference(InboundRef inboundRef) {
-		return selectRef(inboundRef);
+		return copyRef(inboundRef);
 	}
 
 	@Override
 	public boolean visitOutboundReference(OutboundRef outboundRef) {
-		return selectRef(outboundRef);
+		return copyRef(outboundRef);
 	}
-
-
 
 }

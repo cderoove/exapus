@@ -91,13 +91,13 @@ public class SelectionDialog extends Dialog {
 		predefinedScope = scope;
 	}
 
-	//adapted from RAP controls demo
 	protected void configureShell(final Shell shell) {
 		super.configureShell(shell);
 		if(perspective.equals(Perspective.API_CENTRIC))
 			shell.setText("Select Referenced API Elements");
 		if(perspective.equals(Perspective.PROJECT_CENTRIC))
 			shell.setText("Select Referencing Project Elements");
+		//adapted from RAP controls demo
 		shell.addControlListener(new ControlAdapter() {
 			public void controlResized(ControlEvent e) {
 				initializeBounds();

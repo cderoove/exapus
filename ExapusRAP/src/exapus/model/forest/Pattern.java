@@ -36,6 +36,8 @@ import org.eclipse.jdt.core.dom.VariableDeclarationExpression;
 import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
 import org.eclipse.jdt.core.dom.WildcardType;
 
+import exapus.model.details.GraphDetails;
+
 public enum Pattern {
 
 	INSTANCE_METHOD_CALL, SUPER_METHOD_CALL, STATIC_METHOD_CALL, CONSTRUCTOR_CALL, SUPER_CONSTRUCTOR_CALL,
@@ -161,6 +163,11 @@ public enum Pattern {
 			return SUPER_METHOD_CALL;
 		throw new Error("Don't know how to create forest Pattern for given method referencing node");
 	}
+	
+    public static Pattern[] supportedPatterns() {
+        return Pattern.class.getEnumConstants();
+    }
+
 	
 
 }

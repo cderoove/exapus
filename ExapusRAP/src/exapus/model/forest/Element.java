@@ -14,6 +14,8 @@ import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.Modifier;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
+import exapus.model.details.GraphDetails;
+
 public enum Element {
 	INSTANCE_METHOD, STATIC_METHOD, CONSTRUCTOR, INSTANCE_FIELD, STATIC_FIELD, INTERFACE, CLASS,
 	// added
@@ -118,5 +120,10 @@ public enum Element {
 		else
 			return INSTANCE_FIELD;
 	}
+	
+    public static Element[] supportedElements() {
+        return Element.class.getEnumConstants();
+    }
+
 
 }
