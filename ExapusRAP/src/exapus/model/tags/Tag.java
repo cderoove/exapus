@@ -10,7 +10,7 @@ public class Tag implements Comparable<Tag> {
 
     private String identifier;
     private String parentName;
-    private String subName;
+    //private String subName;
 
     public Tag() {
         this("");
@@ -21,9 +21,10 @@ public class Tag implements Comparable<Tag> {
     }
 
     public Tag(String identifier, String parentName) {
-        this.subName = identifier.intern();
+        //this.subName = identifier.intern();
+        //this.identifier = String.format("%s::%s", parentName, identifier).intern();
         this.parentName = parentName.intern();
-        this.identifier = String.format("%s::%s", parentName, identifier).intern();
+        this.identifier = identifier.intern();
     }
 
     @XmlElement
@@ -42,10 +43,12 @@ public class Tag implements Comparable<Tag> {
 
     public void setIdentifier(String id) {
         this.identifier = id;
+/*
 
         if (id.contains("::")) {
             this.subName = id.substring(id.indexOf("::") + 2);
         }
+*/
     }
 
     @Override
@@ -54,6 +57,7 @@ public class Tag implements Comparable<Tag> {
     }
 
     public String getLabelName() {
+/*
         if (isSuperTag()) return identifier;
         if (subName == null || subName.isEmpty()) {
             if (identifier.contains("::")) {
@@ -63,10 +67,13 @@ public class Tag implements Comparable<Tag> {
             }
         }
         return subName;
+*/
+        return identifier;
     }
 
     public String toDebugString() {
-        return String.format("id=%s, parent=%s, subname=%s", this.identifier, this.parentName, this.subName);
+        //return String.format("id=%s, parent=%s, subname=%s", this.identifier, this.parentName, this.subName);
+        return String.format("id=%s, parent=%s, subname=s", this.identifier, this.parentName);
     }
 
 /*

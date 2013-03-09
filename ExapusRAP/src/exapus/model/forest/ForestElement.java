@@ -36,8 +36,8 @@ public abstract class ForestElement implements INode {
 	
 	private QName qid;
 
-    private Multiset<String> allTags = HashMultiset.create();
-    private Multiset<String> allDualTags = HashMultiset.create();
+    private Multiset<Tag> allTags = HashMultiset.create();
+    private Multiset<Tag> allDualTags = HashMultiset.create();
 		
 	public ForestElement(UqName id) {
 		this.id = id;
@@ -215,8 +215,8 @@ public abstract class ForestElement implements INode {
     }
 
     public void addTagToAll(Cloud tags) {
-        Multiset<String> multiset = tags.toMultiset();
-        for (String s : multiset.elementSet()) {
+        Multiset<Tag> multiset = tags.toMultiset();
+        for (Tag s : multiset.elementSet()) {
             this.allTags.add(s, multiset.count(s));
         }
 
@@ -224,8 +224,8 @@ public abstract class ForestElement implements INode {
     }
 
     public void addDualTagToAll(Cloud tags) {
-        Multiset<String> multiset = tags.toMultiset();
-        for (String s : multiset.elementSet()) {
+        Multiset<Tag> multiset = tags.toMultiset();
+        for (Tag s : multiset.elementSet()) {
             this.allDualTags.add(s, multiset.count(s));
         }
 
@@ -263,11 +263,11 @@ public abstract class ForestElement implements INode {
 
     public abstract ICompilationUnit getCorrespondingICompilationUnit();
 
-    public Multiset<String> getAllTags() {
+    public Multiset<Tag> getAllTags() {
         return allTags;
     }
 
-    public Multiset<String> getAllDualTags() {
+    public Multiset<Tag> getAllDualTags() {
         return allDualTags;
     }
     

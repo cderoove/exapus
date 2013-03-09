@@ -41,16 +41,17 @@ public class Cloud {
 		
 	private TreeSet<Tag> tags;
 
-    public Multiset<String> toMultiset(boolean onlySuper) {
-        Multiset<String> tags = HashMultiset.create();
+    public Multiset<Tag> toMultiset(boolean onlySuper) {
+        Multiset<Tag> tags = HashMultiset.create();
         for (Tag tag : this.tags) {
             if ((onlySuper && tag.isSuperTag()) || !onlySuper)
-                tags.add(tag.getIdentifier());
+                //tags.add(tag.getIdentifier());
+                tags.add(tag);
         }
         return tags;
     }
 
-    public Multiset<String> toMultiset() {
+    public Multiset<Tag> toMultiset() {
         return toMultiset(false);
     }
 

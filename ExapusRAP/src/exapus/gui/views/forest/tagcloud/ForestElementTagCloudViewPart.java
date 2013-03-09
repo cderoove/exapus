@@ -1,11 +1,13 @@
 package exapus.gui.views.forest.tagcloud;
 
 import com.google.common.collect.HashMultimap;
+import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multiset;
 import exapus.gui.editors.SelectedForestElementBrowserViewPart;
 import exapus.gui.views.forest.reference.JavaSource2HTMLLineHighlightingConverter;
 import exapus.model.forest.ForestElement;
+import exapus.model.tags.Tag;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.eclipse.rwt.RWT;
 import org.eclipse.rwt.service.IServiceHandler;
@@ -39,41 +41,47 @@ public class ForestElementTagCloudViewPart extends SelectedForestElementBrowserV
         final String MAIN_HTML_ID = uniqueId(fe, "");
 
         DescriptiveStatistics ds = new DescriptiveStatistics();
-        Multiset<String> allTags = fe.getAllDualTags();
+        Multiset<Tag> allTags = fe.getAllDualTags();
+        //Multiset<String> allTags = HashMultiset.create();
 
-        //System.err.println("allTags = " + allTags);
+        System.err.println("allTags = " + allTags);
 
-        Multimap<String, String> subTags = HashMultimap.create();
+        Multimap<String, Tag> subTags = HashMultimap.create();
 
-        for (String s : allTags.elementSet()) {
-            if (s.contains("::")) {
-                String supTag = s.substring(0, s.indexOf("::"));
-                String subTag = s.substring(s.indexOf("::") + 2);
-                subTags.put(supTag, subTag);
+        for (Tag s : allTags.elementSet()) {
+            if (s.isSubTag()) {
+                //String supTag = s.substring(0, s.indexOf("::"));
+                //String subTag = s.substring(s.indexOf("::") + 2);
+                subTags.put(s.getParentName(), s);
             }
             ds.addValue(allTags.count(s));
         }
 
-        Multimap<Integer, String> freqs = HashMultimap.create();
+        System.err.println("subTags = " + subTags.toString());
+
+        Multimap<Integer, Tag> freqs = HashMultimap.create();
         //System.err.println("ds = " + ds.toString());
-        for (String s : allTags.elementSet()) {
-            if (s.contains("::")) continue;
+        for (Tag s : allTags.elementSet()) {
+            //if (s.contains("::")) continue;
+            if (s.isSubTag()) continue;
             int size = getSize(ds, allTags.count(s));
             //System.err.printf("%d -> %d\n", allTags.count(s), size);
             freqs.put(size, s);
         }
 
         Map<String, DescriptiveStatistics> subTagsDs = new HashMap<String, DescriptiveStatistics>();
-        for (String tag : allTags.elementSet()) {
-            if (tag.contains("::")) {
-                String supTag = tag.substring(0, tag.indexOf("::"));
+        for (Tag tag : allTags.elementSet()) {
+            if (tag.isSubTag()) {
+                //String supTag = tag.substring(0, tag.indexOf("::"));
 
-                if (!subTagsDs.containsKey(supTag)) {
-                    subTagsDs.put(supTag, new DescriptiveStatistics());
+                if (!subTagsDs.containsKey(tag.getParentName())) {
+                    subTagsDs.put(tag.getParentName(), new DescriptiveStatistics());
                 }
-                subTagsDs.get(supTag).addValue(allTags.count(tag));
+                subTagsDs.get(tag.getParentName()).addValue(allTags.count(tag));
             }
         }
+
+        //System.err.println("subTagsDs = " + subTagsDs.toString());
 
         Map<String, String> subTagsHtml = new HashMap<String, String>();
         for (String tag : subTags.keySet()) {
@@ -83,8 +91,9 @@ public class ForestElementTagCloudViewPart extends SelectedForestElementBrowserV
             StringBuilder sugTagsHtml = new StringBuilder();
             sugTagsHtml.append(JavaSource2HTMLLineHighlightingConverter.HTML_SITE_HEADER);
             sugTagsHtml.append(String.format("<a href=\"%s\"><---Back</a><br><br>", getUniqueImageURL(MAIN_HTML_ID)));
-            for (String subTag : subTags.get(tag)) {
-                sugTagsHtml.append(String.format("<font size=\"%d\">%s</font>&nbsp;&nbsp;", getSize(subTagsDs.get(tag), allTags.count(tag + "::" + subTag)), subTag));
+            for (Tag subTag : subTags.get(tag)) {
+                sugTagsHtml.append(String.format("<font size=\"%d\">%s</font>&nbsp;&nbsp;",
+                        getSize(subTagsDs.get(tag), allTags.count(subTag)), subTag));
             }
             sugTagsHtml.append(JavaSource2HTMLLineHighlightingConverter.HTML_SITE_FOOTER);
 
@@ -100,15 +109,16 @@ public class ForestElementTagCloudViewPart extends SelectedForestElementBrowserV
 
         int sum = 0;
         for (Integer size : ordered) {
-            for (String s : freqs.get(size)) {
-                if (s.contains("::")) continue;
+            for (Tag s : freqs.get(size)) {
+                //if (s.contains("::")) continue;
+                if (s.isSubTag()) continue;
                 if (sum + size >= GROUPNG) {
                     html.append("<br>");
                     sum = 0;
                 }
                 sum += size;
-                if (subTagsHtml.containsKey(s)) {
-                    html.append(String.format("<font size=\"%d\"><a href=\"%s\">%s</a></font>&nbsp;&nbsp;", size, getUniqueImageURL(subTagsHtml.get(s)), s));
+                if (subTagsHtml.containsKey(s.getIdentifier())) {
+                    html.append(String.format("<font size=\"%d\"><a href=\"%s\">%s</a></font>&nbsp;&nbsp;", size, getUniqueImageURL(subTagsHtml.get(s.getIdentifier())), s.getIdentifier()));
                 } else {
                     html.append(String.format("<font size=\"%d\">%s</font>&nbsp;&nbsp;", size, s));
                 }

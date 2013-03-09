@@ -179,11 +179,11 @@ public abstract class Ref extends ForestElement {
 		return false;
 	}
 
-    public Multiset<String> getAllTags() {
+    public Multiset<Tag> getAllTags() {
         return getTags().toMultiset();
     }
 
-    public Multiset<String> getAllDualTags() {
+    public Multiset<Tag> getAllDualTags() {
         return getDualTags().toMultiset();
     }
 
