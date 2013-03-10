@@ -10,13 +10,13 @@ import java.lang.reflect.Constructor;
  */
 public enum MetricType {
     PROJS(NumberOfProjsVisitor.class.getCanonicalName(),
-            "#projs",
+            "#proj",
             "Number of projects using APIs"),
     API_REFS(TotalNumberAPIReferencesVisitor.class.getCanonicalName(),
-            "#refs",
+            "#ref",
             "Total references to APIs from projects"),
     API_ELEM(NumberReferencedDistinctAPIElementsVisitor.class.getCanonicalName(),
-            "#elems",
+            "#elem",
             "Number of distinct API elements referenced by projects"),
     API_CHILDREN(APIChildrenVisitor.class.getCanonicalName(),
             "#derives",

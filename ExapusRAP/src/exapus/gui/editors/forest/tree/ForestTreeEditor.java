@@ -1037,6 +1037,7 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 
 				private void clear() {
 					column.getColumn().setText("");
+                    column.getColumn().setToolTipText("");
 					column.setLabelProvider(new ForestTreeLabelProviders.EmptyColumnLabelProvider());
 					column.getColumn().removeSelectionListener(selectionAdapter);
 				}
