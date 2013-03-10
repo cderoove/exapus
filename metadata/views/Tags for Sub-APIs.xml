@@ -435,11 +435,202 @@
             </tag>
         </Type>
         <Type>
+            <QName>org.jdom.input.BuilderErrorHandler</QName>
+            <scope>TYPE_SCOPE</scope>
+            <tag>
+                <identifier>Exception</identifier>
+                <parentName>JDOM</parentName>
+            </tag>
+        </Type>
+        <Type>
+            <QName>org.jdom.input.BuilderErrorHandler</QName>
+            <scope>TYPE_SCOPE</scope>
+            <tag>
+                <identifier>Input</identifier>
+                <parentName>JDOM</parentName>
+            </tag>
+        </Type>
+        <Type>
+            <QName>org.jdom.DataConversionException</QName>
+            <scope>TYPE_SCOPE</scope>
+            <tag>
+                <identifier>Exception</identifier>
+                <parentName>JDOM</parentName>
+            </tag>
+        </Type>
+        <Type>
+            <QName>org.jdom.IllegalAddException</QName>
+            <scope>TYPE_SCOPE</scope>
+            <tag>
+                <identifier>Exception</identifier>
+                <parentName>JDOM</parentName>
+            </tag>
+        </Type>
+        <Type>
+            <QName>org.jdom.IllegalDataException</QName>
+            <scope>TYPE_SCOPE</scope>
+            <tag>
+                <identifier>Exception</identifier>
+                <parentName>JDOM</parentName>
+            </tag>
+        </Type>
+        <Type>
+            <QName>org.jdom.IllegalNameException</QName>
+            <scope>TYPE_SCOPE</scope>
+            <tag>
+                <identifier>Exception</identifier>
+                <parentName>JDOM</parentName>
+            </tag>
+        </Type>
+        <Type>
+            <QName>org.jdom.IllegalTargetException</QName>
+            <scope>TYPE_SCOPE</scope>
+            <tag>
+                <identifier>Exception</identifier>
+                <parentName>JDOM</parentName>
+            </tag>
+        </Type>
+        <Type>
+            <QName>org.jdom.JDOMException</QName>
+            <scope>TYPE_SCOPE</scope>
+            <tag>
+                <identifier>Exception</identifier>
+                <parentName>JDOM</parentName>
+            </tag>
+        </Type>
+        <Type>
+            <QName>org.jdom.input.JDOMParseException</QName>
+            <scope>TYPE_SCOPE</scope>
+            <tag>
+                <identifier>Exception</identifier>
+                <parentName>JDOM</parentName>
+            </tag>
+        </Type>
+        <Type>
+            <QName>org.jdom.Verifier</QName>
+            <scope>TYPE_SCOPE</scope>
+            <tag>
+                <identifier>Nontrivial API</identifier>
+                <parentName>JDOM</parentName>
+            </tag>
+        </Type>
+        <Type>
+            <QName>org.jdom.DefaultJDOMFactory</QName>
+            <scope>TYPE_SCOPE</scope>
+            <tag>
+                <identifier>Nontrivial API</identifier>
+                <parentName>JDOM</parentName>
+            </tag>
+        </Type>
+        <Type>
+            <QName>org.jdom.UncheckedJDOMFactory</QName>
+            <scope>TYPE_SCOPE</scope>
+            <tag>
+                <identifier>Nontrivial API</identifier>
+                <parentName>JDOM</parentName>
+            </tag>
+        </Type>
+        <Type>
+            <QName>org.jdom.input.SAXBuilder</QName>
+            <scope>TYPE_SCOPE</scope>
+            <tag>
+                <identifier>Input</identifier>
+                <parentName>JDOM</parentName>
+            </tag>
+        </Type>
+        <Type>
+            <QName>org.jdom.input.SAXHandler</QName>
+            <scope>TYPE_SCOPE</scope>
+            <tag>
+                <identifier>Input</identifier>
+                <parentName>JDOM</parentName>
+            </tag>
+        </Type>
+        <Type>
+            <QName>org.jdom.input.SAXHandler</QName>
+            <scope>TYPE_SCOPE</scope>
+            <tag>
+                <identifier>Nontrivial API</identifier>
+                <parentName>JDOM</parentName>
+            </tag>
+        </Type>
+        <Type>
+            <QName>org.jdom.output.DOMOutputter</QName>
+            <scope>TYPE_SCOPE</scope>
+            <tag>
+                <identifier>Output</identifier>
+                <parentName>JDOM</parentName>
+            </tag>
+        </Type>
+        <Type>
+            <QName>org.jdom.output.Format</QName>
+            <scope>TYPE_SCOPE</scope>
+            <tag>
+                <identifier>Output</identifier>
+                <parentName>JDOM</parentName>
+            </tag>
+        </Type>
+        <Type>
+            <QName>org.jdom.output.Format</QName>
+            <scope>TYPE_SCOPE</scope>
+            <tag>
+                <identifier>Nontrivial API</identifier>
+                <parentName>JDOM</parentName>
+            </tag>
+        </Type>
+        <Type>
+            <QName>org.jdom.output.JDOMLocator</QName>
+            <scope>TYPE_SCOPE</scope>
+            <tag>
+                <identifier>Output</identifier>
+                <parentName>JDOM</parentName>
+            </tag>
+        </Type>
+        <Type>
+            <QName>org.jdom.output.JDOMLocator</QName>
+            <scope>TYPE_SCOPE</scope>
+            <tag>
+                <identifier>Nontrivial API</identifier>
+                <parentName>JDOM</parentName>
+            </tag>
+        </Type>
+        <Type>
+            <QName>org.jdom.output.SAXOutputter</QName>
+            <scope>TYPE_SCOPE</scope>
+            <tag>
+                <identifier>Output</identifier>
+                <parentName>JDOM</parentName>
+            </tag>
+        </Type>
+        <Type>
+            <QName>org.jdom.output.EscapeStrategy</QName>
+            <scope>TYPE_SCOPE</scope>
+            <tag>
+                <identifier>Nontrivial API</identifier>
+                <parentName>JDOM</parentName>
+            </tag>
+        </Type>
+        <Type>
+            <QName>org.jdom.output.SAXOutputter</QName>
+            <scope>TYPE_SCOPE</scope>
+            <tag>
+                <identifier>Nontrivial API</identifier>
+                <parentName>JDOM</parentName>
+            </tag>
+        </Type>
+        <Type>
+            <QName>org.jdom.output.XMLOutputter</QName>
+            <scope>TYPE_SCOPE</scope>
+            <tag>
+                <identifier>Output</identifier>
+                <parentName>JDOM</parentName>
+            </tag>
+        </Type>
+        <Type>
             <QName>org.jdom.CDATA</QName>
             <scope>TYPE_SCOPE</scope>
             <tag>
                 <identifier>Nontrivial XML</identifier>
-                <display>Nontrivial XML</display>
                 <parentName>JDOM</parentName>
             </tag>
         </Type>
@@ -448,7 +639,6 @@
             <scope>TYPE_SCOPE</scope>
             <tag>
                 <identifier>Nontrivial XML</identifier>
-                <display>Nontrivial XML</display>
                 <parentName>JDOM</parentName>
             </tag>
         </Type>
@@ -457,7 +647,6 @@
             <scope>TYPE_SCOPE</scope>
             <tag>
                 <identifier>Nontrivial XML</identifier>
-                <display>Nontrivial XML</display>
                 <parentName>JDOM</parentName>
             </tag>
         </Type>
@@ -466,7 +655,6 @@
             <scope>TYPE_SCOPE</scope>
             <tag>
                 <identifier>Nontrivial XML</identifier>
-                <display>Nontrivial XML</display>
                 <parentName>JDOM</parentName>
             </tag>
         </Type>
@@ -474,8 +662,7 @@
             <QName>org.jdom.Element.addContent(Collection)</QName>
             <scope>METHOD_SCOPE</scope>
             <tag>
-                <identifier>Construction</identifier>
-                <display>Construction</display>
+                <identifier>Addition</identifier>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -483,8 +670,7 @@
             <QName>org.jdom.Element.addContent(Content)</QName>
             <scope>METHOD_SCOPE</scope>
             <tag>
-                <identifier>Construction</identifier>
-                <display>Construction</display>
+                <identifier>Addition</identifier>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -492,8 +678,7 @@
             <QName>org.jdom.Element.addContent(int, Content)</QName>
             <scope>METHOD_SCOPE</scope>
             <tag>
-                <identifier>Construction</identifier>
-                <display>Construction</display>
+                <identifier>Addition</identifier>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -501,17 +686,7 @@
             <QName>org.jdom.Element.addContent(String)</QName>
             <scope>METHOD_SCOPE</scope>
             <tag>
-                <identifier>Construction</identifier>
-                <display>Construction</display>
-                <parentName>JDOM</parentName>
-            </tag>
-        </Method>
-        <Method>
-            <QName>org.jdom.Element.addNamespaceDeclaration(Namespace)</QName>
-            <scope>METHOD_SCOPE</scope>
-            <tag>
-                <identifier>Construction</identifier>
-                <display>Construction</display>
+                <identifier>Addition</identifier>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -520,7 +695,6 @@
             <scope>METHOD_SCOPE</scope>
             <tag>
                 <identifier>Observation</identifier>
-                <display>Observation</display>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -529,7 +703,6 @@
             <scope>METHOD_SCOPE</scope>
             <tag>
                 <identifier>Observation</identifier>
-                <display>Observation</display>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -538,7 +711,6 @@
             <scope>METHOD_SCOPE</scope>
             <tag>
                 <identifier>Observation</identifier>
-                <display>Observation</display>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -547,7 +719,6 @@
             <scope>METHOD_SCOPE</scope>
             <tag>
                 <identifier>Observation</identifier>
-                <display>Observation</display>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -556,7 +727,6 @@
             <scope>METHOD_SCOPE</scope>
             <tag>
                 <identifier>Observation</identifier>
-                <display>Observation</display>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -565,7 +735,6 @@
             <scope>METHOD_SCOPE</scope>
             <tag>
                 <identifier>Observation</identifier>
-                <display>Observation</display>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -574,7 +743,6 @@
             <scope>METHOD_SCOPE</scope>
             <tag>
                 <identifier>Observation</identifier>
-                <display>Observation</display>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -583,7 +751,6 @@
             <scope>METHOD_SCOPE</scope>
             <tag>
                 <identifier>Observation</identifier>
-                <display>Observation</display>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -592,7 +759,6 @@
             <scope>METHOD_SCOPE</scope>
             <tag>
                 <identifier>Observation</identifier>
-                <display>Observation</display>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -601,7 +767,6 @@
             <scope>METHOD_SCOPE</scope>
             <tag>
                 <identifier>Observation</identifier>
-                <display>Observation</display>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -610,7 +775,6 @@
             <scope>METHOD_SCOPE</scope>
             <tag>
                 <identifier>Observation</identifier>
-                <display>Observation</display>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -619,7 +783,6 @@
             <scope>METHOD_SCOPE</scope>
             <tag>
                 <identifier>Observation</identifier>
-                <display>Observation</display>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -628,7 +791,6 @@
             <scope>METHOD_SCOPE</scope>
             <tag>
                 <identifier>Observation</identifier>
-                <display>Observation</display>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -637,7 +799,6 @@
             <scope>METHOD_SCOPE</scope>
             <tag>
                 <identifier>Observation</identifier>
-                <display>Observation</display>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -646,7 +807,6 @@
             <scope>METHOD_SCOPE</scope>
             <tag>
                 <identifier>Observation</identifier>
-                <display>Observation</display>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -655,7 +815,6 @@
             <scope>METHOD_SCOPE</scope>
             <tag>
                 <identifier>Observation</identifier>
-                <display>Observation</display>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -664,7 +823,6 @@
             <scope>METHOD_SCOPE</scope>
             <tag>
                 <identifier>Observation</identifier>
-                <display>Observation</display>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -673,7 +831,6 @@
             <scope>METHOD_SCOPE</scope>
             <tag>
                 <identifier>Observation</identifier>
-                <display>Observation</display>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -682,16 +839,46 @@
             <scope>METHOD_SCOPE</scope>
             <tag>
                 <identifier>Observation</identifier>
-                <display>Observation</display>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
+        <Type>
+            <QName>org.jdom.filter.Filter</QName>
+            <scope>TYPE_SCOPE</scope>
+            <tag>
+                <identifier>Query</identifier>
+                <parentName>JDOM</parentName>
+            </tag>
+	</Type>
+        <Type>
+            <QName>org.jdom.filter.AbstractFilter</QName>
+            <scope>TYPE_SCOPE</scope>
+            <tag>
+                <identifier>Query</identifier>
+                <parentName>JDOM</parentName>
+            </tag>
+	</Type>
+        <Type>
+            <QName>org.jdom.filter.ContentFilter</QName>
+            <scope>TYPE_SCOPE</scope>
+            <tag>
+                <identifier>Query</identifier>
+                <parentName>JDOM</parentName>
+            </tag>
+	</Type>
+        <Type>
+            <QName>org.jdom.filter.ElementFilter</QName>
+            <scope>TYPE_SCOPE</scope>
+            <tag>
+                <identifier>Query</identifier>
+                <parentName>JDOM</parentName>
+            </tag>
+	</Type>
         <Method>
             <QName>org.jdom.Element.getDescendants()</QName>
             <scope>METHOD_SCOPE</scope>
             <tag>
                 <identifier>Query</identifier>
-                <display>XML query</display>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -700,7 +887,6 @@
             <scope>METHOD_SCOPE</scope>
             <tag>
                 <identifier>Query</identifier>
-                <display>XML query</display>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -709,7 +895,6 @@
             <scope>TYPE_SCOPE</scope>
             <tag>
                 <identifier>Query</identifier>
-                <display>XML query</display>
                 <parentName>JDOM</parentName>
             </tag>
         </Type>
@@ -718,7 +903,14 @@
             <scope>TYPE_SCOPE</scope>
             <tag>
                 <identifier>Transformation</identifier>
-                <display>XML transformation</display>
+                <parentName>JDOM</parentName>
+            </tag>
+        </Type>
+        <Type>
+            <QName>org.jdom.adapters.DOMAdapter</QName>
+            <scope>TYPE_SCOPE</scope>
+            <tag>
+                <identifier>Adaptation</identifier>
                 <parentName>JDOM</parentName>
             </tag>
         </Type>
@@ -726,8 +918,7 @@
             <QName>org.jdom.adapters.AbstractDOMAdapter</QName>
             <scope>TYPE_SCOPE</scope>
             <tag>
-                <identifier>Adapter</identifier>
-                <display>Adapter</display>
+                <identifier>Adaptation</identifier>
                 <parentName>JDOM</parentName>
             </tag>
         </Type>
@@ -735,8 +926,7 @@
             <QName>org.jdom.adapters.CrimsonDOMAdapter</QName>
             <scope>TYPE_SCOPE</scope>
             <tag>
-                <identifier>Adapter</identifier>
-                <display>Adapter</display>
+                <identifier>Adaptation</identifier>
                 <parentName>JDOM</parentName>
             </tag>
         </Type>
@@ -744,8 +934,7 @@
             <QName>org.jdom.adapters.JAXPDOMAdapter</QName>
             <scope>TYPE_SCOPE</scope>
             <tag>
-                <identifier>Adapter</identifier>
-                <display>Adapter</display>
+                <identifier>Adaptation</identifier>
                 <parentName>JDOM</parentName>
             </tag>
         </Type>
@@ -753,8 +942,7 @@
             <QName>org.jdom.adapters.OracleV1DOMAdapter</QName>
             <scope>TYPE_SCOPE</scope>
             <tag>
-                <identifier>Adapter</identifier>
-                <display>Adapter</display>
+                <identifier>Adaptation</identifier>
                 <parentName>JDOM</parentName>
             </tag>
         </Type>
@@ -762,8 +950,7 @@
             <QName>org.jdom.adapters.OracleV2DOMAdapter</QName>
             <scope>TYPE_SCOPE</scope>
             <tag>
-                <identifier>Adapter</identifier>
-                <display>Adapter</display>
+                <identifier>Adaptation</identifier>
                 <parentName>JDOM</parentName>
             </tag>
         </Type>
@@ -771,8 +958,7 @@
             <QName>org.jdom.adapters.XercesDOMAdapter</QName>
             <scope>TYPE_SCOPE</scope>
             <tag>
-                <identifier>Adapter</identifier>
-                <display>Adapter</display>
+                <identifier>Adaptation</identifier>
                 <parentName>JDOM</parentName>
             </tag>
         </Type>
@@ -780,8 +966,71 @@
             <QName>org.jdom.adapters.XML4JDOMAdapter</QName>
             <scope>TYPE_SCOPE</scope>
             <tag>
-                <identifier>Adapter</identifier>
-                <display>Adapter</display>
+                <identifier>Adaptation</identifier>
+                <parentName>JDOM</parentName>
+            </tag>
+        </Type>
+        <Type>
+            <QName>org.jdom.adapters.DOMAdapter</QName>
+            <scope>TYPE_SCOPE</scope>
+            <tag>
+                <identifier>Nontrivial API</identifier>
+                <parentName>JDOM</parentName>
+            </tag>
+        </Type>
+        <Type>
+            <QName>org.jdom.adapters.AbstractDOMAdapter</QName>
+            <scope>TYPE_SCOPE</scope>
+            <tag>
+                <identifier>Nontrivial API</identifier>
+                <parentName>JDOM</parentName>
+            </tag>
+        </Type>
+        <Type>
+            <QName>org.jdom.adapters.CrimsonDOMAdapter</QName>
+            <scope>TYPE_SCOPE</scope>
+            <tag>
+                <identifier>Nontrivial API</identifier>
+                <parentName>JDOM</parentName>
+            </tag>
+        </Type>
+        <Type>
+            <QName>org.jdom.adapters.JAXPDOMAdapter</QName>
+            <scope>TYPE_SCOPE</scope>
+            <tag>
+                <identifier>Nontrivial API</identifier>
+                <parentName>JDOM</parentName>
+            </tag>
+        </Type>
+        <Type>
+            <QName>org.jdom.adapters.OracleV1DOMAdapter</QName>
+            <scope>TYPE_SCOPE</scope>
+            <tag>
+                <identifier>Nontrivial API</identifier>
+                <parentName>JDOM</parentName>
+            </tag>
+        </Type>
+        <Type>
+            <QName>org.jdom.adapters.OracleV2DOMAdapter</QName>
+            <scope>TYPE_SCOPE</scope>
+            <tag>
+                <identifier>Nontrivial API</identifier>
+                <parentName>JDOM</parentName>
+            </tag>
+        </Type>
+        <Type>
+            <QName>org.jdom.adapters.XercesDOMAdapter</QName>
+            <scope>TYPE_SCOPE</scope>
+            <tag>
+                <identifier>Nontrivial API</identifier>
+                <parentName>JDOM</parentName>
+            </tag>
+        </Type>
+        <Type>
+            <QName>org.jdom.adapters.XML4JDOMAdapter</QName>
+            <scope>TYPE_SCOPE</scope>
+            <tag>
+                <identifier>Nontrivial API</identifier>
                 <parentName>JDOM</parentName>
             </tag>
         </Type>
@@ -789,8 +1038,15 @@
             <QName>org.jdom.input.DOMBuilder</QName>
             <scope>TYPE_SCOPE</scope>
             <tag>
-                <identifier>Adapter</identifier>
-                <display>Adapter</display>
+                <identifier>Nontrivial API</identifier>
+                <parentName>JDOM</parentName>
+            </tag>
+        </Type>
+        <Type>
+            <QName>org.jdom.input.DOMBuilder</QName>
+            <scope>TYPE_SCOPE</scope>
+            <tag>
+                <identifier>Input</identifier>
                 <parentName>JDOM</parentName>
             </tag>
         </Type>
@@ -798,8 +1054,7 @@
             <QName>org.jdom.output.DOMOutputter</QName>
             <scope>TYPE_SCOPE</scope>
             <tag>
-                <identifier>Adapter</identifier>
-                <display>Adapter</display>
+                <identifier>Nontrivial API</identifier>
                 <parentName>JDOM</parentName>
             </tag>
         </Type>
@@ -808,7 +1063,6 @@
             <scope>METHOD_SCOPE</scope>
             <tag>
                 <identifier>Observation</identifier>
-                <display>Observation</display>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -817,7 +1071,6 @@
             <scope>METHOD_SCOPE</scope>
             <tag>
                 <identifier>Observation</identifier>
-                <display>Observation</display>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -826,7 +1079,6 @@
             <scope>METHOD_SCOPE</scope>
             <tag>
                 <identifier>Observation</identifier>
-                <display>Observation</display>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -835,7 +1087,6 @@
             <scope>METHOD_SCOPE</scope>
             <tag>
                 <identifier>Observation</identifier>
-                <display>Observation</display>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -844,7 +1095,6 @@
             <scope>METHOD_SCOPE</scope>
             <tag>
                 <identifier>Observation</identifier>
-                <display>Observation</display>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -853,7 +1103,6 @@
             <scope>METHOD_SCOPE</scope>
             <tag>
                 <identifier>Observation</identifier>
-                <display>Observation</display>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -862,7 +1111,6 @@
             <scope>METHOD_SCOPE</scope>
             <tag>
                 <identifier>Observation</identifier>
-                <display>Observation</display>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -871,7 +1119,6 @@
             <scope>METHOD_SCOPE</scope>
             <tag>
                 <identifier>Observation</identifier>
-                <display>Observation</display>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -880,7 +1127,6 @@
             <scope>METHOD_SCOPE</scope>
             <tag>
                 <identifier>Observation</identifier>
-                <display>Observation</display>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -889,7 +1135,6 @@
             <scope>METHOD_SCOPE</scope>
             <tag>
                 <identifier>Observation</identifier>
-                <display>Observation</display>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -898,7 +1143,6 @@
             <scope>METHOD_SCOPE</scope>
             <tag>
                 <identifier>Observation</identifier>
-                <display>Observation</display>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -907,7 +1151,6 @@
             <scope>METHOD_SCOPE</scope>
             <tag>
                 <identifier>Observation</identifier>
-                <display>Observation</display>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -915,8 +1158,7 @@
             <QName>org.jdom.Element.removeAttribute(Attribute)</QName>
             <scope>METHOD_SCOPE</scope>
             <tag>
-                <identifier>Mutation</identifier>
-                <display>Mutation</display>
+                <identifier>Removal</identifier>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -924,8 +1166,7 @@
             <QName>org.jdom.Element.removeAttribute(String)</QName>
             <scope>METHOD_SCOPE</scope>
             <tag>
-                <identifier>Mutation</identifier>
-                <display>Mutation</display>
+                <identifier>Removal</identifier>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -933,8 +1174,7 @@
             <QName>org.jdom.Element.removeAttribute(String, Namespace)</QName>
             <scope>METHOD_SCOPE</scope>
             <tag>
-                <identifier>Mutation</identifier>
-                <display>Mutation</display>
+                <identifier>Removal</identifier>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -942,8 +1182,7 @@
             <QName>org.jdom.Element.removeChild(String)</QName>
             <scope>METHOD_SCOPE</scope>
             <tag>
-                <identifier>Mutation</identifier>
-                <display>Mutation</display>
+                <identifier>Removal</identifier>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -951,8 +1190,7 @@
             <QName>org.jdom.Element.removeChild(String, Namespace)</QName>
             <scope>METHOD_SCOPE</scope>
             <tag>
-                <identifier>Mutation</identifier>
-                <display>Mutation</display>
+                <identifier>Removal</identifier>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -960,8 +1198,7 @@
             <QName>org.jdom.Element.removeChildren(String)</QName>
             <scope>METHOD_SCOPE</scope>
             <tag>
-                <identifier>Mutation</identifier>
-                <display>Mutation</display>
+                <identifier>Removal</identifier>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -969,8 +1206,7 @@
             <QName>org.jdom.Element.removeChildren(String, Namespace)</QName>
             <scope>METHOD_SCOPE</scope>
             <tag>
-                <identifier>Mutation</identifier>
-                <display>Mutation</display>
+                <identifier>Removal</identifier>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -978,8 +1214,7 @@
             <QName>org.jdom.Element.removeContent()</QName>
             <scope>METHOD_SCOPE</scope>
             <tag>
-                <identifier>Mutation</identifier>
-                <display>Mutation</display>
+                <identifier>Removal</identifier>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -987,8 +1222,7 @@
             <QName>org.jdom.Element.removeContent(Content)</QName>
             <scope>METHOD_SCOPE</scope>
             <tag>
-                <identifier>Mutation</identifier>
-                <display>Mutation</display>
+                <identifier>Removal</identifier>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -996,8 +1230,7 @@
             <QName>org.jdom.Element.removeContent(Filter)</QName>
             <scope>METHOD_SCOPE</scope>
             <tag>
-                <identifier>Mutation</identifier>
-                <display>Mutation</display>
+                <identifier>Removal</identifier>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -1005,8 +1238,7 @@
             <QName>org.jdom.Element.removeContent(int)</QName>
             <scope>METHOD_SCOPE</scope>
             <tag>
-                <identifier>Mutation</identifier>
-                <display>Mutation</display>
+                <identifier>Removal</identifier>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -1014,8 +1246,7 @@
             <QName>org.jdom.Element.removeNamespaceDeclaration(Namespace)</QName>
             <scope>METHOD_SCOPE</scope>
             <tag>
-                <identifier>Mutation</identifier>
-                <display>Mutation</display>
+                <identifier>Removal</identifier>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -1023,8 +1254,7 @@
             <QName>org.jdom.Element.setAttribute(Attribute)</QName>
             <scope>METHOD_SCOPE</scope>
             <tag>
-                <identifier>Mutation</identifier>
-                <display>Mutation</display>
+                <identifier>Manipulation</identifier>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -1032,8 +1262,7 @@
             <QName>org.jdom.Element.setAttribute(String, String)</QName>
             <scope>METHOD_SCOPE</scope>
             <tag>
-                <identifier>Mutation</identifier>
-                <display>Mutation</display>
+                <identifier>Manipulation</identifier>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -1041,8 +1270,7 @@
             <QName>org.jdom.Element.setAttribute(String, String, Namespace)</QName>
             <scope>METHOD_SCOPE</scope>
             <tag>
-                <identifier>Mutation</identifier>
-                <display>Mutation</display>
+                <identifier>Manipulation</identifier>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -1050,8 +1278,7 @@
             <QName>org.jdom.Element.setAttributes(Collection)</QName>
             <scope>METHOD_SCOPE</scope>
             <tag>
-                <identifier>Mutation</identifier>
-                <display>Mutation</display>
+                <identifier>Manipulation</identifier>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -1059,17 +1286,15 @@
             <QName>org.jdom.Element.setContent(Collection)</QName>
             <scope>METHOD_SCOPE</scope>
             <tag>
-                <identifier>Mutation</identifier>
-                <display>Mutation</display>
+                <identifier>Manipulation</identifier>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
         <Method>
-            <QName>org.jdom.Element.setConten(Content)t</QName>
+            <QName>org.jdom.Element.setContent(Content)</QName>
             <scope>METHOD_SCOPE</scope>
             <tag>
-                <identifier>Mutation</identifier>
-                <display>Mutation</display>
+                <identifier>Manipulation</identifier>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -1077,8 +1302,7 @@
             <QName>org.jdom.Element.setContent(int, Collection)</QName>
             <scope>METHOD_SCOPE</scope>
             <tag>
-                <identifier>Mutation</identifier>
-                <display>Mutation</display>
+                <identifier>Manipulation</identifier>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -1086,8 +1310,7 @@
             <QName>org.jdom.Element.setContent(int, Content)</QName>
             <scope>METHOD_SCOPE</scope>
             <tag>
-                <identifier>Mutation</identifier>
-                <display>Mutation</display>
+                <identifier>Manipulation</identifier>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -1095,17 +1318,7 @@
             <QName>org.jdom.Element.setName(String)</QName>
             <scope>METHOD_SCOPE</scope>
             <tag>
-                <identifier>Mutation</identifier>
-                <display>Mutation</display>
-                <parentName>JDOM</parentName>
-            </tag>
-        </Method>
-        <Method>
-            <QName>org.jdom.Element.setNamespace(Namespace)</QName>
-            <scope>METHOD_SCOPE</scope>
-            <tag>
-                <identifier>Mutation</identifier>
-                <display>Mutation</display>
+                <identifier>Renaming</identifier>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -1113,8 +1326,7 @@
             <QName>org.jdom.Element.setText(String)</QName>
             <scope>METHOD_SCOPE</scope>
             <tag>
-                <identifier>Mutation</identifier>
-                <display>Mutation</display>
+                <identifier>Manipulation</identifier>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -1123,7 +1335,6 @@
             <scope>METHOD_SCOPE</scope>
             <tag>
                 <identifier>Namespaces</identifier>
-                <display>XML namespaces</display>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -1132,7 +1343,6 @@
             <scope>METHOD_SCOPE</scope>
             <tag>
                 <identifier>Namespaces</identifier>
-                <display>XML namespaces</display>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -1141,7 +1351,6 @@
             <scope>METHOD_SCOPE</scope>
             <tag>
                 <identifier>Namespaces</identifier>
-                <display>XML namespaces</display>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -1150,7 +1359,6 @@
             <scope>METHOD_SCOPE</scope>
             <tag>
                 <identifier>Namespaces</identifier>
-                <display>XML namespaces</display>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -1159,7 +1367,6 @@
             <scope>METHOD_SCOPE</scope>
             <tag>
                 <identifier>Namespaces</identifier>
-                <display>XML namespaces</display>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -1168,7 +1375,6 @@
             <scope>METHOD_SCOPE</scope>
             <tag>
                 <identifier>Namespaces</identifier>
-                <display>XML namespaces</display>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -1177,7 +1383,6 @@
             <scope>METHOD_SCOPE</scope>
             <tag>
                 <identifier>Namespaces</identifier>
-                <display>XML namespaces</display>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -1186,7 +1391,6 @@
             <scope>METHOD_SCOPE</scope>
             <tag>
                 <identifier>Namespaces</identifier>
-                <display>XML namespaces</display>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
@@ -1195,7 +1399,6 @@
             <scope>METHOD_SCOPE</scope>
             <tag>
                 <identifier>Namespaces</identifier>
-                <display>XML namespaces</display>
                 <parentName>JDOM</parentName>
             </tag>
         </Method>
