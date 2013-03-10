@@ -44,7 +44,7 @@ public class ForestElementTagCloudViewPart extends SelectedForestElementBrowserV
         Multiset<Tag> allTags = fe.getAllDualTags();
         //Multiset<String> allTags = HashMultiset.create();
 
-        System.err.println("allTags = " + allTags);
+        //System.err.println("allTags = " + allTags);
 
         Multimap<String, Tag> subTags = HashMultimap.create();
 
@@ -57,7 +57,7 @@ public class ForestElementTagCloudViewPart extends SelectedForestElementBrowserV
             ds.addValue(allTags.count(s));
         }
 
-        System.err.println("subTags = " + subTags.toString());
+        //System.err.println("subTags = " + subTags.toString());
 
         Multimap<Integer, Tag> freqs = HashMultimap.create();
         //System.err.println("ds = " + ds.toString());
