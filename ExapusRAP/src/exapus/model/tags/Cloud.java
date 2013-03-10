@@ -29,7 +29,7 @@ public class Cloud {
         List<String> names = new ArrayList<String>();
         for (Tag tag : tags) {
             //System.err.println(tag.toDebugString());
-            names.add(tag.getLabelName());
+            names.add(tag.getDisplay());
         }
 
 		return Joiner.on(',').join(names);

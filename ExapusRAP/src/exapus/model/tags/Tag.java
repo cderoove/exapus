@@ -8,9 +8,14 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class Tag implements Comparable<Tag> {
 
+    public static enum RELATION {
+        CHILD, DOMAIN, NONE
+    }
+
     private String identifier;
-    private String parentName;
-    //private String subName;
+    private String associatedName;
+    private RELATION relation;
+    private String displayName;
 
     public Tag() {
         this("");
@@ -20,20 +25,32 @@ public class Tag implements Comparable<Tag> {
         this.identifier = identifier.intern();
     }
 
-    public Tag(String identifier, String parentName) {
-        //this.subName = identifier.intern();
-        //this.identifier = String.format("%s::%s", parentName, identifier).intern();
-        this.parentName = parentName.intern();
+    public Tag(String identifier, String associatedName, RELATION relation) {
         this.identifier = identifier.intern();
+        this.associatedName = associatedName.intern();
+        this.relation = relation;
     }
 
     @XmlElement
-    public String getParentName() {
-        return parentName;
+    public String getRelation() {
+        return relation.name();
     }
 
-    public void setParentName(String parentName) {
-        this.parentName = parentName;
+    public void setRelation(String relation) {
+        if (relation == null || relation.isEmpty()) {
+            this.relation = RELATION.NONE;
+        } else {
+            this.relation = RELATION.valueOf(relation);
+        }
+    }
+
+    @XmlElement
+    public String getAssociatedName() {
+        return associatedName;
+    }
+
+    public void setAssociatedName(String associatedName) {
+        this.associatedName = associatedName;
     }
 
     @XmlElement
@@ -43,12 +60,6 @@ public class Tag implements Comparable<Tag> {
 
     public void setIdentifier(String id) {
         this.identifier = id;
-/*
-
-        if (id.contains("::")) {
-            this.subName = id.substring(id.indexOf("::") + 2);
-        }
-*/
     }
 
     @Override
@@ -56,41 +67,33 @@ public class Tag implements Comparable<Tag> {
         return this.identifier;
     }
 
-    public String getLabelName() {
-/*
-        if (isSuperTag()) return identifier;
-        if (subName == null || subName.isEmpty()) {
-            if (identifier.contains("::")) {
-                subName = identifier.substring(identifier.indexOf("::") + 2);
-            } else {
-                subName = identifier;
-            }
+    @XmlElement
+    public String getDisplay() {
+        if (displayName == null || displayName.isEmpty()) return identifier;
+        return displayName;
+    }
+
+    public void setDisplay(String displayName) {
+        if (displayName == null || displayName.isEmpty()) {
+            this.displayName = identifier;
+        } else {
+            this.displayName = displayName;
         }
-        return subName;
-*/
-        return identifier;
     }
 
     public String toDebugString() {
-        //return String.format("id=%s, parent=%s, subname=%s", this.identifier, this.parentName, this.subName);
-        return String.format("id=%s, parent=%s, subname=s", this.identifier, this.parentName);
+        //return String.format("id=%s, parent=%s, subname=%s", this.identifier, this.associatedName, this.subName);
+        return String.format("id=%s, aName=%s, relation=%s", this.identifier, this.associatedName, this.relation);
     }
-
-/*
-    private String fullName() {
-        if (isSuperTag()) return getIdentifier();
-        return String.format("%s::%s", this.parentName, this.identifier);
-    }
-*/
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(this.identifier);
+        return Objects.hashCode(this.identifier) + Objects.hashCode(this.associatedName);
     }
 
     @Override
     public boolean equals(Object other) {
-        return Objects.equal(this.identifier, ((Tag) other).identifier);
+        return Objects.equal(this.identifier, ((Tag) other).identifier) && Objects.equal(this.associatedName, ((Tag) other).associatedName);
     }
 
     @Override
@@ -99,11 +102,15 @@ public class Tag implements Comparable<Tag> {
     }
 
     public boolean isSubTag() {
-        return !isSuperTag();
+        return RELATION.CHILD.equals(this.relation);
     }
 
     public boolean isSuperTag() {
-        return parentName == null || parentName.isEmpty();
+        return !isSubTag();
+    }
+
+    public boolean isDomain() {
+        return RELATION.DOMAIN.equals(relation);
     }
 
 }
