@@ -88,10 +88,10 @@ public class ForestElementTagCloudViewPart extends SelectedForestElementBrowserV
         System.err.println("domain2count = " + domain2count.toString());
         System.err.println("domainStats = ");
 */
-        for (double v : domainStats.getValues()) {
+/*        for (double v : domainStats.getValues()) {
             System.err.print(v + ", ");
         }
-        System.err.println("");
+        System.err.println("");*/
 
         Multimap<Integer, String> freqs = HashMultimap.create();
         for (String domain : domain2supTags.keySet()) {
