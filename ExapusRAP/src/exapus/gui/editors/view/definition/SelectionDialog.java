@@ -212,7 +212,8 @@ public class SelectionDialog extends Dialog {
 		scopedSelectionButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				ElementTreeSelectionDialog dialog = new ElementTreeSelectionDialog(getShell(), new ForestTreeLabelProviders.PatternColumnLabelProvider(false), new ScopeSelectionForestTreeContentProvider());
+				ElementTreeSelectionDialog dialog = new ElementTreeSelectionDialog(getShell(),
+                        new ForestTreeLabelProviders.PatternColumnLabelProvider(false), new ScopeSelectionForestTreeContentProvider());
 
 				dialog.setInput(getProposalFactForest());
 				dialog.setTitle("Select an existing forest element.");
@@ -233,11 +234,12 @@ public class SelectionDialog extends Dialog {
 						return ValidationStatus.info("Name of selected element: " + element.getQName().toString());
 					}
 				});
+
 				if(dialog.open() == Window.OK) {
 					Object[] selection = dialog.getResult(); 
-					ForestElement element = (ForestElement) selection[0];
-					scopedSelectionNameComboVW.getCombo().setText(element.getQName().toString());
-                    scopedSelectionAssociatedTagComboVW.setInput(element.getTags().toMultiset(true).elementSet());
+					predefinedElement = (ForestElement) selection[0];
+					scopedSelectionNameComboVW.getCombo().setText(predefinedElement.getQName().toString());
+                    scopedSelectionAssociatedTagComboVW.setInput(predefinedElement.getTags().toMultiset(true).elementSet());
 				}
 
 			}
@@ -258,38 +260,6 @@ public class SelectionDialog extends Dialog {
 		scopedSelectionTagComboVW.setContentProvider(ArrayContentProvider.getInstance());
 		scopedSelectionTagComboVW.setSorter(new ViewerSorter());
 		scopedSelectionTagComboVW.getCombo().setEnabled(false);
- /*       scopedSelectionTagComboVW.addSelectionChangedListener(new ISelectionChangedListener() {
-            @Override
-            public void selectionChanged(SelectionChangedEvent selectionChangedEvent) {
-                IStructuredSelection selection = (IStructuredSelection) selectionChangedEvent.getSelection();
-                System.err.println("selection = " + selection);
-                System.err.println("idx = " + scopedSelectionTagComboVW.getCombo().getSelectionIndex());
-            }
-        });
-*/
-        scopedSelectionTagComboVW.getCombo().addModifyListener(new ModifyListener() {
-            @Override
-            public void modifyText(ModifyEvent e) {
-                //System.err.println("scopedSelectionTagComboVW.getSelection().isEmpty() = " + scopedSelectionTagComboVW.getSelection().isEmpty());
-                if (!scopedSelectionTagComboVW.getSelection().isEmpty()) {
-                    scopedSelectionAssociatedTagComboVW.setSelection(null);
-                } else {
-                    if (scopedSelectionAssociatedTagComboVW.getCombo().getItems().length > 0) {
-                        scopedSelectionAssociatedTagComboVW.getCombo().select(0);
-                    }
-                }
-                scopedSelectionAssociatedTagComboVW.getCombo().setEnabled(scopedSelectionTagComboVW.getSelection().isEmpty());
-            }
-        });
-
-        Label parentTagLabel = new Label(scopedSelectionComposite, SWT.NONE);
-        parentTagLabel.setText("Add Associated Tag:");
-        parentTagLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1));
-        scopedSelectionAssociatedTagComboVW = new ComboViewer(scopedSelectionComposite, SWT.READ_ONLY);
-        scopedSelectionAssociatedTagComboVW.getControl().setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
-        scopedSelectionAssociatedTagComboVW.setContentProvider(ArrayContentProvider.getInstance());
-        scopedSelectionAssociatedTagComboVW.setSorter(new ViewerSorter());
-        scopedSelectionAssociatedTagComboVW.getCombo().setEnabled(false);
 
         Label relationTag = new Label(scopedSelectionComposite, SWT.NONE);
         relationTag.setText("Add Relation B/w Tags:");
@@ -299,7 +269,46 @@ public class SelectionDialog extends Dialog {
         scopedSelectionRelationTagComboVW.setContentProvider(ArrayContentProvider.getInstance());
         scopedSelectionRelationTagComboVW.setSorter(new ViewerSorter());
         scopedSelectionRelationTagComboVW.getCombo().setEnabled(false);
-        scopedSelectionRelationTagComboVW.setInput(Tag.RELATION.class.getEnumConstants());
+        scopedSelectionRelationTagComboVW.setInput(Tag.RELATION.supportedRelations(getSelectedScope()));
+        scopedSelectionRelationTagComboVW.addSelectionChangedListener(new ISelectionChangedListener() {
+            @Override
+            public void selectionChanged(SelectionChangedEvent selectionChangedEvent) {
+                IStructuredSelection selection = (IStructuredSelection) selectionChangedEvent.getSelection();
+                Tag.RELATION chosen = (Tag.RELATION) selection.getFirstElement();
+                if (chosen != null) {
+                    switch (chosen) {
+                        case DOMAIN:
+                            //System.err.println("Setting associated tag to " + scopedSelectionNameComboVW.getCombo().getText());
+                            scopedSelectionAssociatedTagComboVW.getCombo().setText(scopedSelectionNameComboVW.getCombo().getText());
+                            scopedSelectionAssociatedTagComboVW.getCombo().setEnabled(false);
+                            break;
+                        case CHILD:
+                            scopedSelectionAssociatedTagComboVW.getCombo().setEnabled(true);
+                            if (predefinedElement != null) {
+                                //System.err.println("predefinedElement = " + predefinedElement.getQName());
+                                //System.err.println("predefinedElement.tags = " + predefinedElement.getTags().toMultiset().elementSet().toString());
+                                scopedSelectionAssociatedTagComboVW.setInput(predefinedElement.getTags().toMultiset(true).elementSet());
+                                if (scopedSelectionAssociatedTagComboVW.getCombo().getItems().length > 0) {
+                                    scopedSelectionAssociatedTagComboVW.getCombo().select(0);
+                                }
+                            }
+                            break;
+                        case NONE:
+                            scopedSelectionAssociatedTagComboVW.getCombo().setEnabled(true);
+                            scopedSelectionAssociatedTagComboVW.setInput(new Object[]{});
+                    }
+                }
+            }
+        });
+
+        Label parentTagLabel = new Label(scopedSelectionComposite, SWT.NONE);
+        parentTagLabel.setText("Add Associated Tag:");
+        parentTagLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1));
+        scopedSelectionAssociatedTagComboVW = new ComboViewer(scopedSelectionComposite, SWT.NONE);
+        scopedSelectionAssociatedTagComboVW.getControl().setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+        scopedSelectionAssociatedTagComboVW.setContentProvider(ArrayContentProvider.getInstance());
+        scopedSelectionAssociatedTagComboVW.setSorter(new ViewerSorter());
+        scopedSelectionAssociatedTagComboVW.getCombo().setEnabled(false);
 
         if(predefinedScope != null)
 			scopedSelectionScopeComboVW.setSelection(new StructuredSelection(predefinedScope));
@@ -315,9 +324,7 @@ public class SelectionDialog extends Dialog {
 
 
 		return composite;
-		
 	}
-
 
 
 	protected void updateDetailComposite() {
@@ -338,29 +345,37 @@ public class SelectionDialog extends Dialog {
             scopedSelectionRelationTagComboVW.getControl().setEnabled(true);
 			scopedSelectionButton.setEnabled(true);
 			
-			String currentName = scopedSelectionNameComboVW.getCombo().getText();
+			//String currentName = scopedSelectionNameComboVW.getCombo().getText();
 			scopedSelectionNameComboVW.setInput(getProposalStrings()); //disabled for expensive scopes
 			//scopedSelectionNameComboVW.setSelection(new StructuredSelection(currentName));
-			scopedSelectionNameComboVW.getCombo().setText(currentName);
+			scopedSelectionNameComboVW.getCombo().setText(""); // does not really make sense when switching between scopes
 
+            String currentTag = scopedSelectionTagComboVW.getCombo().getText();
             if (Scope.TAG_SCOPE.equals(selectedScope)) {
-                scopedSelectionTagComboVW.getCombo().setEnabled(false);
-                scopedSelectionAssociatedTagComboVW.getCombo().setEnabled(false);
+                // not allowing to add existing tags to existing tags
+                // that---or need to exclude dependencies between them
+                scopedSelectionTagComboVW.setInput(new Object[]{});
             } else {
-                String currentTag = scopedSelectionTagComboVW.getCombo().getText();
                 scopedSelectionTagComboVW.setInput(getProposalTagStrings());
-                scopedSelectionTagComboVW.getCombo().setText(currentTag);
-
-                String currentParentTag = scopedSelectionAssociatedTagComboVW.getCombo().getText();
-                scopedSelectionAssociatedTagComboVW.getCombo().setText(currentParentTag);
             }
+            scopedSelectionTagComboVW.getCombo().setText(currentTag);
+
+            //String currentParentTag = scopedSelectionAssociatedTagComboVW.getCombo().getText();
+            // There is no forest element to take values from
+            scopedSelectionAssociatedTagComboVW.getCombo().setText("");
+
+            //String currentRelation = scopedSelectionRelationTagComboVW.getCombo().getText();
+            scopedSelectionRelationTagComboVW.setInput(Tag.RELATION.supportedRelations(getSelectedScope()));
+            scopedSelectionRelationTagComboVW.getCombo().setText("");
         }
 	}
 
 	private FactForest getProposalFactForest() {
 		View sourceView = getSourceView();
-		if(sourceView != null && sourceView.getPerspective().equals(perspective))
-			return sourceView.evaluate();
+		if(sourceView != null && sourceView.getPerspective().equals(perspective)) {
+            return sourceView.evaluate();
+        }
+
 		ExapusModel workspaceModel = Store.getCurrent().getWorkspaceModel();
 		return perspective.equals(Perspective.API_CENTRIC) ? workspaceModel.getAPICentricForest() : workspaceModel.getProjectCentricForest();
 	}
@@ -540,11 +555,12 @@ public class SelectionDialog extends Dialog {
                 Tag addedTag = null;
                 String parentTag = scopedSelectionAssociatedTagComboVW.getCombo().getText().trim();
                 if (!parentTag.isEmpty()) {
-                    // TODO manage relation correctly, it's a temporary thing for now
-                    addedTag = new Tag(scopedSelectionTag, parentTag, Tag.RELATION.CHILD);
+                    addedTag = new Tag(scopedSelectionTag, parentTag,
+                            Tag.RELATION.valueOf(scopedSelectionRelationTagComboVW.getCombo().getText()));
                 } else {
                     addedTag = new Tag(scopedSelectionTag);
                 }
+                //System.err.println("addedTag = " + addedTag.toDebugString());
                 ((ScopedSelection) selection).setTag(addedTag);
             }
         }

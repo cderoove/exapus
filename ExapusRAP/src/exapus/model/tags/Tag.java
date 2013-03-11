@@ -1,6 +1,7 @@
 package exapus.model.tags;
 
 import com.google.common.base.Objects;
+import exapus.model.view.Scope;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -9,7 +10,24 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class Tag implements Comparable<Tag> {
 
     public static enum RELATION {
-        CHILD, DOMAIN, NONE
+        NONE, CHILD, DOMAIN;
+
+        public static RELATION[] supportedRelations(Scope scope) {
+            if (scope == null) return new RELATION[] {NONE};
+
+            switch (scope) {
+                case TAG_SCOPE:
+                    return new RELATION[]{DOMAIN, NONE};
+                case ROOT_SCOPE:
+                case PREFIX_SCOPE:
+                case PACKAGE_SCOPE:
+                case TYPE_SCOPE:
+                case METHOD_SCOPE:
+                    return new RELATION[]{CHILD, NONE};
+                default:
+                    return new RELATION[]{NONE};
+            }
+        }
     }
 
     private String identifier;
