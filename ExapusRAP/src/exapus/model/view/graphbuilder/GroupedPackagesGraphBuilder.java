@@ -31,8 +31,15 @@ public class GroupedPackagesGraphBuilder extends GraphBuilder {
 
             @Override
             public boolean visitPackageLayer(PackageLayer packageLayer) {
-                graph.add(packageLayer);
-                graph.add(new Edge(packageLayer.getParent(), packageLayer));
+                if (getView().isGraphDetailsOnlyWithUsage()) {
+                    if (packageLayer.getMetric(getView().getMetricType()).getValue(false) > 0) {
+                        graph.add(packageLayer);
+                        graph.add(new Edge(packageLayer.getParent(), packageLayer));
+                    }
+                } else {
+                    graph.add(packageLayer);
+                    graph.add(new Edge(packageLayer.getParent(), packageLayer));
+                }
                 return true;
             }
 

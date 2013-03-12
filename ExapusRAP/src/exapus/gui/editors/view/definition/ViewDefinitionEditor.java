@@ -50,11 +50,12 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 	private ComboViewer comboVWPerspective;
 	private Button checkRenderable;
 	private TableViewer tableVWAPI;
-	private TableViewer tableVWProjects;
-	private ViewEditor viewEditor;
-	private ComboViewer comboMetrics;
-	private ComboViewer comboGraphDetails;
-	private ComboViewer comboVWAPISource;
+    private TableViewer tableVWProjects;
+    private ViewEditor viewEditor;
+    private ComboViewer comboMetrics;
+    private ComboViewer comboGraphDetails;
+    private Button checkGraphDetailsWithUsage;
+    private ComboViewer comboVWAPISource;
 	private ToolBar toolbarAPI;
 	private ToolBar toolbarProjects;
 	private ComboViewer comboVWProjectSource;
@@ -221,10 +222,27 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 			}
 		});
 
+        Label lblGraphWithUsage = new Label(parent, SWT.NONE);
+        GridData gd_lblEmpty = new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1);
+        lblGraphWithUsage.setLayoutData(gd_lblEmpty);
+
+        checkGraphDetailsWithUsage = new Button(parent, SWT.CHECK);
+        checkGraphDetailsWithUsage.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+        checkGraphDetailsWithUsage.setText("Only with usage");
+        checkGraphDetailsWithUsage.addSelectionListener(new SelectionListener() {
+            @Override
+            public void widgetSelected(SelectionEvent selectionEvent) {
+                getView().setGraphDetailsOnlyWithUsage(checkGraphDetailsWithUsage.getSelection());
+            }
+
+            @Override
+            public void widgetDefaultSelected(SelectionEvent selectionEvent) {
+            }
+        });
+
 		//Renderable
 		Label lblRenderable = new Label(parent, SWT.NONE);
-		GridData gd_lblRenderable = new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1);
-		lblRenderable.setLayoutData(gd_lblRenderable);
+		lblRenderable.setLayoutData(gd_lblEmpty);
 
 		checkRenderable = new Button(parent, SWT.CHECK);
 		checkRenderable.setSelection(getView().getRenderable());
@@ -238,6 +256,8 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 			public void widgetSelected(SelectionEvent e) {
 				getView().setRenderable(checkRenderable.getSelection());
 				updateComboMetrics();
+                comboGraphDetails.getCombo().setEnabled(checkRenderable.getSelection());
+                checkGraphDetailsWithUsage.setEnabled(checkRenderable.getSelection());
 			}
 
 			@Override
@@ -249,7 +269,10 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 		comboVWPerspective.setInput(Perspective.supportedPerspectives());
 		comboGraphDetails.setInput(GraphDetails.supportedDetails());
 
-		updateComboMetrics();
+        comboGraphDetails.getCombo().setEnabled(checkRenderable.getSelection());
+        checkGraphDetailsWithUsage.setEnabled(checkRenderable.getSelection());
+
+        updateComboMetrics();
 	}
 
 	private void configureSelectionTableAndToolBar(final TableViewer tableVW, ToolBar toolbar, final Perspective perspective) {
@@ -384,7 +407,7 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 		tableVWAPI.getControl().setEnabled(enabled);
 		tableVWProjects.getControl().setEnabled(enabled);
 		comboMetrics.getControl().setEnabled(enabled);
-		comboGraphDetails.getControl().setEnabled(enabled);
+		//comboGraphDetails.getControl().setEnabled(enabled);
 		toolbarProjects.setEnabled(enabled);
 		toolbarAPI.setEnabled(enabled);
 	}

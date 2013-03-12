@@ -20,8 +20,6 @@ public abstract class GraphBuilder {
         switch (v.getGraphDetails()) {
             case GROUPED_PACKAGES:
                 return new GroupedPackagesGraphBuilder(v);
-            case TOP_LEVEL_TYPES_WITH_USAGE:
-                return new TopLevelTypesWithUsageGraphBuilder(v);
             case TOP_LEVEL_TYPES:
                 return new TopLevelTypesGraphBuilder(v);
             default:
