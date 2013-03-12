@@ -54,6 +54,7 @@ public class View {
 	private boolean renderable;
 
     private GraphDetails graphDetails;
+    private boolean graphDetailsOnlyWithUsage;
 	
 	private Perspective perspective;
 	
@@ -280,6 +281,17 @@ public class View {
         if (this.graphDetails != graphDetails) {
             this.graphDetails = graphDetails;
             //System.err.println("setGraphDetails");
+            makeDirty();
+        }
+    }
+
+    public boolean isGraphDetailsOnlyWithUsage() {
+        return graphDetailsOnlyWithUsage;
+    }
+
+    public void setGraphDetailsOnlyWithUsage(boolean graphDetailsOnlyWithUsage) {
+        if (this.graphDetailsOnlyWithUsage != graphDetailsOnlyWithUsage) {
+            this.graphDetailsOnlyWithUsage = graphDetailsOnlyWithUsage;
             makeDirty();
         }
     }
