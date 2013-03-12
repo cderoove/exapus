@@ -5,6 +5,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 import exapus.model.forest.Direction;
+import exapus.model.forest.FactForest;
 import exapus.model.forest.ForestElement;
 import exapus.model.forest.Member;
 import exapus.model.forest.PackageLayer;
@@ -91,23 +92,23 @@ public class ScopedSelection extends Selection {
 	
 	
 	@Override
-	public boolean matches(PackageTree packageTree) {
+	public boolean matches(PackageTree packageTree, FactForest source) {
 		return false;
 	}
 	
 	@Override
-	public boolean matches(PackageLayer packageLayer) {
+	public boolean matches(PackageLayer packageLayer, FactForest source) {
 		return false;
 	}
 	
 	@Override
-	public boolean matches(Member member) {
+	public boolean matches(Member member, FactForest source) {
 		return false;
 	}
 
 	
 	@Override
-	public boolean matches(Ref ref) {
+	public boolean matches(Ref ref, FactForest source) {
 		return false;
 	}
 

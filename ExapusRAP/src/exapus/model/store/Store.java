@@ -16,6 +16,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 
+import com.google.common.collect.Table;
+
 import exapus.model.Observable;
 import exapus.model.forest.ExapusModel;
 import exapus.model.forest.FactForest;
@@ -258,10 +260,6 @@ public class Store extends Observable {
 	public Cloud getOrRegisterExtendedCloud(Cloud cloud, Cloud extension) {
 		return getOrRegisterCloud(Cloud.from(cloud, extension));
 	}
-
-	
-	
-	
 
 
 }

@@ -14,11 +14,14 @@ public abstract class CopyingForestVisitor implements ICopyingForestVisitor {
 	@Override
 	public FactForest copy(FactForest f) {
 		clear();
+		sourceForest = f;
 		f.acceptVisitor(this);
 		return getCopy();
 	}
 	
 	protected FactForest forestCopy;
+	
+	protected FactForest sourceForest;
 	
 	protected FactForest dualForest;
 	

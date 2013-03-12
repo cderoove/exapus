@@ -1,5 +1,6 @@
 package exapus.model.view;
 
+import exapus.model.forest.FactForest;
 import exapus.model.forest.Member;
 import exapus.model.forest.PackageLayer;
 import exapus.model.forest.PackageTree;
@@ -18,23 +19,23 @@ public class TagScopedSelection extends ScopedSelection {
 	}
 	
 	@Override
-	public boolean matches(PackageTree packageTree) {
-		return packageTree.hasTag(nameAsTag);
+	public boolean matches(PackageTree packageTree, FactForest sourceForest) {
+		return sourceForest.hasTag(packageTree, nameAsTag);
 	}
 	
 	@Override
-	public boolean matches(PackageLayer packageLayer) {
-		return packageLayer.hasTag(nameAsTag);
+	public boolean matches(PackageLayer packageLayer, FactForest sourceForest) {
+		return sourceForest.hasTag(packageLayer, nameAsTag);
 	}
 
 	@Override
-	public boolean matches(Member member) {
-		return member.hasTag(nameAsTag);
+	public boolean matches(Member member, FactForest sourceForest) {
+		return sourceForest.hasTag(member, nameAsTag);
 	}
 	
 	@Override
-	public boolean matches(Ref ref) {
-		return ref.hasTag(nameAsTag);
+	public boolean matches(Ref ref, FactForest sourceForest) {
+		return sourceForest.hasTag(ref, nameAsTag);
 	}
 	
 	@Override

@@ -3,6 +3,7 @@ package exapus.model.view;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
+import exapus.model.forest.FactForest;
 import exapus.model.forest.ForestElement;
 import exapus.model.forest.Member;
 import exapus.model.forest.PackageLayer;
@@ -19,23 +20,23 @@ public abstract class Selection {
 
 	public abstract boolean mayContainMatches(Member member);
 	
-	public abstract boolean matches(Ref ref);
+	public abstract boolean matches(Ref ref, FactForest source);
 	
-	public abstract boolean matches(PackageTree packageTree);
+	public abstract boolean matches(PackageTree packageTree, FactForest source);
 	
-	public abstract boolean matches(PackageLayer packageLayer);
+	public abstract boolean matches(PackageLayer packageLayer, FactForest source);
 	
-	public abstract boolean matches(Member member);
+	public abstract boolean matches(Member member, FactForest source);
 	
-	public boolean matches(ForestElement e) {
+	public boolean matches(ForestElement e, FactForest source) {
 		if(e instanceof Ref)
-			return matches((Ref) e);
+			return matches((Ref) e, source);
 		if(e instanceof Member)
-			return matches((Member) e);
+			return matches((Member) e, source);
 		if(e instanceof PackageLayer)
-			return matches((PackageLayer) e);
+			return matches((PackageLayer) e, source);
 		if(e instanceof PackageTree)
-			return matches((PackageTree) e);
+			return matches((PackageTree) e, source);
 		return false;
 	}
 

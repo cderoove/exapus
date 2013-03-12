@@ -6,7 +6,6 @@ import exapus.model.store.Store;
 import exapus.model.view.View;
 import exapus.model.visitors.FastSelectiveCopyingForestVisitor;
 import exapus.model.visitors.ICopyingForestVisitor;
-import exapus.model.visitors.SelectiveCopyingForestVisitor;
 
 public class APICentricEvaluator extends Evaluator {
 	
