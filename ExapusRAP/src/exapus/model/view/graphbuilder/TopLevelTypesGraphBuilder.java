@@ -1,4 +1,4 @@
-gpackage exapus.model.view.graphbuilder;
+package exapus.model.view.graphbuilder;
 
 import exapus.gui.editors.forest.graph.Edge;
 import exapus.model.forest.*;
