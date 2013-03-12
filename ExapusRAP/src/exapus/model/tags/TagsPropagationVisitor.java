@@ -8,17 +8,21 @@ public class TagsPropagationVisitor implements IForestVisitor {
 
     private View view;
 
+    private FactForest forest;
+    
     public TagsPropagationVisitor(View view) {
         this.view = view;
     }
 
     @Override
     public boolean visitInboundFactForest(InboundFactForest forest) {
+    	this.forest = forest;
         return view.isAPICentric();
     }
 
     @Override
     public boolean visitOutboundFactForest(OutboundFactForest forest) {
+    	this.forest = forest;
         return view.isProjectCentric();
     }
 
@@ -39,17 +43,13 @@ public class TagsPropagationVisitor implements IForestVisitor {
 
     @Override
     public boolean visitInboundReference(InboundRef inboundRef) {
-        if (view.isAPICentric()) {
-            inboundRef.getParent().addTagToAll(inboundRef.getTags());
-        }
-        return view.isAPICentric();
+    	inboundRef.getParent().addTagToAll(forest.getTagsFor(inboundRef));
+    	return false;
     }
 
     @Override
     public boolean visitOutboundReference(OutboundRef outboundRef) {
-        if (view.isProjectCentric()) {
-            outboundRef.getParent().addDualTagToAll(outboundRef.getDualTags());
-        }
-        return view.isProjectCentric();
+    	outboundRef.getParent().addDualTagToAll(forest.getDualTagsFor(outboundRef));
+    	return false;
     }
 }

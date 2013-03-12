@@ -210,7 +210,7 @@ public class Member extends MemberContainer {
 
 	public static Member from(Member original) {
 		Member member = new Member(original.getName(), original.getElement());
-		member.copyTagsFrom(original);
+		//member.copyTagsFrom(original);
 		return member;
 	}
 	

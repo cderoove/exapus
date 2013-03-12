@@ -5,6 +5,7 @@ import org.eclipse.jdt.core.SourceRange;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 
+import com.google.common.base.Objects;
 import com.google.common.collect.Multiset;
 
 import exapus.model.store.Store;
@@ -16,8 +17,6 @@ public abstract class Ref extends ForestElement {
 
 	private Ref dual;
 	
-    private Cloud updatedDualTags;
-
 	protected Direction direction;
 
 	protected Pattern pattern;
@@ -29,6 +28,8 @@ public abstract class Ref extends ForestElement {
 	protected SourceRange range;
 
 	private int lineNumber;
+	
+	private int hash;
 
 	public Ref(Direction d, Pattern p, Element e, QName n, SourceRange r, int l) {
 		// super(new UqName(UUID.randomUUID().toString())); //probably too slow
@@ -39,7 +40,8 @@ public abstract class Ref extends ForestElement {
 		rname = n;
 		range = r;
 		lineNumber = l;
-		updatedDualTags = Cloud.EMPTY_CLOUD;
+		hash = Objects.hashCode(lineNumber, pattern, element, direction, range, rname);
+		
 	}
 
 	@Override
@@ -84,8 +86,8 @@ public abstract class Ref extends ForestElement {
 			ref = InboundRef.fromInboundRef((InboundRef) r);
 		else
 			ref = OutboundRef.fromOutboundRef((OutboundRef) r);
-		ref.copyTagsFrom(r);
-		ref.copyUpdatedDualTagsFrom(r);
+		//ref.copyTagsFrom(r);
+		//ref.copyUpdatedDualTagsFrom(r);
 		return ref;
 	}
 
@@ -142,28 +144,20 @@ public abstract class Ref extends ForestElement {
 
 	@Override
 	public Cloud getDualTags() {
-		return updatedDualTags;
+		return getParentFactForest().getDualTagsFor(this);
 	}
 	
-    public boolean copyDualTagsFromDual(Ref dual) {
-    	Cloud before = updatedDualTags;
-    	updatedDualTags = Store.getCurrent().getOrRegisterExtendedCloud(updatedDualTags, dual.getTags());
-    	return updatedDualTags != before;
-    }
-    
-    public boolean addDualTag(Tag tag) {
-    	Cloud before = updatedDualTags;
-    	updatedDualTags = Store.getCurrent().getOrRegisterExtendedCloud(updatedDualTags, tag);
-    	return updatedDualTags != before;
-    }
-    
-	private void copyUpdatedDualTagsFrom(Ref r) {
-		updatedDualTags = r.updatedDualTags;
-	}
-
 
 	abstract public void acceptVisitor(IForestVisitor v);
 
+	
+	@Override
+	//should be the same for same refs from different forests
+	public int hashCode() {
+		return hash;
+	};
+	
+	//should succeeds for same refs from different forests
 	public boolean equals(Object other) {
 		if(other == null)
 			return false;
