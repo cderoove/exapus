@@ -3,6 +3,8 @@ package exapus.gui.editors.forest.tree;
 import java.util.ArrayList;
 import java.util.List;
 
+import exapus.model.view.evaluator.Evaluator;
+import exapus.model.visitors.CopyingForestVisitor;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ToolBarManager;
@@ -134,6 +136,7 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 	private Text apiFilterText;
 	private Text projectFilterText;
 	private ToolItem filterButton;
+	private ToolItem onlyWithRefsButton;
 	private Composite filterComposite;
 
 	private ToolItem revealButton;
@@ -272,14 +275,27 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 			public void widgetSelected(final SelectionEvent event) {
 				boolean tobefiltered = filterButton.getSelection();
 				updateFilterControls(tobefiltered);
-				applyFilter(tobefiltered);
+				applyFilter(tobefiltered, filter);
 			}
 
 		});
 		filterButton.setSelection(false);
 
+		new ToolItem(bar, SWT.SEPARATOR);
 
-		new ToolItem(bar, SWT.SEPARATOR);	    
+        onlyWithRefsButton = new ToolItem(bar, SWT.CHECK);
+        onlyWithRefsButton.setToolTipText("Filter References");
+        onlyWithRefsButton.setImage(Util.getImageFromPlugin("toggle.gif"));
+        onlyWithRefsButton.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(final SelectionEvent event) {
+                System.err.println("Toggle " + onlyWithRefsButton.getSelection());
+				applyFilter(onlyWithRefsButton.getSelection(), new ForestTreeFilterVisitor());
+			}
+
+		});
+        onlyWithRefsButton.setSelection(false);
+
+		new ToolItem(bar, SWT.SEPARATOR);
 		
 		revealButton = new ToolItem(bar, SWT.PUSH);
 		revealButton.setToolTipText("Reveal selection in other view");
@@ -457,7 +473,7 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 			@Override
 			public void modifyText(ModifyEvent event) {
 				filter.setApiFilter(apiFilterText.getText());
-				applyFilter(true);
+				applyFilter(true, filter);
 			}
 		});
 		
@@ -476,7 +492,7 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 			public void selectionChanged(SelectionChangedEvent event) {
 				IStructuredSelection selection = (IStructuredSelection) elementFilterComboVW.getSelection();
 				filter.setElement((Element)selection.getFirstElement());
-				applyFilter(true);
+				applyFilter(true, filter);
 			}
 		});
 		
@@ -489,7 +505,7 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 			@Override
 			public void modifyText(ModifyEvent event) {
 				filter.setProjectFilter(projectFilterText.getText());
-				applyFilter(true);
+				applyFilter(true, filter);
 			}
 		});
 		
@@ -507,7 +523,7 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 			public void selectionChanged(SelectionChangedEvent event) {
 				IStructuredSelection selection = (IStructuredSelection) patternFilterComboVW.getSelection();
 				filter.setPattern((Pattern)selection.getFirstElement());
-				applyFilter(true);
+				applyFilter(true, filter);
 			}
 		});
 
@@ -557,7 +573,7 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 		filter.setProjectFilter(projectFilter);
 		filter.setApiFilter(apiFilter);
 		updateFilterControls(true);
-		applyFilter(true);
+		applyFilter(true, filter);
 	}
 	
 	
@@ -664,25 +680,27 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 			}
 
 
-			private void applyFilter(boolean tobefiltered) {
+			private void applyFilter(boolean tobefiltered, CopyingForestVisitor filter) {
 				Object[] expanded = viewer.getExpandedElements();
 				StructuredSelection selected = (StructuredSelection) viewer.getSelection();
 
-				FactForest newForest;
-				if(tobefiltered)
-					newForest = filter.copy(getForest());
-				else
-					newForest = getForest();
+                FactForest newForest;
+                if (tobefiltered) {
+                    newForest = filter.copy(getForest());
+                    Evaluator.calculateMetrics(getView(), newForest);
+                    Evaluator.calculateStats(getView(), newForest);
+                } else {
+                    System.err.println("No filtering");
+                    newForest = getForest();
+                }
 
-				viewer.setInput(newForest);
+                viewer.setInput(newForest);
 
 				Object[] newExpanded = newForest.getCorrespondingForestElements(expanded);
 				StructuredSelection newSelected = new StructuredSelection(newForest.getCorrespondingForestElements(selected.toArray()));
 
 				viewer.setSelection(newSelected, true);
-				viewer.setExpandedElements(newExpanded);    
-
-
+				viewer.setExpandedElements(newExpanded);
 			}
 
 
@@ -764,7 +782,7 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 					Object[] newExpanded = newForest.getCorrespondingForestElements(oldExpanded);
 					StructuredSelection oldSelected = (StructuredSelection) viewer.getSelection();
 					StructuredSelection newSelected = new StructuredSelection(newForest.getCorrespondingForestElements(oldSelected.toArray()));
-					
+
 					viewer.setInput(getForest());
 					viewer.setSelection(newSelected, true);
 					viewer.setExpandedElements(newExpanded);    

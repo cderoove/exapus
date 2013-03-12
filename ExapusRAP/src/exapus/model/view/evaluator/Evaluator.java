@@ -19,8 +19,8 @@ public abstract class Evaluator {
 
 	protected abstract void cleanResult();
 
-    private DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-    private Date date = new Date();
+    private static final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+    private static Date date = new Date();
 
     public FactForest getResult() {
 		return result;
@@ -115,7 +115,7 @@ public abstract class Evaluator {
 		calculateMetrics(getView(), forest);
 	}
 
-    protected void calculateMetrics(View view, FactForest forest) {
+    public static void calculateMetrics(View view, FactForest forest) {
     	MetricType type = view.getMetricType();
         if (type != null) {
             long startTime = System.currentTimeMillis();
@@ -137,7 +137,7 @@ public abstract class Evaluator {
         }
     }
 
-    private void calculateStats(View view, FactForest forest) {
+    public static void calculateStats(View view, FactForest forest) {
         long startTime = System.currentTimeMillis();
 
         forest.acceptVisitor(new StatsCollectionVisitor(view));
@@ -147,7 +147,7 @@ public abstract class Evaluator {
         System.err.printf("\t%s\tStats calculation: %d ms\n", currentTimestamp(), elapsedTime);
     }
 
-    private String currentTimestamp() {
+    private static String currentTimestamp() {
         date = new Date();
         return dateFormat.format(date);
     }
