@@ -1,6 +1,5 @@
 package exapus.model.view;
 
-import exapus.model.forest.FactForest;
 import exapus.model.forest.Member;
 import exapus.model.forest.PackageLayer;
 import exapus.model.forest.PackageTree;
@@ -9,23 +8,23 @@ import exapus.model.forest.Ref;
 public class RootScopedSelection extends ScopedSelection {
 	
 	@Override
-	public boolean matches(PackageTree packageTree, FactForest source) {
+	public boolean matches(PackageTree packageTree) {
 		return packageTree.getQName().equals(name);
 	}
 	
 	@Override
-	public boolean matches(PackageLayer packageLayer, FactForest source) {
-		return matches(packageLayer.getParentPackageTree(), source);
+	public boolean matches(PackageLayer packageLayer) {
+		return matches(packageLayer.getParentPackageTree());
 	}
 	
 	@Override
-	public boolean matches(Member member, FactForest source) {
-		return matches(member.getParentPackageTree(), source);
+	public boolean matches(Member member) {
+		return matches(member.getParentPackageTree());
 	}
 
 	@Override
-	public boolean matches(Ref ref, FactForest source) {
-		return matches(ref.getParentPackageTree(), source);
+	public boolean matches(Ref ref) {
+		return matches(ref.getParentPackageTree());
 	}
 	
 	@Override

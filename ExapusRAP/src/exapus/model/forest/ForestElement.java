@@ -28,7 +28,7 @@ public abstract class ForestElement implements INode {
 	
     private Map<MetricType, IMetricValue> metrics = new HashMap<MetricType, IMetricValue>();
 
-    //private Cloud tags = Cloud.EMPTY_CLOUD;
+    private Cloud tags = Cloud.EMPTY_CLOUD;
     
 	private ForestElement parent;
 
@@ -197,13 +197,23 @@ public abstract class ForestElement implements INode {
     }
 
     public Cloud getTags() {
-    	return getParentFactForest().getTagsFor(this);
+    	return tags;
     }
 
     public boolean hasTag(Tag tag) {
-    	return getTags().hasTag(tag);
-    }    
+    	return tags.hasTag(tag);
+    }
+
+    public boolean addTag(Tag tag) {
+    	Cloud before = tags;
+    	tags = Store.getCurrent().getOrRegisterExtendedCloud(tags, tag);
+    	return tags != before;
+    }
     
+    public void copyTagsFrom(ForestElement e) {
+    	tags = e.tags;
+    }
+
     public void addTagToAll(Cloud tags) {
         Multiset<Tag> multiset = tags.toMultiset();
         for (Tag s : multiset.elementSet()) {

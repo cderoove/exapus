@@ -5,42 +5,30 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.WeakHashMap;
 
 import com.google.common.collect.Iterables;
 
 import exapus.model.Observable;
 import exapus.model.metrics.MetricType;
 import exapus.model.stats.StatsLevel;
-import exapus.model.store.Store;
-import exapus.model.tags.Cloud;
-import exapus.model.tags.Tag;
 import exapus.model.visitors.IForestVisitor;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
 public abstract class FactForest extends Observable {
 
-	
     private Map<MetricType, Map<StatsLevel, DescriptiveStatistics>> stats;
 
 	protected Map<UqName, PackageTree> trees;
-	
-	private Map<ForestElement, Cloud> element2tags;
-	private Map<Ref, Cloud> ref2dualtags;
-
 
 	private ExapusModel model;
 
 	private Direction direction;
-	
 
 	public FactForest(ExapusModel m, Direction d) {
 		model = m;
 		trees = new HashMap<UqName, PackageTree>();
 		direction = d;
         stats = new HashMap<MetricType, Map<StatsLevel, DescriptiveStatistics>>();
-        element2tags = new WeakHashMap<ForestElement, Cloud>();
-        ref2dualtags = new WeakHashMap<Ref, Cloud>();
 	}
 
 	public ExapusModel getModel() {
@@ -184,47 +172,5 @@ public abstract class FactForest extends Observable {
 		return !trees.isEmpty();
 	}
 
-	public Cloud getTagsFor(ForestElement forestElement) {
-		Cloud cloud = element2tags.get(forestElement);
-		if(cloud != null)
-			return cloud;
-		return Cloud.EMPTY_CLOUD;
-	}
 	
-	public Cloud getDualTagsFor(Ref ref) {
-		Cloud cloud = ref2dualtags.get(ref);
-		if(cloud != null)
-			return cloud;
-		return Cloud.EMPTY_CLOUD;
-	}
-
-	public void intializeDualTagsForFrom(Ref destination, FactForest sourceForest, Ref source, FactForest dualForest, Ref dual) {
-		Cloud cloud = dualForest.getTagsFor(dual); //dual will still be the original one, but hashCode() override should return the updated reference in the dualForest
-		ref2dualtags.put(destination, cloud);
-	}
-	
-	public void intializeTagsForFrom(ForestElement destination, FactForest sourceForest, ForestElement element) {
-		Cloud cloud = sourceForest.getTagsFor(element);
-		element2tags.put(destination, cloud);
-	}
-
-	public void addTag(ForestElement forestElement, Tag tag) {
-		Cloud before = this.getTagsFor(forestElement);
-		Cloud after = Store.getCurrent().getOrRegisterExtendedCloud(before, tag);
-		element2tags.put(forestElement, after);
-	}
-
-	public void addDualTag(Ref ref, Tag tag) {
-		Cloud before = this.getDualTagsFor(ref);
-		Cloud after = Store.getCurrent().getOrRegisterExtendedCloud(before, tag);
-		ref2dualtags.put(ref, after);
-	}
-
-	
-	public boolean hasTag(ForestElement forestElement, Tag tag) {
-		return getTagsFor(forestElement).hasTag(tag);
-	}
-	
-	
-		
 }

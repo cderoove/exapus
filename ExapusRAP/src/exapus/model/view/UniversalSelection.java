@@ -3,7 +3,6 @@ package exapus.model.view;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-import exapus.model.forest.FactForest;
 import exapus.model.forest.ForestElement;
 import exapus.model.forest.Member;
 import exapus.model.forest.PackageLayer;
@@ -55,27 +54,27 @@ public class UniversalSelection extends Selection {
 	}
 
 	@Override
-	public boolean matches(Ref ref, FactForest source) {
+	public boolean matches(Ref ref) {
 		return true;
 	}
 
 	@Override
-	public boolean matches(PackageTree packageTree, FactForest source) {
+	public boolean matches(PackageTree packageTree) {
 		return true;
 	}
 
 	@Override
-	public boolean matches(PackageLayer packageLayer, FactForest source) {
+	public boolean matches(PackageLayer packageLayer) {
 		return true;
 	}
 
 	@Override
-	public boolean matches(Member member, FactForest source) {
+	public boolean matches(Member member) {
 		return true;
 	}
 
 	@Override
-	public boolean matches(ForestElement e, FactForest source) {
+	public boolean matches(ForestElement e) {
 		return true;
 	}
 

@@ -175,7 +175,7 @@ public class PackageTree extends ForestElement  implements ILayerContainer  {
 	
 	public static PackageTree from(PackageTree original) {
 		PackageTree tree = new PackageTree(original.getName());
-		//tree.copyTagsFrom(original);
+		tree.copyTagsFrom(original);
 		return tree;
 	}
 

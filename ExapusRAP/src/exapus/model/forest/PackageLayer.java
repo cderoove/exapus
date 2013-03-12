@@ -96,7 +96,7 @@ public class PackageLayer extends MemberContainer implements ILayerContainer {
 
 	public static PackageLayer from(PackageLayer original) {
 		PackageLayer layer = new PackageLayer(original.getName());
-		//layer.copyTagsFrom(original);
+		layer.copyTagsFrom(original);
 		return layer;
 	}
 	

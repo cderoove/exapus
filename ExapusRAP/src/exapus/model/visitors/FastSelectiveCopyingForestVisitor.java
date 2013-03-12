@@ -54,9 +54,26 @@ public class FastSelectiveCopyingForestVisitor extends CopyingForestVisitor impl
 
 	//begin code duplication to avoid instanceof checks in selection.matches
 
+	private boolean applyTags(PackageTree copy) {
+		Iterator<Selection> i = selections.iterator();
+		while(i.hasNext()) {
+			Selection selection =  i.next();
+			if(selection.hasTag()) {
+				if(selection.matches(copy)) {
+					if(copy.addTag(selection.getTag()))
+						//re-iterate when a new tag has been added
+						//i = selections.iterator(); 
+						;
+				}
+			}
+		}
+		return true;
+	}
+
+
 	protected boolean anySelectionMatches(Ref ref) {
 		for(Selection selection : selections) 
-			if(selection.matches(ref,sourceForest))
+			if(selection.matches(ref))
 				return true;
 		return false;
 	}
@@ -84,46 +101,53 @@ public class FastSelectiveCopyingForestVisitor extends CopyingForestVisitor impl
 		return false;
 	}
 
-	private boolean applyTags(PackageTree copy, FactForest sourceForest, PackageTree original) {
-		for(Selection selection : selections) {
+
+	private boolean applyTags(PackageLayer copy) {
+		Iterator<Selection> i = selections.iterator();
+		while(i.hasNext()) {
+			Selection selection =  i.next();
 			if(selection.hasTag()) {
-				if(selection.matches(original,sourceForest)) {
-					forestCopy.addTag(copy, selection.getTag());
+				if(selection.matches(copy)) {
+					if(copy.addTag(selection.getTag()))
+						//re-iterate when a new tag has been added
+						//i = selections.iterator(); 
+						;
 				}
 			}
 		}
 		return true;
 	}
 
-
-	private boolean applyTags(PackageLayer copy, FactForest sourceForest, PackageLayer original) {
-		for(Selection selection : selections) {
+	private boolean applyTags(Member copy) {
+		Iterator<Selection> i = selections.iterator();
+		while(i.hasNext()) {
+			Selection selection =  i.next();
 			if(selection.hasTag()) {
-				if(selection.matches(original,sourceForest)) {
-					forestCopy.addTag(copy, selection.getTag());
+				if(selection.matches(copy)) {
+					if(copy.addTag(selection.getTag()))
+						//re-iterate when a new tag has been added
+						//i = selections.iterator(); 
+						;
 				}
 			}
 		}
 		return true;
 	}
 
-	private boolean applyTags(Member copy, FactForest sourceForest, Member original) {
-		for(Selection selection : selections) {
-			if(selection.hasTag()) {
-				if(selection.matches(original,sourceForest)) {
-					forestCopy.addTag(copy, selection.getTag());
-				}
-			}
-		}
-		return true;
-	}
+	
+
 	
 	
-	private boolean applyTags(Ref copy, FactForest sourceForest, Ref original) {
-		for(Selection selection : selections) {
+	private boolean applyTags(Ref copy) {
+		Iterator<Selection> i = selections.iterator();
+		while(i.hasNext()) {
+			Selection selection =  i.next();
 			if(selection.hasTag()) {
-				if(selection.matches(original,sourceForest)) {
-					forestCopy.addTag(copy, selection.getTag());
+				if(selection.matches(copy)) {
+					if(copy.addTag(selection.getTag()))
+						//re-iterate when a new tag has been added
+						//i = selections.iterator(); 
+						;
 				}
 			}
 		}
@@ -131,27 +155,31 @@ public class FastSelectiveCopyingForestVisitor extends CopyingForestVisitor impl
 	}
 	//end code duplication
 
-	private boolean applyDualTags(Ref copy, FactForest sourceForest, Ref original, FactForest dualForest, Ref dual) {
-		for(Selection selection : dual_selections) {
+	private boolean applyDualTags(Ref copy, Ref dualInDualSource) {
+		Iterator<Selection> i = dual_selections.iterator();
+		while(i.hasNext()) {
+			Selection selection =  i.next();
 			if(selection.hasTag()) {
-				if(selection.matches(dual,dualForest)) {
-					forestCopy.addDualTag(copy, selection.getTag());
+				if(selection.matches(dualInDualSource)) {
+					if(copy.addDualTag(selection.getTag()))
+						//re-iterate when a new tag has been added
+						//i = selections.iterator(); 
+						;
 				}
 			}
 		}
 		return true;
+
 	}
 
-	
 
 	@Override
 	public boolean visitPackageTree(final PackageTree tree) {
 		if(mayContainMatches(tree)) {
 			PackageTree copy = PackageTree.from(tree);
 			forestCopy.addPackageTree(copy);
-			forestCopy.intializeTagsForFrom(copy, sourceForest, tree);
 			registerCopy(tree, copy);
-			applyTags(copy, sourceForest, tree); 
+			applyTags(copy); 
 			return true;
 		} 
 		return false;
@@ -163,10 +191,9 @@ public class FastSelectiveCopyingForestVisitor extends CopyingForestVisitor impl
 		if(mayContainMatches(packageLayer)) {
 			ILayerContainer parentCopy = (ILayerContainer) getCopy(packageLayer.getParent());
 			PackageLayer copy = PackageLayer.from(packageLayer);	
-			parentCopy.addLayer(copy);
-			forestCopy.intializeTagsForFrom(copy, sourceForest, packageLayer);
 			registerCopy(packageLayer, copy);
-			applyTags(copy, sourceForest, packageLayer);
+			parentCopy.addLayer(copy);
+			applyTags(copy);
 			return true;
 		} 
 		return false;
@@ -177,10 +204,9 @@ public class FastSelectiveCopyingForestVisitor extends CopyingForestVisitor impl
 		if(mayContainMatches(member)) {
 			MemberContainer parentCopy = (MemberContainer) getCopy(member.getParent());
 			Member copy = Member.from(member);	
-			parentCopy.addMember(copy);
-			forestCopy.intializeTagsForFrom(copy, sourceForest, member);
 			registerCopy(member, copy);
-			applyTags(copy, sourceForest, member);
+			parentCopy.addMember(copy);
+			applyTags(copy);
 			return true;
 		}
 		return false;
@@ -188,20 +214,30 @@ public class FastSelectiveCopyingForestVisitor extends CopyingForestVisitor impl
 
 	private boolean visitReference(final Ref ref) {
 		if(anySelectionMatches(ref)) {
-			//dual resides in workspace forest (All APIs/ All Projects), not in the dualForest
+			//dual resides in workspace forest (All APIs/ All Projects)
 			Ref dual = ref.getDual();
+			Ref dualInDualSource;
+			
+			if(dual.getParentFactForest() != dualForest)
+				 dualInDualSource = (Ref) dualForest.getCorrespondingForestElement(dual);
+			else 
+				//this will speed computation up for views that depend 
+				//immediately on the workspace forests
+				dualInDualSource = dual;
+			
+			if(dualInDualSource == null)
+				return false; 
 			
 			Member parentCopy = (Member) getCopy(ref.getParent());
 			for(Selection dual_selection : dual_selections) {
 				//ref has to match one of the selections
-				if(dual_selection.matches(dual, dualForest)) {
+				if(dual_selection.matches(dualInDualSource)) {
 					Member parentCopyAsMember = (Member) parentCopy;
 					Ref copy = Ref.from(ref);
+					copy.copyDualTagsFromDual(dualInDualSource);
 					parentCopyAsMember.addAPIReference(copy);
-					forestCopy.intializeTagsForFrom(copy, sourceForest, ref);
-					applyTags(copy, sourceForest, ref);
-					forestCopy.intializeDualTagsForFrom(copy, sourceForest, ref, dualForest, dual); 					
-					applyDualTags(copy, sourceForest, ref, dualForest, dual); 		
+					applyTags(copy);
+					applyDualTags(copy, dualInDualSource);
 					return true;
 				}
 			}
