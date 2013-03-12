@@ -1,4 +1,4 @@
-package exapus.model.view.graphbuilder;
+gpackage exapus.model.view.graphbuilder;
 
 import exapus.gui.editors.forest.graph.Edge;
 import exapus.model.forest.*;
@@ -31,10 +31,16 @@ public class TopLevelTypesGraphBuilder extends GraphBuilder {
 
             @Override
             public boolean visitPackageLayer(PackageLayer packageLayer) {
-                graph.add(packageLayer);
-                graph.add(new Edge(packageLayer.getParent(), packageLayer));
-                return true;
-            }
+                if (getView().isGraphDetailsOnlyWithUsage()) {
+                    if (packageLayer.getMetric(getView().getMetricType()).getValue(false) > 0) {
+                        graph.add(packageLayer);
+                        graph.add(new Edge(packageLayer.getParent(), packageLayer));
+                    }
+                } else {
+                    graph.add(packageLayer);
+                    graph.add(new Edge(packageLayer.getParent(), packageLayer));
+                }
+                return true;            }
 
             @Override
             public boolean visitMember(Member member) {

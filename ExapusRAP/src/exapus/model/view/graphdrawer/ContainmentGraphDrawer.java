@@ -19,7 +19,7 @@ public class ContainmentGraphDrawer extends GraphDrawer {
 	@Override
 	protected INodeFormatter getNodeFormatter() {
 		//return new DefaultNodeFormatter();
-		return new QuartileBasedNodeFormatter(view.getMetricType());
+		return new QuartileBasedNodeFormatter(view);
 	}
 
 	@Override

@@ -284,11 +284,12 @@ public class ForestTreeEditor implements IEditorPart, IDoubleClickListener, IVie
 		new ToolItem(bar, SWT.SEPARATOR);
 
         onlyWithRefsButton = new ToolItem(bar, SWT.CHECK);
-        onlyWithRefsButton.setToolTipText("Filter References");
+        onlyWithRefsButton.setToolTipText("Filter Elements W/o Usage");
         onlyWithRefsButton.setImage(Util.getImageFromPlugin("toggle.gif"));
         onlyWithRefsButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(final SelectionEvent event) {
-                System.err.println("Toggle " + onlyWithRefsButton.getSelection());
+                //System.err.println("Toggle " + onlyWithRefsButton.getSelection());
+                // TODO enable filter
 				applyFilter(onlyWithRefsButton.getSelection(), new ForestTreeFilterVisitor());
 			}
 

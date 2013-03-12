@@ -1,7 +1,7 @@
 package exapus.model.details;
 
 public enum GraphDetails {
-    GROUPED_PACKAGES, TOP_LEVEL_TYPES;
+    TOP_LEVEL_TAGS, GROUPED_PACKAGES, TOP_LEVEL_TYPES;
 
     public static GraphDetails defaultValue() {
         return GROUPED_PACKAGES;

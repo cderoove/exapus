@@ -18,6 +18,8 @@ public abstract class GraphBuilder {
 	
 	public static GraphBuilder forView(View v) {
         switch (v.getGraphDetails()) {
+            case TOP_LEVEL_TAGS:
+                return new TopLevelTagsGraphBuilder(v);
             case GROUPED_PACKAGES:
                 return new GroupedPackagesGraphBuilder(v);
             case TOP_LEVEL_TYPES:

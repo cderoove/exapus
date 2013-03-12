@@ -19,7 +19,7 @@ public class Edge {
 		return to;
 	}
 
-	public void setTo(Node to) {
+	public void setTo(INode to) {
 		this.to = to;
 	}
 
