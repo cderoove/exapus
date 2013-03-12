@@ -50,7 +50,7 @@ public abstract class Evaluator {
 	}
 
 	public void evaluate() {
-        System.err.printf("%s\tEvaluating view %s (%s)\n",
+        System.err.printf("%s\tEvaluating view \"%s\" (%s)\n",
                 currentTimestamp(), getView().getName(), getView().isAPICentric() ? "API-centric" : "Project-centric");
         long startTime = System.currentTimeMillis();
 
@@ -61,7 +61,7 @@ public abstract class Evaluator {
 
         long stopTime = System.currentTimeMillis();
         long elapsedTime = stopTime - startTime;
-        System.err.printf("%s\tSpent on %s (%s): %d s\n",
+        System.err.printf("%s\tSpent on \"%s\" (%s): %d s\n",
                 currentTimestamp(), getView().getName(), getView().isAPICentric() ? "API-centric" : "Project-centric", elapsedTime / 1000);
     }
 
