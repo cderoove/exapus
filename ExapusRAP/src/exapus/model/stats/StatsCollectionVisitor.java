@@ -26,6 +26,7 @@ public class StatsCollectionVisitor implements IForestVisitor {
                 HashMap<StatsLevel, DescriptiveStatistics> stats = new HashMap<StatsLevel, DescriptiveStatistics>();
                 stats.put(StatsLevel.GROUPED_PACKAGES, new DescriptiveStatistics());
                 stats.put(StatsLevel.TOP_LEVEL_TYPES, new DescriptiveStatistics());
+                stats.put(StatsLevel.METHODS, new DescriptiveStatistics());
                 fe.getParentFactForest().getStats().put(metric, stats);
             }
         }
@@ -66,9 +67,17 @@ public class StatsCollectionVisitor implements IForestVisitor {
             for (MetricType metric : member.getRegisteredMetrics()) {
                 member.getParentFactForest().getStats().get(metric).get(StatsLevel.TOP_LEVEL_TYPES).addValue(member.getMetric(metric).getValue(true));
             }
+            return true;
         }
 
-        return false;
+        if (member.getElement().isMethod()) {
+            for (MetricType metric : member.getRegisteredMetrics()) {
+                member.getParentFactForest().getStats().get(metric).get(StatsLevel.METHODS).addValue(member.getMetric(metric).getValue(true));
+            }
+            return false;
+        }
+
+        return true;
     }
 
     @Override

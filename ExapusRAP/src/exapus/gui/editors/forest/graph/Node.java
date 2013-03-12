@@ -5,7 +5,7 @@ import exapus.model.forest.ForestElement;
 public class Node implements INode {
 
     public static enum SpecialCase {
-        TOP_LEVEL_TAG_WO_CHILDREN
+        TOP_LEVEL_TAG_WITH_PREFIX
     }
 
     private ForestElement fe;

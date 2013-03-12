@@ -24,6 +24,8 @@ public abstract class GraphBuilder {
                 return new GroupedPackagesGraphBuilder(v);
             case TOP_LEVEL_TYPES:
                 return new TopLevelTypesGraphBuilder(v);
+            case METHODS:
+                return new MethodGraphBuilder(v);
             default:
                 return new TopLevelTypesGraphBuilder(v);
         }

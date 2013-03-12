@@ -39,7 +39,16 @@ public class QuartileBasedNodeFormatter implements INodeFormatter {
         } else {
             fe = (ForestElement) n;
         }
-        return "\"" + fe.getName().toString() + "\"";
+        String qName = fe.getName().toString();
+        if (qName.contains("(")) {
+            qName = qName.substring(0, qName.indexOf("("));
+        }
+
+        if (InboundFactForest.DEFAULT_TREE_NAME.toString().equals(qName)) {
+            return "<APIs>";
+        }
+
+        return "\"" + qName + "\"";
     }
 
     @Override
@@ -70,7 +79,7 @@ public class QuartileBasedNodeFormatter implements INodeFormatter {
             decorations.add("shape=box");
             if (spCase != null) {
                 switch (spCase) {
-                    case TOP_LEVEL_TAG_WO_CHILDREN:
+                    case TOP_LEVEL_TAG_WITH_PREFIX:
                         decorations.add("shape=triangle");
                 }
             }
@@ -100,18 +109,29 @@ public class QuartileBasedNodeFormatter implements INodeFormatter {
         if (fe instanceof Member) {
             Member m = (Member) fe;
             Element e = m.getElement();
+
             if (e.declaresType()) {
-                decorations.add("shape=oval");
+                decorations.add("shape=egg");
                 if (m.isTopLevel()) {
                     PENWIDTH penwidth = getPenwidth(m, spCase);
                     decorations.add("penwidth=" + Integer.toString(penwidth.value));
                     if (penwidth == PENWIDTH.ZERO) {
-                        decorations.add("style=\"filled\" fillcolor=\"grey92\"");
+                        decorations.add("fillcolor=\"white\"");
                     }
                 }
+                return decorations;
             }
+
             if (e.isMethod()) {
-                throw new UnsupportedOperationException("We don't yet have style for that");
+                //decorations.add("shape=octagon");
+                decorations.add("shape=box");
+                PENWIDTH penwidth = getPenwidth(m, spCase);
+                decorations.add("penwidth=" + Integer.toString(penwidth.value));
+                if (penwidth == PENWIDTH.ZERO) {
+                    decorations.add("fillcolor=\"white\"");
+                }
+
+                return decorations;
             }
             if (e.isField()) {
                 throw new UnsupportedOperationException("We don't yet have style for that");
@@ -126,7 +146,7 @@ public class QuartileBasedNodeFormatter implements INodeFormatter {
     }
 
     private PENWIDTH getPenwidth(ForestElement fe, Node.SpecialCase spCase) {
-        StatsLevel statsLevel = fe instanceof PackageLayer ? StatsLevel.GROUPED_PACKAGES : StatsLevel.TOP_LEVEL_TYPES;
+        StatsLevel statsLevel = StatsLevel.fromForestElement(fe);
         Map<StatsLevel, DescriptiveStatistics> map = fe.getParentFactForest().getStats().get(view.getMetricType());
         if (map == null) {
             System.err.println("Error computing pen width for: " + fe.toString());
@@ -152,15 +172,14 @@ public class QuartileBasedNodeFormatter implements INodeFormatter {
         if (ds.getN() == 1) return PENWIDTH.Q1;
 
         //System.err.println("statsLevel = " + statsLevel);
-        int value = 0;
+        int value = fe.getMetric(view.getMetricType()).getValue(StatsLevel.GROUPED_PACKAGES.equals(statsLevel));
         if (spCase != null) {
             switch (spCase) {
-                case TOP_LEVEL_TAG_WO_CHILDREN:
+                case TOP_LEVEL_TAG_WITH_PREFIX:
                     //System.err.println("\t!!!Special case: top level tag w/o direct children");
-                    value = fe.getMetric(view.getMetricType()).getValue(false);
+                    if (value == 0)
+                        value = fe.getMetric(view.getMetricType()).getValue(false);
             }
-        } else {
-            value = fe.getMetric(view.getMetricType()).getValue(StatsLevel.GROUPED_PACKAGES.equals(statsLevel));
         }
 /*
         System.err.println("Just for fun");
