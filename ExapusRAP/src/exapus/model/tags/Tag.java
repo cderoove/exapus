@@ -106,7 +106,7 @@ public class Tag implements Comparable<Tag> {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(this.identifier) + Objects.hashCode(this.associatedName);
+        return Objects.hashCode(this.identifier, this.associatedName);
     }
 
     @Override
