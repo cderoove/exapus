@@ -169,7 +169,6 @@ public class QuartileBasedNodeFormatter implements INodeFormatter {
         }
         System.err.println("");*/
 
-        if (ds.getN() == 1) return PENWIDTH.Q1;
 
         //System.err.println("statsLevel = " + statsLevel);
         int value = fe.getMetric(view.getMetricType()).getValue(StatsLevel.GROUPED_PACKAGES.equals(statsLevel));
@@ -177,8 +176,18 @@ public class QuartileBasedNodeFormatter implements INodeFormatter {
             switch (spCase) {
                 case TOP_LEVEL_TAG_WITH_PREFIX:
                     //System.err.println("\t!!!Special case: top level tag w/o direct children");
-                    if (value == 0)
+                    if (value == 0) {
                         value = fe.getMetric(view.getMetricType()).getValue(false);
+                    }
+            }
+        }
+
+        if (ds.getN() == 1) {
+            if (value > 0) {
+                return PENWIDTH.Q4;
+            } else {
+                System.err.println("\tZERO1 fe = " + fe.getQName().toString());
+                return PENWIDTH.ZERO;
             }
         }
 /*
@@ -187,7 +196,10 @@ public class QuartileBasedNodeFormatter implements INodeFormatter {
         System.err.println("fe.getMetric(view.getMetricType()).getValue(true) = " + fe.getMetric(view.getMetricType()).getValue(true));*/
 
         //System.err.println("value = " + value);
-        if (value == 0) return PENWIDTH.ZERO;
+        if (value == 0) {
+            System.err.println("\tZERO2 fe = " + fe.getQName().toString());
+            return PENWIDTH.ZERO;
+        }
 
         // TODO: this functionality should be somewhere else, probably
         PENWIDTH result;
