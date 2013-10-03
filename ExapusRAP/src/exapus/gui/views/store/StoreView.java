@@ -17,7 +17,7 @@ import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.window.Window;
-import org.eclipse.rwt.RWT;
+import org.eclipse.rap.rwt.RWT;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.layout.FillLayout;
@@ -40,9 +40,6 @@ import exapus.model.view.Perspective;
 import exapus.model.view.View;
 
 public class StoreView extends ViewPart implements IDoubleClickListener {
-	
-	public StoreView() {
-	}
 	
 	static {
 		RWT.getServiceManager().registerServiceHandler(ViewDownloadServiceHandler.ID, new ViewDownloadServiceHandler());

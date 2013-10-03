@@ -100,7 +100,7 @@
             class="exapus.gui.ExapusWorkbench"
             id="exapus.gui.entrypoint.workbench"
             parameter="default"
-            path="/workbench">
+            path="/exapus">
       </entrypoint>
    </extension>
 

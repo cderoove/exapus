@@ -1,6 +1,6 @@
 package exapus.gui;
 
-import org.eclipse.rwt.lifecycle.IEntryPoint;
+import org.eclipse.rap.rwt.application.IEntryPoint;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPreferenceConstants;
 import org.eclipse.ui.PlatformUI;
