@@ -11,6 +11,7 @@ import org.eclipse.jdt.core.dom.ArrayType;
 import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.BodyDeclaration;
 import org.eclipse.jdt.core.dom.ClassInstanceCreation;
+import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.ConstructorInvocation;
 import org.eclipse.jdt.core.dom.EnumConstantDeclaration;
 import org.eclipse.jdt.core.dom.EnumDeclaration;
@@ -48,14 +49,24 @@ public class LayerPopulatingVisitor extends ASTVisitor {
 									// Stack<BodyDeclaration> because
 									// AnonymousClassDeclaration isn't a
 									// subclass
+	
+	public String cuPath;
+	
+	
 
 	public LayerPopulatingVisitor(PackageLayer l) {
 		layer = l;
 		scope = new Stack<ASTNode>();
 	}
 
+	public boolean visit(CompilationUnit cu) {
+		cuPath = cu.getJavaElement().getResource().getRawLocation().toOSString();
+		return true;
+	}
+	
 	public boolean visit(TypeDeclaration td) {
-		layer.addBodyDeclaration(td, scope);
+		Member m = layer.addBodyDeclaration(td, scope);
+		m.setFilePath(cuPath);
 		scope.push(td);
 		return true;
 	}
@@ -66,7 +77,8 @@ public class LayerPopulatingVisitor extends ASTVisitor {
 	}
 
 	public boolean visit(AnnotationTypeDeclaration td) {
-		layer.addBodyDeclaration(td, scope);
+		Member m = layer.addBodyDeclaration(td, scope);
+		m.setFilePath(cuPath);
 		scope.push(td);
 		return true;
 	}
@@ -77,7 +89,8 @@ public class LayerPopulatingVisitor extends ASTVisitor {
 	}
 
 	public boolean visit(EnumConstantDeclaration bd) {
-		layer.addBodyDeclaration(bd, scope);
+		Member m = layer.addBodyDeclaration(bd, scope);
+		m.setFilePath(cuPath);
 		scope.push(bd);
 		return true;
 	}
@@ -90,7 +103,8 @@ public class LayerPopulatingVisitor extends ASTVisitor {
 	public boolean visit(MethodDeclaration md) {
 		IMethodBinding mb = md.resolveBinding();
 		assert mb != null;
-		layer.addMethodDeclaration(md, scope, mb);
+		Member m = layer.addMethodDeclaration(md, scope, mb);
+		m.setFilePath(cuPath);
 		scope.push(md);
 		for (Object o : md.thrownExceptions()) {
 			Name n = (Name) o;
@@ -101,7 +115,7 @@ public class LayerPopulatingVisitor extends ASTVisitor {
 		}
 		return true;
 	}
-
+	
 	public void endVisit(MethodDeclaration md) {
 		assert scope.peek() == md;
 		scope.pop();
@@ -142,7 +156,7 @@ public class LayerPopulatingVisitor extends ASTVisitor {
 
 	}
 
-	static boolean isTypeBindingFromAPI(ITypeBinding b) {
+	public boolean isTypeBindingFromAPI(ITypeBinding b) {
 		if (b.isPrimitive())
 			return false;
 		if (b.isFromSource())

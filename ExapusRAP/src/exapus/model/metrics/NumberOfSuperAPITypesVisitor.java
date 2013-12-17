@@ -50,6 +50,7 @@ public class NumberOfSuperAPITypesVisitor extends MetricVisitor {
             Pattern pattern = outboundRef.getReferencingPattern();
 
             switch (pattern) {
+            	case EXTENDS_ENUM:	
                 case EXTENDS_CLASS:
                 case IMPLEMENTS_INTERFACE:
                 case EXTENDS_INTERFACE:
@@ -69,6 +70,7 @@ public class NumberOfSuperAPITypesVisitor extends MetricVisitor {
             Pattern pattern = inboundRef.getReferencingPattern();
 
             switch (pattern) {
+            	case EXTENDS_ENUM:	
                 case EXTENDS_CLASS:
                 case IMPLEMENTS_INTERFACE:
                 case EXTENDS_INTERFACE:

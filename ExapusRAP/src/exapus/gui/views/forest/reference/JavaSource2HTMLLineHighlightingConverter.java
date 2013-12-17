@@ -107,7 +107,8 @@ public class JavaSource2HTMLLineHighlightingConverter extends AbstractJavaSource
 			throw new IllegalStateException("Trying to write out converted code without having source set.");
 		}
 
-		currentLineNumber = sourceHighlights.lineNumberOffset - 1;
+		//only needed when showing source code extracts
+		//currentLineNumber = sourceHighlights.lineNumberOffset - 1;
 		
 		//Header
 		String alignValue = getHtmlAlignValue(options.getHorizontalAlignment());

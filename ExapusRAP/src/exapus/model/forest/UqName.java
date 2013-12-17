@@ -57,8 +57,7 @@ public class UqName {
 	}
 
 	public static UqName forBinding(ITypeBinding t) {
-		
-			QName name = QName.forBinding(t);
+		QName name = QName.forBinding(t);
 		List<UqName> components = name.getComponents();
 		return components.get(components.size() - 1); //this should give us an (unqualified) name for anonymous classes
 	}

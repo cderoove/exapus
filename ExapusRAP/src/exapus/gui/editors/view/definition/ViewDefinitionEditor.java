@@ -14,6 +14,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.ViewerCell;
+import org.eclipse.rap.rwt.lifecycle.WidgetUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -97,6 +98,8 @@ public class ViewDefinitionEditor extends EditorPart implements IViewEditorPage{
 		lblPerspective.setText("Perspective:");
 
 		comboVWPerspective = new ComboViewer(parent, SWT.READ_ONLY);
+		//Added to demonstrate Selenium testing
+		comboVWPerspective.setData(WidgetUtil.CUSTOM_WIDGET_ID, "comboVWPerspective");
 		comboVWPerspective.getCombo().setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		comboVWPerspective.setContentProvider(ArrayContentProvider.getInstance());
 		comboVWPerspective.addSelectionChangedListener(new ISelectionChangedListener() {

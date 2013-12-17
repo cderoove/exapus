@@ -1,5 +1,9 @@
 package exapus.model.forest;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -8,14 +12,17 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.core.builder.AdditionalTypeCollection;
 
+import com.google.common.base.Charsets;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
+import com.google.common.io.Files;
 
 import exapus.gui.editors.forest.graph.INode;
 import exapus.model.metrics.IMetricValue;
@@ -161,10 +168,23 @@ public abstract class ForestElement implements INode {
 	}
 
 	public IJavaProject getCorrespondingJavaProject() {
-		return JavaCore.create(getCorrespondingIProject());
+		IProject project = getCorrespondingIProject();
+		if(project == null)
+			return null;
+		try {
+			if(project.hasNature(JavaCore.NATURE_ID)) 
+				return JavaCore.create(project);
+			else
+				return null;
+		} catch (CoreException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	public String getSourceString() {
+		return null;
+		/*
 		ICompilationUnit icu = getCorrespondingICompilationUnit();
 		if(icu == null)
 			return null;
@@ -174,6 +194,7 @@ public abstract class ForestElement implements INode {
 			e.printStackTrace();
 			return null;
 		}
+		 */
 	}
 
 	public int getSourceCharacterIndexOffset() {

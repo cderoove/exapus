@@ -4,16 +4,19 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.IMethodBinding;
 import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jdt.core.dom.IVariableBinding;
@@ -129,9 +132,23 @@ public class PackageTree extends ForestElement  implements ILayerContainer  {
 
 	private PackageLayer getOrAddLayerCorrespondingToTypeBinding(ITypeBinding t) {
 		IType type = (IType) t.getJavaElement();
-		IPackageFragment packageFragment = type.getPackageFragment();
-		PackageLayer layer = getOrAddLayerForPackageFragment(packageFragment);
-		return layer;
+		if(type != null) {
+			IPackageFragment packageFragment = type.getPackageFragment();
+			PackageLayer layer = getOrAddLayerForPackageFragment(packageFragment);
+			return layer;
+		}
+		
+		
+		//stems from partial program analysis
+		QName typeName = QName.forBinding(t);
+		QName packageName;
+		if(Character.isUpperCase(typeName.getIdentifier().charAt(0))) 
+			packageName = new QName("UNKNOWNP");
+		else
+			packageName = typeName.getButLast();
+
+		PackageLayer layer = root.getOrAddLayer(packageName, this);
+		return layer;		
 	}
 
 	public void addInboundReference(ITypeBinding b, OutboundRef outbound) {
@@ -186,6 +203,14 @@ public class PackageTree extends ForestElement  implements ILayerContainer  {
 	
 	public boolean removePackageLayer(PackageLayer packageLayer) {
 		return root.removePackageLayer(packageLayer);
+	}
+
+	public void processPartialCompilationUnit(CompilationUnit cu, Set<String> sourcePackageNames) {
+		ICompilationUnit icu = (ICompilationUnit) cu.getJavaElement();
+		IPackageFragment frag =  (IPackageFragment) icu.getParent();
+		
+		PackageLayer packageLayer = getOrAddLayerForPackageFragment(frag);
+		packageLayer.processPartialCompilationunit(cu, sourcePackageNames);
 	}
 
 }

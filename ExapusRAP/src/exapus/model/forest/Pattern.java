@@ -12,6 +12,7 @@ import org.eclipse.jdt.core.dom.CatchClause;
 import org.eclipse.jdt.core.dom.ClassInstanceCreation;
 import org.eclipse.jdt.core.dom.ConstructorInvocation;
 import org.eclipse.jdt.core.dom.EnhancedForStatement;
+import org.eclipse.jdt.core.dom.EnumDeclaration;
 import org.eclipse.jdt.core.dom.FieldAccess;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.IMethodBinding;
@@ -51,6 +52,7 @@ public enum Pattern {
 	EXTENDS_CLASS, // covered
 	IMPLEMENTS_INTERFACE, // covered
 	EXTENDS_INTERFACE, // covered
+	EXTENDS_ENUM,
 
 	METHOD_PARAMETER, // covered
 	METHOD_RESULT, // covered
@@ -129,7 +131,11 @@ public enum Pattern {
 			else
 				return IMPLEMENTS_INTERFACE;
 		}
-
+		
+		if (parentProperty.equals(EnumDeclaration.SUPER_INTERFACE_TYPES_PROPERTY)) {
+				return EXTENDS_ENUM;
+		}
+		
 		Pattern p = type_mapping.get(parentProperty);
 		if (p != null)
 			return p;

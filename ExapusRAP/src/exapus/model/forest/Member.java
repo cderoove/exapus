@@ -1,12 +1,16 @@
 package exapus.model.forest;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import com.google.common.base.Charsets;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.IBuffer;
 import org.eclipse.jdt.core.ICompilationUnit;
@@ -22,6 +26,7 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
+import com.google.common.io.Files;
 
 import exapus.model.visitors.IForestVisitor;
 
@@ -33,6 +38,7 @@ public class Member extends MemberContainer {
 		references = new ArrayList<Ref>();
 	}
 
+	private String filePath;
 
 	private List<Ref> references;
 
@@ -74,6 +80,28 @@ public class Member extends MemberContainer {
 		return oldParent;
 	}
 	
+	
+	public String getSourceString() {
+		try {
+			
+			String path = getFilePath();
+			if(path == null) {
+				Member topLevelMember = getTopLevelMember();
+				path = topLevelMember.getFilePath();
+			}
+			if(path != null) {
+				return Files.toString(new File(path), Charsets.UTF_8);
+			}
+			return null;
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+		
+	}
+
+	
 	public boolean isTopLevel() {
 		ForestElement parent = getParent();
 		return !(parent instanceof Member);
@@ -90,6 +118,8 @@ public class Member extends MemberContainer {
 		//TODO: only if element = class/etc, or change to getCorrespondingMember
 		//en daarna getMethod, getField ..
 		IJavaProject project = getCorrespondingJavaProject();
+		if(project == null)
+			return null;
 		try {
 			if (element.declaresType()) 
 				return project.findType(getQName().toString(), (IProgressMonitor) null);
@@ -113,18 +143,6 @@ public class Member extends MemberContainer {
 				return null;
 			}
 			return null;
-		} catch (JavaModelException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	public String getSourceString() {
-		IMember element = getCorrespondingIMember();
-		if (element == null)
-			return null;
-		try {
-			return element.getSource();
 		} catch (JavaModelException e) {
 			e.printStackTrace();
 			return null;
@@ -210,6 +228,7 @@ public class Member extends MemberContainer {
 
 	public static Member from(Member original) {
 		Member member = new Member(original.getName(), original.getElement());
+		member.setFilePath(original.getFilePath());
 		member.copyTagsFrom(original);
 		return member;
 	}
@@ -221,6 +240,14 @@ public class Member extends MemberContainer {
 
 	public boolean removeReference(Ref ref) {
 		return references.remove(ref);
+	}
+
+	public String getFilePath() {
+		return filePath;
+	}
+
+	public void setFilePath(String filePath) {
+		this.filePath = filePath;
 	}
 	
 }

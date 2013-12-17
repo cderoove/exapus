@@ -71,8 +71,11 @@ public class ExapusModel {
 	
 	
 	public void processProject(IProject p, IProgressMonitor m) throws CoreException {
-		if (p.isOpen() && p.isNatureEnabled(JavaCore.NATURE_ID))
-			projects.addProject(JavaCore.create(p), m);
+		if (p.isOpen()) {
+			if(!p.getName().startsWith("__PPA_PROJECT")) {
+				projects.addProject(p, m);
+			}
+		}
 	}
 	
 	/*

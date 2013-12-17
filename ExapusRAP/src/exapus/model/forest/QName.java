@@ -31,7 +31,12 @@ public class QName {
 	}
 
 	public static QName forBinding(ITypeBinding apiType) {
-		return new QName(apiType.getBinaryName());
+		String binaryName = apiType.getBinaryName();
+		if(binaryName != null)
+			return new QName(binaryName);
+		//probably for PPA-produced bindings
+		String otherName = apiType.getQualifiedName();
+		return new QName(otherName);
 	}
 
 	public static QName forMemberBinding(IVariableBinding fb, ITypeBinding tb) {

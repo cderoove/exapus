@@ -109,21 +109,20 @@ public class PackageLayer extends MemberContainer implements ILayerContainer {
 		return layer;
 	}
 	
-	public void addBodyDeclaration(BodyDeclaration bd, Stack<ASTNode> scope) {
-		getOrAddMember(UqName.forNode(bd), Element.forNode(bd), scope.iterator());
+	public Member addBodyDeclaration(BodyDeclaration bd, Stack<ASTNode> scope) {
+		return getOrAddMember(UqName.forNode(bd), Element.forNode(bd), scope.iterator());
 	}
 
-	public void addMethodDeclaration(MethodDeclaration md, Stack<ASTNode> scope, IMethodBinding mb) {
+	public Member addMethodDeclaration(MethodDeclaration md, Stack<ASTNode> scope, IMethodBinding mb) {
 		if(mb == null) {
-			getOrAddMember(new UqName(md.getName()), Element.forNode(md), scope.iterator());
-			return;
+			return getOrAddMember(new UqName(md.getName()), Element.forNode(md), scope.iterator());
 		}
-		getOrAddMember(UqName.forBinding(mb), Element.forNode(md), scope.iterator());
+		return getOrAddMember(UqName.forBinding(mb), Element.forNode(md), scope.iterator());
 	}
 
 
-	public void addAnonymousClassDeclaration(AnonymousClassDeclaration bd, Stack<ASTNode> scope) {
-		getOrAddMember(UqName.forNode(bd), Element.forNode(bd), scope.iterator());
+	public Member addAnonymousClassDeclaration(AnonymousClassDeclaration bd, Stack<ASTNode> scope) {
+		return getOrAddMember(UqName.forNode(bd), Element.forNode(bd), scope.iterator());
 	}
 
 	public void addOutboundReference(ASTNode n, ITypeBinding b, Stack<ASTNode> scope) {
@@ -147,6 +146,10 @@ public class PackageLayer extends MemberContainer implements ILayerContainer {
 		enclosingMember.addAPIReference(reference);
 		getAPICentricForest().addInboundAPIReference(tb, mb, reference);
 
+	}
+	
+	public void processPartialCompilationunit(CompilationUnit cu, Set<String> sourcePackageNames) {
+		cu.accept(new PartialLayerPopulatingVisitor(this, sourcePackageNames));
 	}
 
 	public void processCompilationUnits(IJavaProject p, ICompilationUnit[] icus) {

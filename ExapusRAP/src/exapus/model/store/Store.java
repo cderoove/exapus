@@ -65,7 +65,7 @@ public class Store extends Observable {
 				return Status.OK_STATUS;
 			}
 		};
-		job.setUser(true);
+		job.setSystem(true);
 		job.schedule();
 	}
 	
