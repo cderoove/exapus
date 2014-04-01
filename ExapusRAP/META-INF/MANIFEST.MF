@@ -4,21 +4,23 @@ Bundle-SymbolicName: Exapus;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.jdt.core,
- org.eclipse.core.resources;bundle-version="3.8.0",
- org.eclipse.rap.rwt.supplemental.filedialog;bundle-version="1.5.0",
- org.eclipse.rap.rwt.supplemental.fileupload;bundle-version="1.5.0",
- org.eclipse.core.databinding;bundle-version="1.4.1",
- org.eclipse.rap.ui;bundle-version="2.1.1",
- org.junit;bundle-version="4.11.0",
- ca.mcgill.cs.swevo.ppa.ui;bundle-version="1.2.1"
+ org.eclipse.rap.rwt.supplemental.filedialog,
+ org.eclipse.rap.rwt.supplemental.fileupload,
+ org.eclipse.core.databinding,
+ org.eclipse.rap.ui,
+ org.junit,
+ org.eclipse.core.filesystem,
+ org.eclipse.core.resources
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Import-Package: ca.mcgill.cs.swevo.ppa.ui,
- com.ibm.icu.text;version="4.4.2.2",
- javax.servlet;version="2.4.0",
- javax.servlet.http;version="2.4.0"
-Bundle-ClassPath: .,
- libs/guava-11.0.2.jar,
+Import-Package: com.ibm.icu.text,
+ javax.servlet,
+ javax.servlet.http
+Bundle-ClassPath: libs/guava-11.0.2.jar,
  libs/commons-math3-3.1.jar,
- libs/java2html.jar
-Export-Package: exapus.gui.editors.view;x-internal:=true
+ libs/java2html.jar,
+ ppalibs/log4j-1.2-api-2.0-beta9.jar,
+ ppalibs/log4j-api-2.0-beta9.jar,
+ ppalibs/log4j-core-2.0-beta9.jar,
+ .
+
